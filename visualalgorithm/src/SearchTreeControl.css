@@ -1,0 +1,44 @@
+.control {
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+.add {
+    margin-bottom: 10%;
+    width: 100%;
+}
+
+.addBox {
+    width: 80%;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: 0;
+    border: 0;
+}
+
+.addButton {
+    width: 100%;
+}
+
+.break {
+    width: 100%;
+}
+
+.remove {
+    width: 100%;
+    margin-top: 10%;
+}
+
+.removeBox {
+    width: 80%;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: 0;
+    border: 0;
+}
+
+.removeButton {
+    width: 100%;
+}

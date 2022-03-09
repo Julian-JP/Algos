@@ -1,0 +1,24 @@
+.canvas {
+    background-color: lightgray;
+    width: 74%;
+    height: auto;
+    max-height: 50%;
+    float: left;
+}
+
+.visual {
+    display: flex;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    height: auto;
+    background-color: yellow;
+}
+
+.control {
+    display: flex;
+    justify-content: center;
+    background-color: red;
+    width: 26%;
+    height: auto;
+}
