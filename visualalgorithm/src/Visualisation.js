@@ -41,7 +41,7 @@ const Visualisation = (props) => {
             className={"canvas"}
             />
             <div className={"control"}>
-                <SearchTreeControl drawCircle={drawCircle} clear={clear} width={canvasRef.current.width} height={canvasRef.current.height}/>
+                <SearchTreeControl drawCircle={drawCircle} clear={clear} canvas={canvasRef}/>
             </div>
         </div>
     );

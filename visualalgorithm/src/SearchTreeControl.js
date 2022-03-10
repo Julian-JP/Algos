@@ -1,10 +1,10 @@
 import React from 'react';
 import "./SearchTreeControl.css"
 
-const SearchTreeControl = ({drawCircle, clear, width, height}) => {
+const SearchTreeControl = ({drawCircle, clear, canvas}) => {
 
     const onAdd = () => {
-        drawCircle(Math.random()*Math.abs(width - 50) + 100, Math.random()*Math.abs(height -50) + 100, 50, 'blue');
+        drawCircle(Math.random()*Math.abs(canvas.current.width - 50) + 100, Math.random()*Math.abs(canvas.current.height -50) + 100, 50, 'blue');
     }
 
     const onRemove = () => {
