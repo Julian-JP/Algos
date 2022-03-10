@@ -28,7 +28,6 @@ public class BinarySearchTreeService {
 
     @org.jetbrains.annotations.NotNull
     private BSTNode convNodeJSON(String json) throws JSONException {
-        System.out.println(json);
         JSONObject root = new JSONObject(json);
         BSTNode left = null;
         BSTNode right = null;
