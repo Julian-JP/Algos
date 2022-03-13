@@ -35,11 +35,25 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
     }
 
     const onRemove = () => {
-        clear();
+        if (removeval === '' || tree == null) return;
+
+        fetch('http://localhost:8080/algos/bst/remove/' + removeval, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({root: tree}),
+        }).then(res => {return res.json()}).then(data => {
+            setTree(data.root);
+            printTree(data.root, 5, 'blue', 'black');
+        });
     }
 
-    const printTree = ({value, left, right}, depth, color, lcolor) => {
-        printSubTree({value, left, right}, 0, 0, canvas.current.width, canvas.current.height, depth, color, lcolor);
+    const printTree = (tree, depth, color, lcolor) => {
+        clear();
+        if (tree != null) {
+            printSubTree(tree, 0, 0, canvas.current.width, canvas.current.height, depth, color, lcolor);
+        }
     }
 
     const printSubTree = ({value, left, right}, x, y, width, height, depth, color, lcolor) => {

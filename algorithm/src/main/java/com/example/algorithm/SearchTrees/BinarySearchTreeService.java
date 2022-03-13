@@ -13,8 +13,10 @@ public class BinarySearchTreeService {
         return bst;
     }
 
-    public BinarySearchTree remove(int value, String tree) {
-        return null;
+    public BinarySearchTree remove(int value, String tree) throws JSONException {
+        BinarySearchTree bst = convJSON(tree);
+        bst.remove(value);
+        return bst;
     }
 
     public BinarySearchTree create(int value) {

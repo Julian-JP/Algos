@@ -12,10 +12,16 @@ public class BinarySearchTree {
     }
 
     public void add(int value) {
-        root.add(value);
+        if (root != null) {
+            root.add(value);
+        } else {
+            root = new BSTNode(value);
+        }
     }
 
     public void remove(int value) {
-
+        if (root != null) {
+            root = root.remove(value, null);
+        }
     }
 }

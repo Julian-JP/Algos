@@ -45,7 +45,12 @@ public class Controller {
         )
     public ResponseEntity<BinarySearchTree> BSTremove(@PathVariable("value") int value, RequestEntity<String> tree) {
         logger.info("New BinarySearchtree remove-request: " + value + " in " + tree.getBody());
-        return new ResponseEntity<>(bstService.remove(value, tree.getBody()), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(bstService.remove(value, tree.getBody()), HttpStatus.OK);
+        } catch (JSONException e) {
+            logger.error("BinarySearchtree remove JSON failed: " + tree);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/bst/new/{value}")
