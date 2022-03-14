@@ -17,13 +17,20 @@ const Visualisation = (props) => {
         contextRef.current = context;
     })
 
-    const drawCircle = (x, y, rad, color) => {
+    const drawCircle = (x, y, rad, color, txt) => {
         const context = contextRef.current;
-        context.fillStyle = color;
         context.beginPath();
+        context.fillStyle = color;
         context.arc(x, y, rad, 0, Math.PI*2);
         context.fill();
+
+        context.fillStyle = '#ffffff';
+        context.font = 'bold ' + (rad/(txt.toString().length)*1.7) + 'px Calibri';
+        context.textAlign="center";
+        context.textBaseline = "middle";
+        context.fillText(txt.toString(), x, y);
         context.stroke();
+
     }
 
     const drawLine = (x1, y1, x2, y2, color) => {

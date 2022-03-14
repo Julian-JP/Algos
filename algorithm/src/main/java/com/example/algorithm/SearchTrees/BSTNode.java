@@ -31,12 +31,12 @@ public class BSTNode {
         }
     }
 
-    public BSTNode remove(int newValue, BSTNode exchg) {
+    public BSTNode remove(int newValue) {
         if (newValue < value) {
-            left = left != null ? left.remove(newValue, exchg) : null;
+            left = left != null ? left.remove(newValue) : null;
             return this;
         } else if (newValue > value) {
-            right = right != null ? right.remove(newValue, exchg) : null;
+            right = right != null ? right.remove(newValue) : null;
             return this;
         }
 
@@ -46,13 +46,15 @@ public class BSTNode {
             return left;
         }
 
+        BSTNode prev = this;
         BSTNode next = right;
         for (;;) {
             if (next.left != null) {
+                prev = next;
                 next = next.left;
-            } else if (next.right != null) {
-                next = next.right;
             } else {
+                if (prev.left == next) prev.left = next.right;
+                else prev.right = next.right;
                 next.left = left;
                 next.right = right;
                 return next;

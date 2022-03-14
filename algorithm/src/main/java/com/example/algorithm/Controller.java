@@ -12,8 +12,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
-
 @RestController
 @RequestMapping("/algos")
 @CrossOrigin("*")

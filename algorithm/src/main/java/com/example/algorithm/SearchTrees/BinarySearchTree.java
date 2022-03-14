@@ -21,7 +21,7 @@ public class BinarySearchTree {
 
     public void remove(int value) {
         if (root != null) {
-            root = root.remove(value, null);
+            root = root.remove(value);
         }
     }
 }

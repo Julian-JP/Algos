@@ -6,8 +6,8 @@
 }
 
 .add {
-    margin-bottom: 10%;
-    width: 100%;
+    margin-bottom: 5%;
+    width: 50%;
 }
 
 .addBox {
@@ -27,8 +27,8 @@
 }
 
 .remove {
-    width: 100%;
-    margin-top: 10%;
+    width: 50%;
+    margin-top: 5%;
 }
 
 .removeBox {
@@ -41,4 +41,24 @@
 
 .removeButton {
     width: 100%;
+}
+
+.undo {
+    width: 30%;
+    margin-top: 10%;
+    display: grid;
+}
+
+.undobutton {
+    margin-right: 10%;
+}
+
+.redo {
+    width: 30%;
+    margin-top: 10%;
+    display: grid;
+}
+
+.redobutton {
+    margin-left: 10%;
 }

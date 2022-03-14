@@ -1,6 +1,7 @@
 import './App.css';
 import Navbar from "./Navbar";
 import Visualisation from "./Visualisation";
+import React from "react";
 
 function App() {
 
