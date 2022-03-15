@@ -56,8 +56,10 @@ const Visualisation = (props) => {
             className={"canvas"}
             />
             <div className={"control"}>
-                <SearchTreeControl drawCircle={drawCircle} drawLine={drawLine} clear={clear} canvas={canvasRef}/>
+                <SearchTreeControl drawCircle={drawCircle} drawLine={drawLine} clear={clear} canvas={canvasRef} type={'bst'}/>
             </div>
+            <div className={"break"}></div>
+            <div className={"explanation"}></div>
         </div>
     );
 };

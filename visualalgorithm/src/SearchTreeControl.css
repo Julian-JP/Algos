@@ -3,6 +3,7 @@
     justify-content: center;
     flex-flow: row wrap;
     align-items: center;
+    width: auto;
 }
 
 .add {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "./SearchTreeControl.css"
 
-const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
+const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
 
     const [tree, setTree] = useState(null);
     const [addval, setAddval] = useState('');
@@ -13,17 +13,13 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
     const linecolor = 'black';
 
     const onUndo = () => {
-        console.log(undoStack.length);
         if (undoStack.length > 0) {
             const undo = undoStack.pop();
-            console.log(undo);
             setUndoStack(undoStack.splice(0,undoStack.length));
             setRedoStack((old) => [...old, tree]);
-            console.log(undoStack);
             if (undo != null) {
                 printTree(undo, 5, nodecolor, linecolor);
             } else {
-                console.log("clear");
                 clear();
             }
             setTree(undo);
@@ -48,7 +44,7 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
         if (addval === '' ) return;
 
         if (tree == null) {
-            fetch('http://localhost:8080/algos/bst/new/' + addval, {
+            fetch('http://localhost:8080/algos/'+ type +'/new/' + addval, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -60,7 +56,7 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
                 printTree(data.root, 5, nodecolor, linecolor);
             });
         } else {
-            fetch('http://localhost:8080/algos/bst/insert/' + addval, {
+            fetch('http://localhost:8080/algos/'+ type +'/insert/' + addval, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -82,7 +78,7 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
     const onRemove = () => {
         if (removeval === '' || tree == null) return;
 
-        fetch('http://localhost:8080/algos/bst/remove/' + removeval, {
+        fetch('http://localhost:8080/algos/'+ type +'/remove/' + removeval, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -95,7 +91,6 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
             }
             return data.root;
         }).then(data => {
-            console.log(data);
             setTree(data);
             printTree(data, 5, nodecolor, linecolor);
         });

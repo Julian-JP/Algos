@@ -8,6 +8,7 @@
 
 .visual {
     display: flex;
+    flex-wrap: wrap;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 20px;
@@ -20,4 +21,16 @@
     justify-content: center;
     background-color: red;
     height: auto;
+    margin-left: auto;
+}
+
+.break {
+    flex-basis: 100%;
+    height: 0;
+}
+
+.explanation  {
+    width: 100%;
+    margin-top: 3%;
+    background-color: deeppink;
 }
