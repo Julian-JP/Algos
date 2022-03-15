@@ -1,11 +1,13 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import "./Visualisation.css"
 import SearchTreeControl from "./SearchTreeControl";
 
-const Visualisation = (props) => {
+const Visualisation = () => {
 
     const canvasRef = useRef(null);
     const contextRef = useRef(null);
+
+    const [expl, setExpl] = useState('Loading...');
 
 
     useEffect(() => {
@@ -15,7 +17,17 @@ const Visualisation = (props) => {
 
         const context = canvas.getContext("2d");
         contextRef.current = context;
+
+        loadExplanation("bst");
     })
+
+    const loadExplanation = (type) => {
+        fetch('http://localhost:8080/algos/'+ type +'/explanation', {
+            method: 'GET'
+        }).then((res) => {
+            res.text().then(res => setExpl(res));
+        })
+    }
 
     const drawCircle = (x, y, rad, color, txt) => {
         const context = contextRef.current;
@@ -51,15 +63,18 @@ const Visualisation = (props) => {
 
     return (
         <div className={"visual"}>
-            <canvas
-            ref={canvasRef}
-            className={"canvas"}
-            />
-            <div className={"control"}>
-                <SearchTreeControl drawCircle={drawCircle} drawLine={drawLine} clear={clear} canvas={canvasRef} type={'bst'}/>
+            <div className={"visualisation"}>
+                <div className={"control"}>
+                    <SearchTreeControl drawCircle={drawCircle} drawLine={drawLine} clear={clear} canvas={canvasRef} type={'bst'}/>
+                </div>
+                <canvas
+                ref={canvasRef}
+                className={"canvas"}
+                />
             </div>
+
             <div className={"break"}></div>
-            <div className={"explanation"}></div>
+            <div className={"explanation"} dangerouslySetInnerHTML={{ __html: expl}}></div>
         </div>
     );
 };

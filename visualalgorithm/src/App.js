@@ -5,12 +5,10 @@ import React from "react";
 
 function App() {
 
-    var nodes = [{x:40, y:40}, {x:100, y:500}];
-
   return (
     <div className="App">
         <Navbar/>
-        <Visualisation nodes={nodes}/>
+        <Visualisation/>
         <h1 className={"test"}>App</h1>
     </div>
   );

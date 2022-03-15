@@ -1,4 +1,4 @@
-package com.example.algorithm;
+package com.example.algorithm.Controller;
 
 import com.example.algorithm.SearchTrees.BinarySearchTree;
 import com.example.algorithm.SearchTrees.BinarySearchTreeService;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/algos")
 @CrossOrigin("*")
-public class Controller {
+public class BinaryTreeController {
 
     private final BinarySearchTreeService bstService;
-    private final Logger logger = LoggerFactory.getLogger(Controller.class);
+    private final Logger logger = LoggerFactory.getLogger(BinaryTreeController.class);
     @Autowired
-    public Controller(BinarySearchTreeService bstService) {
+    public BinaryTreeController(BinarySearchTreeService bstService) {
         this.bstService = bstService;
     }
 
@@ -55,5 +55,11 @@ public class Controller {
     public ResponseEntity<BinarySearchTree> BSTcreate(@PathVariable("value") int value) {
         logger.info("New BinarySearchtree create-request: " + value);
         return new ResponseEntity<>(bstService.create(value), HttpStatus.OK);
+    }
+
+    @GetMapping("bst/explanation")
+    public ResponseEntity<String> BSTgetExpl() {
+        logger.info("Requested Explanation BinarySearchtree");
+        return new ResponseEntity<>("<h1>Binärer Suchbaum</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>:)", HttpStatus.OK);
     }
 }

@@ -1,19 +1,26 @@
 .canvas {
     background-color: lightgray;
-    width: 74%;
     height: auto;
     max-height: 50%;
-    float: left;
+    flex: 1;
+    min-width: 0;
 }
 
 .visual {
-    display: flex;
-    flex-wrap: wrap;
+    background-color: yellow;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 20px;
+    margin-top: 55px;
+}
+
+.visualisation {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: 5px;
     height: auto;
-    background-color: yellow;
 }
 
 .control {
@@ -21,7 +28,9 @@
     justify-content: center;
     background-color: red;
     height: auto;
-    margin-left: auto;
+    min-width: 150px;
+    max-width: 450px;
+    flex-basis: 26%;
 }
 
 .break {

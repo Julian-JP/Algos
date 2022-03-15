@@ -1,14 +1,16 @@
 .control {
+    padding-left: 0;
+    margin-left: 0;
     display: flex;
-    justify-content: center;
     flex-flow: row wrap;
     align-items: center;
-    width: auto;
+    justify-content: center;
+    width: 100%;
 }
 
 .add {
     margin-bottom: 5%;
-    width: 50%;
+    width: 90%;
 }
 
 .addBox {
@@ -28,7 +30,7 @@
 }
 
 .remove {
-    width: 50%;
+    width: 90%;
     margin-top: 5%;
 }
 
@@ -45,21 +47,24 @@
 }
 
 .undo {
-    width: 30%;
+    width: 45%;
     margin-top: 10%;
-    display: grid;
+    padding-right: 5%;
+    padding-bottom: 5%;
 }
 
 .undobutton {
-    margin-right: 10%;
+    width: 100%;
 }
 
 .redo {
-    width: 30%;
+    width: 45%;
     margin-top: 10%;
-    display: grid;
+    padding-left: 5%;
+    padding-bottom: 5%;
 }
 
 .redobutton {
-    margin-left: 10%;
+    float: left;
+    width: 100%;
 }
