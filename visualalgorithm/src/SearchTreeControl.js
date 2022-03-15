@@ -13,21 +13,34 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
     const linecolor = 'black';
 
     const onUndo = () => {
-        if (undoStack !== []) {
+        console.log(undoStack.length);
+        if (undoStack.length > 0) {
             const undo = undoStack.pop();
-            setUndoStack(redoStack.splice(redoStack.length-1, 1));
-            setRedoStack((old) => [...old, undo]);
             console.log(undo);
-            printTree(undo, 5, nodecolor,linecolor);
+            setUndoStack(undoStack.splice(0,undoStack.length));
+            setRedoStack((old) => [...old, tree]);
+            console.log(undoStack);
+            if (undo != null) {
+                printTree(undo, 5, nodecolor, linecolor);
+            } else {
+                console.log("clear");
+                clear();
+            }
+            setTree(undo);
         }
     }
 
     const onRedo = () => {
-        if (redoStack !== []) {
+        if (redoStack.length > 0) {
             const redo = redoStack.pop();
-            setRedoStack(redoStack.splice(redoStack.length-1, 1));
-            setUndoStack((old) => [...old, redo]);
-            printTree(redo, 5, nodecolor, linecolor);
+            setRedoStack(redoStack.splice(0, redoStack.length));
+            setUndoStack((old) => [...old, tree]);
+            if (redo != null) {
+                printTree(redo, 5, nodecolor, linecolor);
+            } else {
+                clear();
+            }
+            setTree(redo)
         }
     }
 
@@ -42,7 +55,8 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
                 }
             }).then(res => {return res.json()}).then(data => {
                 setTree(data.root);
-                setUndoStack((old) => [...old, data.root]);
+                setUndoStack((old) => [...old, null]);
+                setRedoStack([]);
                 printTree(data.root, 5, nodecolor, linecolor);
             });
         } else {
@@ -53,10 +67,14 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
                 },
                 body: JSON.stringify({root: tree}),
             }).then(res => {return res.json()}).then(data => {
-                setTree(data.root);
-                setUndoStack((old) => [...old, data.root]);
-                console.log(undoStack);
-                printTree(data.root, 5, nodecolor, linecolor);
+                if (JSON.stringify(tree) !== JSON.stringify(data.root)) {
+                    setUndoStack((old) => [...old, tree]);
+                    setRedoStack([]);
+                }
+                return data.root;
+            }).then((data) => {
+                setTree(data);
+                printTree(data, 5, nodecolor, linecolor);
             });
         }
     }
@@ -71,9 +89,15 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas}) => {
             },
             body: JSON.stringify({root: tree}),
         }).then(res => {return res.json()}).then(data => {
-            setTree(data.root);
-            setUndoStack((old) => [...old, data.root]);
-            printTree(data.root, 5, nodecolor, linecolor);
+            if (tree != null && JSON.stringify(tree) !== JSON.stringify(data.root)) {
+                setRedoStack([]);
+                setUndoStack((old) => [...old, tree]);
+            }
+            return data.root;
+        }).then(data => {
+            console.log(data);
+            setTree(data);
+            printTree(data, 5, nodecolor, linecolor);
         });
     }
 
