@@ -9,7 +9,6 @@ function App() {
     <div className="App">
         <Navbar/>
         <Visualisation/>
-        <h1 className={"test"}>App</h1>
     </div>
   );
 }

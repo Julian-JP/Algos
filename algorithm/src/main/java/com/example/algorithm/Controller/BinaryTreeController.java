@@ -12,6 +12,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/algos")
 @CrossOrigin("*")
@@ -60,6 +62,11 @@ public class BinaryTreeController {
     @GetMapping("bst/explanation")
     public ResponseEntity<String> BSTgetExpl() {
         logger.info("Requested Explanation BinarySearchtree");
-        return new ResponseEntity<>("<h1>Binärer Suchbaum</h1></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>:)", HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(bstService.getExplanation(), HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("<h1>Failed to Load</h1>", HttpStatus.BAD_REQUEST);
+        }
     }
 }

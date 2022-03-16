@@ -1,0 +1,28 @@
+<h1>Binärer Suchbaum</h1>
+Der binäre Suchbaum ist eine der simpelsten Suchstrukturen für sortierbare Daten. In einem binären Suchbaum gelten die Folgenden Invarianten: </br>
+<ol>
+    <li><h5>Eindeutiger Schlüssel:</h5> Jeder im Baum abgespeicherter Schlüssel muss eindeutig sein, darf also nicht doppelt im Baum sein</li>
+    <li><h5>Knoten-Grad 2:</h5> Jeder Knoten im Baum hat keinen, einen, oder zwei Kinder</li>
+    <li><h5>Suchbaum Eigenschaft:</h5> Für jeden Knoten n, der sich im linken Teilbaum eines Knoten k befindet, gilt: n<k. Für jeden Knoten m, der sich im rechten Teilbaum eines Knoten k befindet, gilt: m>k</li>
+</ol>
+</br>
+<h2>Find</h2>
+Wende bei der Wurzel beginnend den folgenden Algorithmus an:
+<ol>
+    <li>Vergleiche die Wurzel mit dem gesuchten Wert. Wenn es der richtige ist, sind wir fertig</li>
+    <li>Ist der gesuchte Wert kleiner als die Wurzel? Dann nehme den linken Kinderknoten, sonst nehme den rechten Kinderknoten</li>
+    <li>Betrachte diesen Knoten als neue Wurzel und führe wieder Schritt 1 aus</li>
+</ol>
+Da ein binärer Suchbaum im schlimmsten Fall in eine Liste entarten kann, liegt die Worstcase-Laufzeit hier in O(n), die Bestcase-Laufzeit ist in O(1)
+</br>
+<h2>Insert</h2>
+Wende so lange die Regeln des Find-Algorithmus an, bis der Knoten der ausgewählt wurde ein Blatt ist. Ersetze diesen anschließend durch einen neuen Knoten, der den einzufügenden Wert enthält.
+Die Lauzeiten verhalten sich analog zu Find, im Worstcase also O(n) und im Bestcase O(1).
+</br>
+<h2>Remove</h2>
+Beim Entfernen eines Knotens muss wieder der zuerst der Knoten gefunden werden. Anschließend gibt es 3 mögliche Fälle:
+<ol>
+    <li><h5>Der Knoten hat keine Kinder: </h5> Entferne den Knoten einfach aus dem Baum</li>
+    <li><h5>Der Knoten hat ein Kind: </h5> Füge den Teilbaum mit diesem einem Kind als Wurzel an die Stelle wo sich der zu entfernende Knoten befindet. Der gewünschte Knoten ist jetzt aus dem Baum entkoppelt und kann gelöscht werden</li>
+    <li><h5>Der Knoten hat zwei Kinder: </h5> Tausche den Knoten mit dem Knoten, der der nächst größere ist aus. An der neuen Stelle hat der Knoten nur noch maximal ein Kind, da sonst der getauschte Knoten nicht der nächst größere gewesen ist. Entferne den Knoten an der neuen Stelle nun mit Regel 1 oder 2</li>
+</ol>
