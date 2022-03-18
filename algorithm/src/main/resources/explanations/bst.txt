@@ -3,7 +3,7 @@ Der binäre Suchbaum ist eine der simpelsten Suchstrukturen für sortierbare Dat
 <ol>
     <li><h5>Eindeutiger Schlüssel:</h5> Jeder im Baum abgespeicherter Schlüssel muss eindeutig sein, darf also nicht doppelt im Baum sein</li>
     <li><h5>Knoten-Grad 2:</h5> Jeder Knoten im Baum hat keinen, einen, oder zwei Kinder</li>
-    <li><h5>Suchbaum Eigenschaft:</h5> Für jeden Knoten n, der sich im linken Teilbaum eines Knoten k befindet, gilt: n<k. Für jeden Knoten m, der sich im rechten Teilbaum eines Knoten k befindet, gilt: m>k</li>
+    <li><h5>Suchbaum Eigenschaft:</h5> Für jeden Knoten n, der sich im linken Teilbaum eines Knoten k befindet, gilt: n&lt;k. Für jeden Knoten m, der sich im rechten Teilbaum eines Knoten k befindet, gilt: m&gt;k</li>
 </ol>
 </br>
 <h2>Find</h2>

@@ -3,11 +3,10 @@ package com.example.algorithm.SearchTrees;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Service
 public class BinarySearchTreeService {
@@ -29,7 +28,7 @@ public class BinarySearchTreeService {
     }
 
     public String getExplanation() throws IOException {
-        return Files.readString(Paths.get("/src/main/resources/explanations/bst.txt"), StandardCharsets.UTF_8);
+        return new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/bst.txt").toPath()));
     }
 
     private BinarySearchTree convJSON(String json) throws JSONException {
