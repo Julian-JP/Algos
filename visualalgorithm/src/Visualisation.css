@@ -7,7 +7,7 @@
 }
 
 .visual {
-    background-color: yellow;
+    background-color: #a3a3a3;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 20px;
@@ -24,9 +24,9 @@
 }
 
 .control {
+    background-color: lightgray;
     display: flex;
     justify-content: center;
-    background-color: red;
     height: auto;
     min-width: 150px;
     max-width: 450px;
@@ -39,7 +39,9 @@
 }
 
 .explanation  {
+    box-sizing: border-box;
+    background-color: lightgray;
     width: 100%;
     margin-top: 3%;
-    background-color: deeppink;
+    padding: 50px
 }
