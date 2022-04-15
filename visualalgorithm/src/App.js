@@ -1,6 +1,6 @@
 import './App.css';
-import Navbar from "./Navbar";
-import Visualisation from "./Visualisation";
+import Navbar from "./components/control/Navbar";
+import GraphVisualisation from "./components/Visualisation/GraphVisualisation";
 import React from "react";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
         <Navbar/>
-        <Visualisation/>
+        <GraphVisualisation/>
     </div>
   );
 }

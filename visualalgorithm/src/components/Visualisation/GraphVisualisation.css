@@ -6,21 +6,12 @@
     min-width: 0;
 }
 
-.visual {
+.background {
     background-color: #a3a3a3;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 20px;
     margin-top: 55px;
-}
-
-.visualisation {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    gap: 5px;
-    height: auto;
 }
 
 .control {
