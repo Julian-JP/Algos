@@ -1,5 +1,6 @@
 package com.example.algorithm.SearchTrees;
 
+import com.example.algorithm.Explanation.Explanation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,9 @@ public class BinarySearchTreeService {
         return new BinarySearchTree(new BSTNode(value, null, null));
     }
 
-    public String getExplanation() throws IOException {
-        return new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/bst.txt").toPath()));
+    public Explanation getExplanation() throws IOException {
+        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/bst.txt").toPath()));
+        return new Explanation(explanation);
     }
 
     private BinarySearchTree convJSON(String json) throws JSONException {

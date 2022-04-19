@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import "./SearchTreeControl.css"
+import classes from "./SearchTreeControl.module.css"
+import useFetch from "../../hooks/useFetch";
 
 const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
 
@@ -8,6 +9,8 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
     const [removeval, setRemoveval] = useState('');
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
+
+    const {isLoading, error, sendRequest} = useFetch();
 
     const nodecolor = 'blue';
     const linecolor = 'black';
@@ -42,58 +45,60 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
 
     const onAdd = () => {
         if (addval === '' ) return;
-
         if (tree == null) {
-            fetch('http://localhost:8080/algos/'+ type +'/new/' + addval, {
+            const createTreeFromJSON = (response) => {
+                setTree(response.root);
+                setUndoStack((old) => [...old, null]);
+                setRedoStack([]);
+                printTree(response.root, 5, nodecolor, linecolor);
+            }
+            sendRequest({
+                url: 'http://localhost:8080/algos/'+ type +'/new/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }).then(res => {return res.json()}).then(data => {
-                setTree(data.root);
-                setUndoStack((old) => [...old, null]);
-                setRedoStack([]);
-                printTree(data.root, 5, nodecolor, linecolor);
-            });
+            }, createTreeFromJSON);
         } else {
-            fetch('http://localhost:8080/algos/'+ type +'/insert/' + addval, {
+            const createTreeFromJSON = (response) => {
+                if (JSON.stringify(tree) !== JSON.stringify(response.root)) {
+                    setUndoStack((old) => [...old, tree]);
+                    setRedoStack([]);
+                }
+                setTree(response.root);
+                printTree(response.root, 5, nodecolor, linecolor);
+            }
+
+            sendRequest({
+                url: 'http://localhost:8080/algos/'+ type +'/insert/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({root: tree}),
-            }).then(res => {return res.json()}).then(data => {
-                if (JSON.stringify(tree) !== JSON.stringify(data.root)) {
-                    setUndoStack((old) => [...old, tree]);
-                    setRedoStack([]);
-                }
-                return data.root;
-            }).then((data) => {
-                setTree(data);
-                printTree(data, 5, nodecolor, linecolor);
-            });
+                body: {root: tree}
+            }, createTreeFromJSON);
         }
     }
 
     const onRemove = () => {
         if (removeval === '' || tree == null) return;
 
-        fetch('http://localhost:8080/algos/'+ type +'/remove/' + removeval, {
+        const createTreeFromJSON = (response) => {
+            if (tree != null && JSON.stringify(tree) !== JSON.stringify(response.root)) {
+                setUndoStack((old) => [...old, tree]);
+                setRedoStack([]);
+                setTree(response.root);
+                printTree(response.root, 5, nodecolor, linecolor);
+            }
+        }
+        sendRequest({
+            url: 'http://localhost:8080/algos/'+ type +'/remove/' + removeval,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({root: tree}),
-        }).then(res => {return res.json()}).then(data => {
-            if (tree != null && JSON.stringify(tree) !== JSON.stringify(data.root)) {
-                setRedoStack([]);
-                setUndoStack((old) => [...old, tree]);
-            }
-            return data.root;
-        }).then(data => {
-            setTree(data);
-            printTree(data, 5, nodecolor, linecolor);
-        });
+            body: {root: tree}
+        }, createTreeFromJSON);
     }
 
     const printTree = (tree, depth, color, lcolor) => {
@@ -104,7 +109,6 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
     }
 
     const printSubTree = ({value, left, right}, x, y, width, height, depth, color, lcolor) => {
-
         if (left) {
             drawLine(x + (width/2), y + (height/8), x + width/4, y + height/4, lcolor);
             printSubTree(left, x+0, y+(height/8), (width/2), height, depth-1, color, lcolor);
@@ -113,29 +117,28 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
             drawLine(x + (width/2), y + (height/8), x + width/2 + width/4, y + height/4, lcolor);
             printSubTree(right, x+(width/2), y+(height/8), width/2, height, depth-1, color, lcolor);
         }
-
         drawCircle(x + (width/2), y + (height/8), 20, color, value);
     }
 
     return (
-        <div className={"control"}>
-            <div className={"add"}>
-                <input type="number" className={"addBox"} onChange={(val) => setAddval(val.target.value)}/>
+        <div className={classes.control}>
+            <div className={classes.add}>
+                <input type="number" className={classes.addBox} onChange={(val) => setAddval(val.target.value)}/>
                 <br/>
-                <button onClick={onAdd} className={"addButton"}>Add</button>
+                <button onClick={onAdd} className={classes.addButton}>Add</button>
             </div>
-            <div className={"break"}></div>
-            <div className={"remove"}>
-                <input type={"number"} className={"removeBox"} onChange={(val) => setRemoveval(val.target.value)}/>
+            <div className={classes.break}></div>
+            <div className={classes.remove}>
+                <input type={"number"} className={classes.removeBox} onChange={(val) => setRemoveval(val.target.value)}/>
                 <br/>
-                <button onClick={onRemove} className={"removeButton"}>Remove</button>
+                <button onClick={onRemove} className={classes.removeButton}>Remove</button>
             </div>
-            <div className={"break"}></div>
-            <div className={"undo"}>
-                <button className={"undobutton"} onClick={onUndo}>Undo</button>
+            <div className={classes.break}></div>
+            <div className={classes.undo}>
+                <button className={classes.undobutton} onClick={onUndo}>Undo</button>
             </div>
-            <div className={"redo"}>
-                <button className={"redobutton"} onClick={onRedo}>Redo</button>
+            <div className={classes.redo}>
+                <button className={classes.redobutton} onClick={onRedo}>Redo</button>
             </div>
         </div>
     );

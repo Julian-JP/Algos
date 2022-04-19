@@ -1,16 +1,17 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import "./GraphVisualisation.css"
+import React, { useEffect, useRef, useState} from 'react';
+import classes from "./GraphVisualisation.module.css"
 import SearchTreeControl from "../control/SearchTreeControl";
 import Card from '../UI/Card';
+import useFetch from "../../hooks/useFetch";
 
 const GraphVisualisation = () => {
 
+    const [explanation, setExplanation] = useState(null);
+    const {isLoading, error, sendRequest} = useFetch();
+
+
     const canvasRef = useRef(null);
     const contextRef = useRef(null);
-
-    const [expl, setExpl] = useState('Loading...');
-    const [error, setError] = useState(null);
-
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -20,18 +21,15 @@ const GraphVisualisation = () => {
         const context = canvas.getContext("2d");
         contextRef.current = context;
 
-        loadExplanation("bst");
-    }, [])
+        const applyResponse = (response) => {
+            setExplanation(response.explanation);
+        };
+        sendRequest({
+            url: 'http://localhost:8080/algos/bst/explanation',
+            method: 'GET'
+        }, applyResponse);
 
-    const loadExplanation = useCallback(async (type) => {
-        fetch('http://localhost:8080/algos/' + type + '/explanation')
-            .then((res) => {
-                res.text().then(res => setExpl(res));
-            }).catch(error => {
-                setError(error);
-            }
-        )
-    }, []);
+    }, [sendRequest]);
 
     const drawCircle = (x, y, rad, color, txt) => {
         const context = contextRef.current;
@@ -65,10 +63,15 @@ const GraphVisualisation = () => {
         context.stroke();
     }
 
+    const explanationDiv =
+        isLoading ? <div className={classes.explanation} >Loading...</div> :
+            error ? <div className={classes.explanation} >Fehler beim Laden</div> :
+                <div className={classes.explanation} dangerouslySetInnerHTML={{__html: explanation}}></div>
+
     return (
-        <div className={"background"}>
-            <Card className={"background"}>
-                <div className={"control"}>
+        <div className={classes.background}>
+            <Card className={classes.background}>
+                <div className={classes.control}>
                     <SearchTreeControl
                         drawCircle={drawCircle}
                         drawLine={drawLine}
@@ -78,13 +81,11 @@ const GraphVisualisation = () => {
                 </div>
                 <canvas
                     ref={canvasRef}
-                    className={"canvas"}
+                    className={classes.canvas}
                 />
             </Card>
-
-            <div className={"break"}></div>
-            {!error && <div className={"explanation"} dangerouslySetInnerHTML={{__html: expl}}></div>}
-            {error && <div className={"explanation"} >Fehler beim Laden</div>}
+            <div className={classes.break}></div>
+            {explanationDiv}
         </div>
     );
 };

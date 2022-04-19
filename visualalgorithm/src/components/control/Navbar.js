@@ -1,11 +1,11 @@
 import React from 'react';
-import './Navbar.css'
+import classes from './Navbar.module.css'
 
 const Navbar = () => {
     return (
-        <nav className={"topnavbar"}>
+        <nav className={classes.topnavbar}>
             <a href= "visualalgorithm/src/components/control/Navbar#home">Home</a>
-            <a href="algorithms" className="active">Algorithms</a>
+            <a href="algorithms" className={classes.active}>Algorithms</a>
             <a href= "visualalgorithm/src/components/control/Navbar#about">About me</a>
         </nav>
     );

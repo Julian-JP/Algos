@@ -1,5 +1,6 @@
 package com.example.algorithm.Controller;
 
+import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.SearchTrees.BinarySearchTree;
 import com.example.algorithm.SearchTrees.BinarySearchTreeService;
 import org.json.JSONException;
@@ -60,13 +61,13 @@ public class BinaryTreeController {
     }
 
     @GetMapping("bst/explanation")
-    public ResponseEntity<String> BSTgetExpl() {
+    public ResponseEntity<Explanation> BSTgetExpl() {
         logger.info("Requested Explanation BinarySearchtree");
         try {
             return new ResponseEntity<>(bstService.getExplanation(), HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("<h1>Failed to Load</h1>", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
