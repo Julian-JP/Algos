@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import classes from "./SearchTreeControl.module.css"
 import useFetch from "../../hooks/useFetch";
 
-const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
+const SearchTreeControl = ({canvas, type}) => {
 
     const [tree, setTree] = useState(null);
     const [addval, setAddval] = useState('');
@@ -23,7 +23,7 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
             if (undo != null) {
                 printTree(undo, 5, nodecolor, linecolor);
             } else {
-                clear();
+                canvas.clear();
             }
             setTree(undo);
         }
@@ -37,13 +37,14 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
             if (redo != null) {
                 printTree(redo, 5, nodecolor, linecolor);
             } else {
-                clear();
+                canvas.clear();
             }
             setTree(redo)
         }
     }
 
-    const onAdd = () => {
+    const onAdd = (event) => {
+        event.preventDefault();
         if (addval === '' ) return;
         if (tree == null) {
             const createTreeFromJSON = (response) => {
@@ -80,7 +81,8 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
         }
     }
 
-    const onRemove = () => {
+    const onRemove = (event) => {
+        event.preventDefault();
         if (removeval === '' || tree == null) return;
 
         const createTreeFromJSON = (response) => {
@@ -102,37 +104,35 @@ const SearchTreeControl = ({drawCircle, drawLine, clear, canvas, type}) => {
     }
 
     const printTree = (tree, depth, color, lcolor) => {
-        clear();
+        canvas.clear();
         if (tree != null) {
-            printSubTree(tree, 0, 0, canvas.current.width, canvas.current.height, depth, color, lcolor);
+            printSubTree(tree, 0, 0, canvas.width, canvas.height, depth, color, lcolor);
         }
     }
 
     const printSubTree = ({value, left, right}, x, y, width, height, depth, color, lcolor) => {
         if (left) {
-            drawLine(x + (width/2), y + (height/8), x + width/4, y + height/4, lcolor);
+            canvas.drawLine(x + (width/2), y + (height/8), x + width/4, y + height/4, lcolor);
             printSubTree(left, x+0, y+(height/8), (width/2), height, depth-1, color, lcolor);
         }
         if (right) {
-            drawLine(x + (width/2), y + (height/8), x + width/2 + width/4, y + height/4, lcolor);
+            canvas.drawLine(x + (width/2), y + (height/8), x + width/2 + width/4, y + height/4, lcolor);
             printSubTree(right, x+(width/2), y+(height/8), width/2, height, depth-1, color, lcolor);
         }
-        drawCircle(x + (width/2), y + (height/8), 20, color, value);
+        canvas.drawCircle(x + (width/2), y + (height/8), 20, color, value);
     }
 
     return (
         <div className={classes.control}>
-            <div className={classes.add}>
+            <form className={classes.add} onSubmit={onAdd}>
                 <input type="number" className={classes.addBox} onChange={(val) => setAddval(val.target.value)}/>
-                <br/>
-                <button onClick={onAdd} className={classes.addButton}>Add</button>
-            </div>
+                <button type="submit" className={classes.addButton}>Add</button>
+            </form>
             <div className={classes.break}></div>
-            <div className={classes.remove}>
+            <form className={classes.remove} onSubmit={onRemove}>
                 <input type={"number"} className={classes.removeBox} onChange={(val) => setRemoveval(val.target.value)}/>
-                <br/>
-                <button onClick={onRemove} className={classes.removeButton}>Remove</button>
-            </div>
+                <button type="submit" className={classes.removeButton}>Remove</button>
+            </form>
             <div className={classes.break}></div>
             <div className={classes.undo}>
                 <button className={classes.undobutton} onClick={onUndo}>Undo</button>
