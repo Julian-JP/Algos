@@ -1,5 +1,5 @@
 import './App.css';
-import Navbar from "./components/control/Navbar";
+import Navbar from "./components/UI/Navbar";
 import GraphVisualisation from "./components/Visualisation/GraphVisualisation";
 import React from "react";
 

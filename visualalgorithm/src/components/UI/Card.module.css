@@ -1,8 +1,0 @@
-.card {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    gap: 5px;
-    height: auto;
-}

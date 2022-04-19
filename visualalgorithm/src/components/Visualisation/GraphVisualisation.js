@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState} from 'react';
 import classes from "./GraphVisualisation.module.css"
 import SearchTreeControl from "../control/SearchTreeControl";
-import Card from '../UI/Card';
 import useFetch from "../../hooks/useFetch";
 import useCanvas from "../../hooks/useCanvas";
 
@@ -41,18 +40,16 @@ const GraphVisualisation = () => {
 
     return (
         <div className={classes.background}>
-            <Card className={classes.background}>
-                <div className={classes.control}>
-                    <SearchTreeControl
-                        canvas={canvas}
-                        type={'bst'}/>
-                </div>
+            <div className={classes.card}>
                 <canvas
                     ref={canvasRef}
                     className={classes.canvas}
                 />
-            </Card>
-            <div className={classes.break}></div>
+                    <SearchTreeControl
+                        canvas={canvas}
+                        type={'bst'}/>
+
+            </div>
             {explanationDiv}
         </div>
     );

@@ -124,21 +124,21 @@ const SearchTreeControl = ({canvas, type}) => {
 
     return (
         <div className={classes.control}>
-            <form className={classes.add} onSubmit={onAdd}>
-                <input type="number" className={classes.addBox} onChange={(val) => setAddval(val.target.value)}/>
-                <button type="submit" className={classes.addButton}>Add</button>
+            <form className={classes.card} onSubmit={onAdd}>
+                <input type="number" className={classes.inputBox} onChange={(val) => setAddval(val.target.value)}/>
+                <button type="submit" className={classes.buttonAddRemove}>Add</button>
             </form>
             <div className={classes.break}></div>
-            <form className={classes.remove} onSubmit={onRemove}>
-                <input type={"number"} className={classes.removeBox} onChange={(val) => setRemoveval(val.target.value)}/>
-                <button type="submit" className={classes.removeButton}>Remove</button>
+            <form className={classes.card} onSubmit={onRemove}>
+                <input type={"number"} className={classes.inputBox} onChange={(val) => setRemoveval(val.target.value)}/>
+                <button type="submit" className={classes.buttonAddRemove}>Remove</button>
             </form>
             <div className={classes.break}></div>
             <div className={classes.undo}>
-                <button className={classes.undobutton} onClick={onUndo}>Undo</button>
+                <button className={classes.buttonUndoRedo} onClick={onUndo}>Undo</button>
             </div>
             <div className={classes.redo}>
-                <button className={classes.redobutton} onClick={onRedo}>Redo</button>
+                <button className={classes.buttonUndoRedo} onClick={onRedo}>Redo</button>
             </div>
         </div>
     );
