@@ -1,29 +1,38 @@
 import useFetch from "../../../hooks/useFetch";
 import React, {useEffect, useState} from "react";
+import DropDownMenue from "../../UI/DropDownMenue";
+import classes from "./AlgorithmList.module.css";
+import AlgorithmInformation from "./AlgorithmInformation";
 
 const AlgorithmList = () => {
-    const [algorithmList, setAlgorithmList] = useState([]);
+    const [categoryList, setCategoryList] = useState([]);
     const {isLoading, error, sendRequest} = useFetch();
 
     useEffect(() => {
-        fetchAlogorithmList();
+        fetchCategories();
     }, []);
 
-    const fetchAlogorithmList = () => {
+    const fetchCategories = () => {
         const applyResponse = (response) => {
-            setAlgorithmList(response);
+            setCategoryList(response);
         }
 
         sendRequest({
-            url: 'http://localhost:8080/algos/SearchTreeAlogrithms',
+            url: 'http://localhost:8080/algos/AlgorithmCateogories',
             method: 'GET'
         }, applyResponse);
     }
 
-    const convertedAlgorithmList = algorithmList.map(elem => <li key={elem.id}>{elem.name}</li>);
+    const convertedAlgorithmList =
+        <ul className={classes.list}>
+            {categoryList.map(elem =>
+                <DropDownMenue key={elem.id} dropdownElements={
+                    elem.algorithmUrls.map(algo => <AlgorithmInformation url={algo} key={algo}/>)
+                }>{elem.name}</DropDownMenue>)}
+        </ul>;
 
     return <React.Fragment>
-        {!isLoading && !error && <ul>{convertedAlgorithmList}</ul>}
+        {!isLoading && !error && <div className={classes.card}>{convertedAlgorithmList}</div>}
         {isLoading && <div>Loading...</div>}
         {!isLoading && <div>{error}</div>}
     </React.Fragment>

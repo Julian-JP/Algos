@@ -21,7 +21,6 @@ const useFetch = () => {
                applyData(data);
 
            } catch (err) {
-               console.log(err.message)
                setError(err.message || 'Somethiong went wrong!');
            }
            setIsLoading(false);
