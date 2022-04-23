@@ -82,7 +82,6 @@ const SearchTreeControl = ({canvas, type}) => {
     }
 
     const onRemove = (event) => {
-        console.log(type)
         event.preventDefault();
         if (removeval === '' || tree == null) return;
 
