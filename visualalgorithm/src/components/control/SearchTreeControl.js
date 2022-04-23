@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import classes from "./SearchTreeControl.module.css"
 import useFetch from "../../hooks/useFetch";
 
@@ -18,7 +18,7 @@ const SearchTreeControl = ({canvas, type}) => {
     const onUndo = () => {
         if (undoStack.length > 0) {
             const undo = undoStack.pop();
-            setUndoStack(undoStack.splice(0,undoStack.length));
+            setUndoStack(undoStack.splice(0, undoStack.length));
             setRedoStack((old) => [...old, tree]);
             if (undo != null) {
                 printTree(undo, 5, nodecolor, linecolor);
@@ -45,7 +45,7 @@ const SearchTreeControl = ({canvas, type}) => {
 
     const onAdd = (event) => {
         event.preventDefault();
-        if (addval === '' ) return;
+        if (addval === '') return;
         if (tree == null) {
             const createTreeFromJSON = (response) => {
                 setTree(response.root);
@@ -54,7 +54,7 @@ const SearchTreeControl = ({canvas, type}) => {
                 printTree(response.root, 5, nodecolor, linecolor);
             }
             sendRequest({
-                url: 'http://localhost:8080/algos/'+ type +'/new/' + addval,
+                url: 'http://localhost:8080/algos/' + type + '/new/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ const SearchTreeControl = ({canvas, type}) => {
             }
 
             sendRequest({
-                url: 'http://localhost:8080/algos/'+ type +'/insert/' + addval,
+                url: 'http://localhost:8080/algos/' + type + '/insert/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ const SearchTreeControl = ({canvas, type}) => {
             }
         }
         sendRequest({
-            url: 'http://localhost:8080/algos/'+ type +'/remove/' + removeval,
+            url: 'http://localhost:8080/algos/' + type + '/remove/' + removeval,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -113,14 +113,14 @@ const SearchTreeControl = ({canvas, type}) => {
 
     const printSubTree = ({value, left, right}, x, y, width, height, depth, color, lcolor) => {
         if (left) {
-            canvas.drawLine(x + (width/2), y + (height/8), x + width/4, y + height/4, lcolor);
-            printSubTree(left, x+0, y+(height/8), (width/2), height, depth-1, color, lcolor);
+            canvas.drawLine(x + (width / 2), y + (height / 8), x + width / 4, y + height / 4, lcolor);
+            printSubTree(left, x + 0, y + (height / 8), (width / 2), height, depth - 1, color, lcolor);
         }
         if (right) {
-            canvas.drawLine(x + (width/2), y + (height/8), x + width/2 + width/4, y + height/4, lcolor);
-            printSubTree(right, x+(width/2), y+(height/8), width/2, height, depth-1, color, lcolor);
+            canvas.drawLine(x + (width / 2), y + (height / 8), x + width / 2 + width / 4, y + height / 4, lcolor);
+            printSubTree(right, x + (width / 2), y + (height / 8), width / 2, height, depth - 1, color, lcolor);
         }
-        canvas.drawCircle(x + (width/2), y + (height/8), 20, color, value);
+        canvas.drawCircle(x + (width / 2), y + (height / 8), 20, color, value);
     }
 
     return (
