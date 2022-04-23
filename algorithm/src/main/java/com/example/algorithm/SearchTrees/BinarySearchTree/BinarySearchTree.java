@@ -1,4 +1,4 @@
-package com.example.algorithm.SearchTrees;
+package com.example.algorithm.SearchTrees.BinarySearchTree;
 
 import lombok.Getter;
 import lombok.Setter;

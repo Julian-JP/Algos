@@ -1,4 +1,4 @@
-package com.example.algorithm.SearchTrees;
+package com.example.algorithm.SearchTrees.BinarySearchTree;
 
 import com.example.algorithm.Explanation.Explanation;
 import org.json.JSONException;

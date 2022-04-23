@@ -4,7 +4,7 @@ import DropDownMenue from "../../UI/DropDownMenue";
 import classes from "./AlgorithmList.module.css";
 import AlgorithmInformation from "./AlgorithmInformation";
 
-const AlgorithmList = () => {
+const AlgorithmList = props => {
     const [categoryList, setCategoryList] = useState([]);
     const {isLoading, error, sendRequest} = useFetch();
 
@@ -27,7 +27,7 @@ const AlgorithmList = () => {
         <ul className={classes.list}>
             {categoryList.map(elem =>
                 <DropDownMenue key={elem.id} dropdownElements={
-                    elem.algorithmUrls.map(algo => <AlgorithmInformation url={algo} key={algo}/>)
+                    elem.algorithmUrls.map(algo => <AlgorithmInformation url={algo} key={algo} changeDisplayedContent={props.changeDisplayedContent} />)
                 }>{elem.name}</DropDownMenue>)}
         </ul>;
 

@@ -20,10 +20,12 @@ public class AlgorithmListController {
 
     public class Algorithm {
         private String name;
+        private String url;
         private long id;
 
-        public Algorithm(String name, long id) {
+        public Algorithm(String name, String url, long id) {
             this.name = name;
+            this.url = url;
             this.id = id;
         }
 
@@ -33,6 +35,10 @@ public class AlgorithmListController {
 
         public long getId() {
             return id;
+        }
+
+        public String getUrl() {
+            return url;
         }
     }
 
@@ -80,21 +86,21 @@ public class AlgorithmListController {
     @GetMapping("/BinarySearchTree")
     public ResponseEntity<Algorithm> getBinarySearchTree() {
         logger.info("Requested information to: Binary Search Tree");
-        Algorithm binarySearchTree = new Algorithm("Binary Search Tree", 0);
+        Algorithm binarySearchTree = new Algorithm("Binary Search Tree", "BinarySearchTree", 0);
         return new ResponseEntity<>(binarySearchTree, HttpStatus.OK);
     }
 
     @GetMapping("/AVLTree")
     public ResponseEntity<Algorithm> getAVLTree() {
         logger.info("Requested information to: AVL Tree");
-        Algorithm avlTree = new Algorithm("AVL Tree", 1);
+        Algorithm avlTree = new Algorithm("AVL Tree", "AVLTree", 1);
         return new ResponseEntity<>(avlTree, HttpStatus.OK);
     }
 
     @GetMapping("/RedBlackTree")
     public ResponseEntity<Algorithm> getRedBlackTree() {
         logger.info("Requested information to: Red-Black Tree");
-        Algorithm RedBlackTree = new Algorithm("Red-Black Tree", 2);
+        Algorithm RedBlackTree = new Algorithm("Red-Black Tree", "RedBlackTree", 2);
         return new ResponseEntity<>(RedBlackTree, HttpStatus.OK);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.algorithm.SearchTrees;
+package com.example.algorithm.SearchTrees.BinarySearchTree;
 
 public class BSTNode {
     private int value;

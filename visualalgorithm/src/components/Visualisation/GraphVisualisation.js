@@ -4,7 +4,7 @@ import SearchTreeControl from "../control/SearchTreeControl";
 import useFetch from "../../hooks/useFetch";
 import useCanvas from "../../hooks/useCanvas";
 
-const GraphVisualisation = () => {
+const GraphVisualisation = props => {
 
     const [explanation, setExplanation] = useState(null);
     const {isLoading, error, sendRequest} = useFetch();
@@ -27,7 +27,7 @@ const GraphVisualisation = () => {
             setExplanation(response.explanation);
         };
         sendRequest({
-            url: 'http://localhost:8080/algos/bst/explanation',
+            url: `http://localhost:8080/algos/${props.url}/explanation`,
             method: 'GET'
         }, applyResponse);
 
@@ -47,7 +47,7 @@ const GraphVisualisation = () => {
                 />
                     <SearchTreeControl
                         canvas={canvas}
-                        type={'bst'}/>
+                        type={props.url}/>
 
             </div>
             {explanationDiv}

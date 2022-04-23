@@ -1,8 +1,8 @@
 package com.example.algorithm.Controller;
 
 import com.example.algorithm.Explanation.Explanation;
-import com.example.algorithm.SearchTrees.BinarySearchTree;
-import com.example.algorithm.SearchTrees.BinarySearchTreeService;
+import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
+import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTreeService;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class BinaryTreeController {
     }
 
     @PostMapping(
-            path = "/bst/insert/{value}"
+            path = "/BinarySearchTree/insert/{value}"
     )
     public ResponseEntity<BinarySearchTree> BSTinsert(@PathVariable("value") int value, RequestEntity<String> tree) {
         try {
@@ -41,7 +41,7 @@ public class BinaryTreeController {
     }
 
     @PostMapping(
-            path = "/bst/remove/{value}",
+            path = "/BinarySearchTree/remove/{value}",
             produces = MediaType.APPLICATION_JSON_VALUE
         )
     public ResponseEntity<BinarySearchTree> BSTremove(@PathVariable("value") int value, RequestEntity<String> tree) {
@@ -54,13 +54,13 @@ public class BinaryTreeController {
         }
     }
 
-    @PostMapping("/bst/new/{value}")
+    @PostMapping("/BinarySearchTree/new/{value}")
     public ResponseEntity<BinarySearchTree> BSTcreate(@PathVariable("value") int value) {
         logger.info("New BinarySearchtree create-request: " + value);
         return new ResponseEntity<>(bstService.create(value), HttpStatus.OK);
     }
 
-    @GetMapping("bst/explanation")
+    @GetMapping("BinarySearchTree/explanation")
     public ResponseEntity<Explanation> BSTgetExpl() {
         logger.info("Requested Explanation BinarySearchtree");
         try {
