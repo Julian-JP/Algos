@@ -22,6 +22,7 @@ public class BinarySearchTreeController {
 
     private final BinarySearchTreeService bstService;
     private final Logger logger = LoggerFactory.getLogger(BinarySearchTreeController.class);
+
     @Autowired
     public BinarySearchTreeController(BinarySearchTreeService bstService) {
         this.bstService = bstService;
@@ -32,7 +33,7 @@ public class BinarySearchTreeController {
     )
     public ResponseEntity<BinarySearchTree> BSTinsert(@PathVariable("value") int value, RequestEntity<String> tree) {
         try {
-            logger.info("New BinarySearchtree insert-request: " + value + " in " +  tree);
+            logger.info("New BinarySearchtree insert-request: " + value + " in " + tree);
             return new ResponseEntity<>(bstService.insert(value, tree.getBody()), HttpStatus.OK);
         } catch (JSONException e) {
             logger.error("BinarySearchtree insert JSON failed: " + tree);
@@ -43,7 +44,7 @@ public class BinarySearchTreeController {
     @PostMapping(
             path = "/BinarySearchTree/remove/{value}",
             produces = MediaType.APPLICATION_JSON_VALUE
-        )
+    )
     public ResponseEntity<BinarySearchTree> BSTremove(@PathVariable("value") int value, RequestEntity<String> tree) {
         logger.info("New BinarySearchtree remove-request: " + value + " in " + tree.getBody());
         try {
