@@ -18,12 +18,12 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/algos")
 @CrossOrigin("*")
-public class BinaryTreeController {
+public class BinarySearchTreeController {
 
     private final BinarySearchTreeService bstService;
-    private final Logger logger = LoggerFactory.getLogger(BinaryTreeController.class);
+    private final Logger logger = LoggerFactory.getLogger(BinarySearchTreeController.class);
     @Autowired
-    public BinaryTreeController(BinarySearchTreeService bstService) {
+    public BinarySearchTreeController(BinarySearchTreeService bstService) {
         this.bstService = bstService;
     }
 
