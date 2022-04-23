@@ -7,8 +7,9 @@ const MainContent = () => {
     const [displayedContent, setDisplayedContent] = useState({type: 'algorithmlist'});
 
     return <React.Fragment>
-        {displayedContent.type === 'graphAlgorithm' && <GraphVisualisation changeDisplayedContent={setDisplayedContent} url={displayedContent.url}/>}
-        {displayedContent.type === 'algorithmlist' && <AlgorithmList changeDisplayedContent={setDisplayedContent} />}
+        {displayedContent.type === 'graphAlgorithm' &&
+            <GraphVisualisation changeDisplayedContent={setDisplayedContent} url={displayedContent.url}/>}
+        {displayedContent.type === 'algorithmlist' && <AlgorithmList changeDisplayedContent={setDisplayedContent}/>}
     </React.Fragment>
 }
 
