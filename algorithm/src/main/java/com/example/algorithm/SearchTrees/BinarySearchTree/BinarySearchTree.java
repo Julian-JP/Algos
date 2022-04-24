@@ -1,27 +1,25 @@
 package com.example.algorithm.SearchTrees.BinarySearchTree;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.algorithm.SearchTrees.SearchTree;
+import com.example.algorithm.SearchTrees.SearchTreeNode;
 
-public class BinarySearchTree {
+public class BinarySearchTree extends SearchTree {
 
-    @Getter @Setter private BSTNode root;
-
-    public BinarySearchTree(BSTNode root) {
-        this.root = root;
+    public BinarySearchTree(SearchTreeNode root) {
+        super(root);
     }
 
     public void add(int value) {
-        if (root != null) {
-            root.add(value);
+        if (getRoot() != null) {
+            getRoot().add(value);
         } else {
-            root = new BSTNode(value);
+            setRoot(new BSTNode(value));
         }
     }
 
     public void remove(int value) {
-        if (root != null) {
-            root = root.remove(value);
+        if (getRoot() != null) {
+            setRoot(getRoot().remove(value));
         }
     }
 }

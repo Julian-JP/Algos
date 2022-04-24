@@ -1,88 +1,71 @@
 package com.example.algorithm.SearchTrees.BinarySearchTree;
 
-public class BSTNode {
-    private int value;
-    private BSTNode left;
-    private BSTNode right;
+import com.example.algorithm.SearchTrees.SearchTreeNode;
 
+public class BSTNode extends SearchTreeNode {
     public BSTNode(int value) {
-        this.value = value;
+        super(value);
     }
 
     public BSTNode(int value, BSTNode left, BSTNode right) {
-        this.value = value;
-        this.left = left;
-        this.right = right;
+        super(value, left, right);
     }
 
+    @Override
     public void add(int newValue) {
-        if (newValue < value) {
-            if (left != null) {
-                left.add(newValue);
+        if (newValue < getValue()) {
+            if (getLeft() != null) {
+                getLeft().add(newValue);
             } else {
-                left = new BSTNode(newValue);
+                setLeft(new BSTNode(newValue));
             }
-        } else if (newValue > value) {
-            if (right != null) {
-                right.add(newValue);
+        } else if (newValue > getValue()) {
+            if (getRight() != null) {
+                getRight().add(newValue);
             } else {
-                right = new BSTNode(newValue);
+                setRight(new BSTNode(newValue));
             }
         }
     }
 
+    @Override
     public BSTNode remove(int newValue) {
-        if (newValue < value) {
-            left = left != null ? left.remove(newValue) : null;
+        if (newValue < getValue()) {
+            setLeft(getLeft() != null ? getLeft().remove(newValue) : null);
             return this;
-        } else if (newValue > value) {
-            right = right != null ? right.remove(newValue) : null;
+        } else if (newValue > getValue()) {
+            setRight(getRight() != null ? getRight().remove(newValue) : null);
             return this;
         }
 
-        if (left == null) {
-            return right;
-        } else if (right == null) {
-            return left;
+        if (getLeft() == null) {
+            return getRight();
+        } else if (getRight() == null) {
+            return getLeft();
         }
 
         BSTNode prev = this;
-        BSTNode next = right;
+        BSTNode next = getRight();
         for (;;) {
-            if (next.left != null) {
+            if (next.getLeft() != null) {
                 prev = next;
-                next = next.left;
+                next = next.getLeft();
             } else {
-                if (prev.left == next) prev.left = next.right;
-                else prev.right = next.right;
-                next.left = left;
-                next.right = right;
+                if (prev.getLeft() == next) setLeft(next.getRight());
+                else setRight(next.getRight());
+                next.setLeft(getLeft());
+                next.setRight(getRight());
                 return next;
             }
         }
     }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
+    @Override
     public BSTNode getLeft() {
-        return left;
+        return (BSTNode) super.getLeft();
     }
 
-    public void setLeft(BSTNode left) {
-        this.left = left;
-    }
-
+    @Override
     public BSTNode getRight() {
-        return right;
-    }
-
-    public void setRight(BSTNode right) {
-        this.right = right;
+        return (BSTNode) super.getRight();
     }
 }

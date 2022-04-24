@@ -135,10 +135,10 @@ const SearchTreeControl = ({canvas, type}) => {
             </form>
             <div className={classes.break}></div>
             <div className={classes.undo}>
-                <button className={classes.buttonUndoRedo} onClick={onUndo}>Undo</button>
+                <button className={classes.buttonUndoRedo} onClick={onUndo} disabled={undoStack.length === 0}>Undo</button>
             </div>
             <div className={classes.redo}>
-                <button className={classes.buttonUndoRedo} onClick={onRedo}>Redo</button>
+                <button className={classes.buttonUndoRedo} onClick={onRedo} disabled={redoStack.length === 0}>Redo</button>
             </div>
         </div>
     );
