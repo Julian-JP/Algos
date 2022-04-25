@@ -1,5 +1,6 @@
 package com.example.algorithm.SearchTrees.BinarySearchTree;
 
+import com.example.algorithm.SearchTrees.AVLTree.AVLTreeNode;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 
 public class BSTNode extends SearchTreeNode {
@@ -32,35 +33,38 @@ public class BSTNode extends SearchTreeNode {
     }
 
     @Override
-    public BSTNode remove(int newValue) {
-        if (newValue < getValue()) {
-            setLeft(getLeft() != null ? getLeft().remove(newValue) : null);
-            return this;
-        } else if (newValue > getValue()) {
-            setRight(getRight() != null ? getRight().remove(newValue) : null);
-            return this;
-        }
-
-        if (getLeft() == null) {
+    public SearchTreeNode remove(int deleteValue) {
+        if (deleteValue < getValue()) {
+            if (getLeft() != null) {
+                setLeft(getLeft().remove(deleteValue));
+            } else {
+                return this;
+            }
+        } else if (deleteValue > getValue()) {
+            if (getRight() != null) {
+                setRight(getRight().remove(deleteValue));
+            } else {
+                return this;
+            }
+            //Remove node
+        } else if (getLeft() == null) {
             return getRight();
         } else if (getRight() == null) {
             return getLeft();
+        } else {
+            setLeft(getLeft().findPrecesor(this));
         }
+        return this;
+    }
 
-        BSTNode prev = this;
-        BSTNode next = getRight();
-        for (;;) {
-            if (next.getLeft() != null) {
-                prev = next;
-                next = next.getLeft();
-            } else {
-                if (prev.getLeft() == next) setLeft(next.getRight());
-                else setRight(next.getRight());
-                next.setLeft(getLeft());
-                next.setRight(getRight());
-                return next;
-            }
+    private BSTNode findPrecesor(BSTNode root) {
+        if (this.getRight() != null) {
+            setRight(getRight().findPrecesor(root));
+        } else {
+            root.setValue(this.getValue());
+            return null;
         }
+        return this;
     }
     @Override
     public BSTNode getLeft() {

@@ -59,19 +59,19 @@ public class AVLTreeNode extends SearchTreeNode {
             return getLeft();
         } else {
             AVLTreeNode prev = this;
-            AVLTreeNode next = getRight();
-            for (;;) {
-                if (next.getLeft() != null) {
-                    prev = next;
-                    next = next.getLeft();
-                } else {
-                    if (prev.getLeft() == next) setLeft(next.getRight());
-                    else setRight(next.getRight());
-                    next.setLeft(getLeft());
-                    next.setRight(getRight());
-                    return next;
-                }
-            }
+            AVLTreeNode next = getLeft();
+            setLeft(getLeft().findPrecesor(this));
+        }
+        heightDifference = updateHeightDifferenze();
+        return balance();
+    }
+
+    private AVLTreeNode findPrecesor(AVLTreeNode root) {
+        if (this.getRight() != null) {
+            setRight(getRight().findPrecesor(root));
+        } else {
+            root.setValue(this.getValue());
+            return null;
         }
         return balance();
     }
