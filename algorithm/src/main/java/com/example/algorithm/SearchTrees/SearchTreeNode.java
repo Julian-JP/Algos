@@ -14,7 +14,7 @@ public abstract class SearchTreeNode {
         this.right = right;
     }
 
-    public abstract void add(int newValue);
+    public abstract SearchTreeNode add(int newValue);
 
     public abstract SearchTreeNode remove(int newValue);
 

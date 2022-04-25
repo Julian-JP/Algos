@@ -12,20 +12,23 @@ public class BSTNode extends SearchTreeNode {
     }
 
     @Override
-    public void add(int newValue) {
+    public BSTNode add(int newValue) {
         if (newValue < getValue()) {
             if (getLeft() != null) {
                 getLeft().add(newValue);
             } else {
                 setLeft(new BSTNode(newValue));
+                return this;
             }
         } else if (newValue > getValue()) {
             if (getRight() != null) {
                 getRight().add(newValue);
             } else {
                 setRight(new BSTNode(newValue));
+                return this;
             }
         }
+        return null;
     }
 
     @Override

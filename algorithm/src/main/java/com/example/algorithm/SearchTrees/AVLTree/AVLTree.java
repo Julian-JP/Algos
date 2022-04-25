@@ -10,11 +10,17 @@ public class AVLTree extends SearchTree {
 
     @Override
     public void add(int value) {
-
+        if (getRoot() == null) {
+            setRoot(new AVLTreeNode(value));
+        } else {
+            setRoot(getRoot().add(value));
+        }
     }
 
     @Override
     public void remove(int value) {
-
+        if (getRoot() != null) {
+            setRoot(getRoot().remove(value));
+        }
     }
 }

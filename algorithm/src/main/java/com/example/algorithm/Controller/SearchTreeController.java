@@ -37,7 +37,7 @@ public class SearchTreeController {
         try {
             SearchTreeService service = stringToService(treeType);
 
-            logger.info("New BinarySearchtree insert-request: " + value + " in " + tree);
+            logger.info("New BinarySearchtree insert-request: " + value + " in " + tree.getBody());
             return new ResponseEntity<>(service.insert(value, tree.getBody()), HttpStatus.OK);
         } catch (JSONException e) {
             logger.error("BinarySearchtree insert JSON failed: " + tree);
