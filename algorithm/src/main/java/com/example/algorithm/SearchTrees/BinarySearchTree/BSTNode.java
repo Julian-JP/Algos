@@ -1,6 +1,5 @@
 package com.example.algorithm.SearchTrees.BinarySearchTree;
 
-import com.example.algorithm.SearchTrees.AVLTree.AVLTreeNode;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 
 public class BSTNode extends SearchTreeNode {
@@ -52,14 +51,14 @@ public class BSTNode extends SearchTreeNode {
         } else if (getRight() == null) {
             return getLeft();
         } else {
-            setLeft(getLeft().findPrecesor(this));
+            setLeft(getLeft().changeWithPredecessor(this));
         }
         return this;
     }
 
-    private BSTNode findPrecesor(BSTNode root) {
+    private BSTNode changeWithPredecessor(BSTNode root) {
         if (this.getRight() != null) {
-            setRight(getRight().findPrecesor(root));
+            setRight(getRight().changeWithPredecessor(root));
         } else {
             root.setValue(this.getValue());
             return null;
