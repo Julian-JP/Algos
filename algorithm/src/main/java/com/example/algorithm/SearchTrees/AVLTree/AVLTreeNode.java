@@ -34,7 +34,6 @@ public class AVLTreeNode extends SearchTreeNode {
                 setRight(new AVLTreeNode(newValue));
             }
         }
-        heightDifference = updateHeightDifferenze();
         return balance();
     }
 
@@ -62,7 +61,6 @@ public class AVLTreeNode extends SearchTreeNode {
             AVLTreeNode next = getLeft();
             setLeft(getLeft().findPrecesor(this));
         }
-        heightDifference = updateHeightDifferenze();
         return balance();
     }
 
@@ -77,6 +75,7 @@ public class AVLTreeNode extends SearchTreeNode {
     }
 
     private AVLTreeNode balance() {
+        heightDifference = updateHeightDifferenze();
         if (heightDifference == 2 && getRight().heightDifference > 0) {
             return rotateLeft();
         } else if (heightDifference == -2 && getLeft().heightDifference < 0) {
