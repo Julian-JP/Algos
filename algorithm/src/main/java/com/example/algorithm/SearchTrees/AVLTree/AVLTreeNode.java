@@ -57,8 +57,6 @@ public class AVLTreeNode extends SearchTreeNode {
         } else if (getRight() == null) {
             return getLeft();
         } else {
-            AVLTreeNode prev = this;
-            AVLTreeNode next = getLeft();
             setLeft(getLeft().findPrecesor(this));
         }
         return balance();
