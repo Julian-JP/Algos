@@ -14,19 +14,9 @@ public class BSTNode extends SearchTreeNode {
     @Override
     public BSTNode add(int newValue) {
         if (newValue < getValue()) {
-            if (getLeft() != null) {
-                getLeft().add(newValue);
-            } else {
-                setLeft(new BSTNode(newValue));
-                return this;
-            }
+            return addInLeftSubTree(newValue);
         } else if (newValue > getValue()) {
-            if (getRight() != null) {
-                getRight().add(newValue);
-            } else {
-                setRight(new BSTNode(newValue));
-                return this;
-            }
+            return addInRightSubTree(newValue);
         }
         return null;
     }
@@ -66,6 +56,24 @@ public class BSTNode extends SearchTreeNode {
             setLeft(getLeft().changeWithPredecessor(this));
             return this;
         }
+    }
+
+    private BSTNode addInLeftSubTree(int newValue) {
+        if (getLeft() != null) {
+            getLeft().add(newValue);
+        } else {
+            setLeft(new BSTNode(newValue));
+        }
+        return this;
+    }
+
+    private BSTNode addInRightSubTree(int newValue) {
+        if (getRight() != null) {
+            getRight().add(newValue);
+        } else {
+            setRight(new BSTNode(newValue));
+        }
+        return this;
     }
 
     private BSTNode changeWithPredecessor(BSTNode root) {
