@@ -34,26 +34,38 @@ public class BSTNode extends SearchTreeNode {
     @Override
     public SearchTreeNode remove(int deleteValue) {
         if (deleteValue < getValue()) {
-            if (getLeft() != null) {
-                setLeft(getLeft().remove(deleteValue));
-            } else {
-                return this;
-            }
+            return removeInLeftSubTree(deleteValue);
         } else if (deleteValue > getValue()) {
-            if (getRight() != null) {
-                setRight(getRight().remove(deleteValue));
-            } else {
-                return this;
-            }
+            return removeInRightSubTree(deleteValue);
             //Remove node
-        } else if (getLeft() == null) {
+        } else {
+            return removeThisNode();
+        }
+    }
+
+    private BSTNode removeInLeftSubTree(int deleteValue) {
+        if (getLeft() != null) {
+            setLeft(getLeft().remove(deleteValue));
+        }
+        return this;
+    }
+
+    private BSTNode removeInRightSubTree(int deleteValue) {
+        if (getRight() != null) {
+            setRight(getRight().remove(deleteValue));
+        }
+        return this;
+    }
+
+    private BSTNode removeThisNode() {
+        if (getLeft() == null) {
             return getRight();
         } else if (getRight() == null) {
             return getLeft();
         } else {
             setLeft(getLeft().changeWithPredecessor(this));
+            return this;
         }
-        return this;
     }
 
     private BSTNode changeWithPredecessor(BSTNode root) {
@@ -61,7 +73,7 @@ public class BSTNode extends SearchTreeNode {
             setRight(getRight().changeWithPredecessor(root));
         } else {
             root.setValue(this.getValue());
-            return null;
+            return getLeft();
         }
         return this;
     }
