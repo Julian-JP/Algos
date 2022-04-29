@@ -64,18 +64,18 @@ public class AVLTreeNode extends SearchTreeNode {
     private AVLTreeNode changeWithPredecessor(AVLTreeNode root) {
         if (this.getRight() != null) {
             setRight(getRight().changeWithPredecessor(root));
+            return balance();
         } else {
             root.setValue(this.getValue());
-            return null;
+            return this.getLeft();
         }
-        return balance();
     }
 
     private AVLTreeNode balance() {
         heightDifference = updateHeightDifferenze();
-        if (heightDifference == 2 && getRight().heightDifference > 0) {
+        if (heightDifference == 2 && getRight().heightDifference >= 0) {
             return rotateLeft();
-        } else if (heightDifference == -2 && getLeft().heightDifference < 0) {
+        } else if (heightDifference == -2 && getLeft().heightDifference <= 0) {
             return rotateRight();
         } else if (heightDifference == 2 && getRight().heightDifference < 0) {
             return rotateRightLeft();
