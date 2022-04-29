@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/algos")
+@RequestMapping("/algos/SearchTrees")
 @CrossOrigin("*")
 public class SearchTreeController {
 
@@ -42,6 +42,9 @@ public class SearchTreeController {
         } catch (JSONException e) {
             logger.error("BinarySearchtree insert JSON failed: " + tree);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ServiceNotFoundException e) {
+            logger.error("SearchTree insert failed: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -57,13 +60,22 @@ public class SearchTreeController {
         } catch (JSONException e) {
             logger.error("BinarySearchtree remove JSON failed: " + tree);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ServiceNotFoundException e) {
+            logger.error("SearchTree insert failed: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/{tree}/new/{value}")
     public ResponseEntity<SearchTree> BSTcreate(@PathVariable("value") int value, @PathVariable("tree") String treeType) {
         logger.info("New BinarySearchtree create-request: " + value);
-        SearchTreeService service = stringToService(treeType);
+        SearchTreeService service = null;
+        try {
+            service = stringToService(treeType);
+        } catch (ServiceNotFoundException e) {
+            logger.error("SearchTree insert failed: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(service.create(value), HttpStatus.OK);
     }
 
@@ -76,14 +88,17 @@ public class SearchTreeController {
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ServiceNotFoundException e) {
+            logger.error("SearchTree insert failed: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    private SearchTreeService stringToService(String service) {
+    private SearchTreeService stringToService(String service) throws ServiceNotFoundException {
         switch (service) {
             case "BinarySearchTree": return bstService;
             case "AVLTree": return avlService;
-            default: return bstService;
+            default: throw new ServiceNotFoundException("Service: " + service + " Not Found");
         }
     }
 }

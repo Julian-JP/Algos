@@ -16,7 +16,7 @@ const AlgorithmInformation = props => {
         }
 
         sendRequest({
-            url: `http://localhost:8080/algos${props.url}`,
+            url: `http://localhost:8080/algos/all${props.url}`,
             method: 'GET'
         }, applyResponse);
     }

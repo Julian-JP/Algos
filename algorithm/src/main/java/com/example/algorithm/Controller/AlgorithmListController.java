@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/algos")
+@RequestMapping("/algos/all")
 @CrossOrigin("*")
 public class AlgorithmListController {
     private final Logger logger = LoggerFactory.getLogger(AlgorithmListController.class);
@@ -76,9 +76,9 @@ public class AlgorithmListController {
     public ResponseEntity<List<Category>> getCategories() {
         logger.info("Requested list of all Categories of Algorithms");
         List<Category> categories = new ArrayList<>();
-        String[] searchTreeAlgos = {"/BinarySearchTree", "/AVLTree", "/RedBlackTree"};
-        String[] heapAlgos = {"/MinHeap", "/FibonacciHeap"};
-        String[] shortestPathAlgos = {"/BFS", "/DFS", "/AStar"};
+        String[] searchTreeAlgos = {"/SearchTrees/BinarySearchTree", "/SearchTrees/AVLTree", "/SearchTrees/RedBlackTree"};
+        String[] heapAlgos = {"/Heaps/BinaryHeap", "/Heaps/FibonacciHeap"};
+        String[] shortestPathAlgos = {"/ShortestPath/BFS", "/ShortestPath/DFS", "/ShortestPath/AStar"};
         Category searchTrees = new Category("Searchtrees", searchTreeAlgos, 0);
         Category minHeap = new Category("Heaps", heapAlgos, 1);
         Category shortestPath = new Category("Shortest Path", shortestPathAlgos, 2);
@@ -89,31 +89,31 @@ public class AlgorithmListController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @GetMapping("/BinarySearchTree")
+    @GetMapping("/SearchTrees/BinarySearchTree")
     public ResponseEntity<Algorithm> getBinarySearchTree() {
         logger.info("Requested information to: Binary Search Tree");
-        Algorithm binarySearchTree = new Algorithm("Binary Search Tree", "BinarySearchTree", "binarytree",0);
+        Algorithm binarySearchTree = new Algorithm("Binary Search Tree", "SearchTrees/BinarySearchTree", "binarytree",0);
         return new ResponseEntity<>(binarySearchTree, HttpStatus.OK);
     }
 
-    @GetMapping("/AVLTree")
+    @GetMapping("/SearchTrees/AVLTree")
     public ResponseEntity<Algorithm> getAVLTree() {
         logger.info("Requested information to: AVL Tree");
-        Algorithm avlTree = new Algorithm("AVL Tree", "AVLTree", "binarytree", 1);
+        Algorithm avlTree = new Algorithm("AVL Tree", "SearchTrees/AVLTree", "binarytree", 1);
         return new ResponseEntity<>(avlTree, HttpStatus.OK);
     }
 
-    @GetMapping("/RedBlackTree")
+    @GetMapping("/SearchTrees/RedBlackTree")
     public ResponseEntity<Algorithm> getRedBlackTree() {
         logger.info("Requested information to: Red-Black Tree");
-        Algorithm RedBlackTree = new Algorithm("Red-Black Tree", "RedBlackTree", "binarytree", 2);
-        return new ResponseEntity<>(RedBlackTree, HttpStatus.OK);
+        Algorithm redBlackTree = new Algorithm("Red-Black Tree", "SearchTrees/RedBlackTree", "binarytree", 2);
+        return new ResponseEntity<>(redBlackTree, HttpStatus.OK);
     }
 
-    @GetMapping("/BFS")
-    public ResponseEntity<Algorithm> getBFS() {
-        logger.info("Requested information to: BFS");
-        Algorithm BFS = new Algorithm("Breadth-first search", "BFS", "graph", 1);
-        return new ResponseEntity<>(BFS, HttpStatus.OK);
+    @GetMapping("/Heaps/BinaryHeap")
+    public ResponseEntity<Algorithm> getBinaryHeap() {
+        logger.info("Requested information to: BinaryHeap");
+        Algorithm binaryHeap = new Algorithm("Binary Min-Heap", "Heaps/BinaryHeap", "binarytree", 0);
+        return new ResponseEntity<>(binaryHeap, HttpStatus.OK);
     }
 }

@@ -18,7 +18,7 @@ const AlgorithmList = props => {
         }
 
         sendRequest({
-            url: 'http://localhost:8080/algos/AlgorithmCateogories',
+            url: 'http://localhost:8080/algos/all/AlgorithmCateogories',
             method: 'GET'
         }, applyResponse);
     }
