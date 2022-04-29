@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import classes from "./GraphVisualisation.module.css"
-import SearchTreeControl from "../control/SearchTreeControl";
 import useFetch from "../../hooks/useFetch";
 import useCanvas from "../../hooks/useCanvas";
+import ControlSelector from "../control/ControlSelector";
 
 const GraphVisualisation = props => {
 
@@ -34,8 +34,8 @@ const GraphVisualisation = props => {
     }, [sendRequest]);
 
     const explanationDiv =
-        isLoading ? <div className={classes.explanation} >Loading...</div> :
-            error ? <div className={classes.explanation} >Fehler beim Laden</div> :
+        isLoading ? <div className={classes.explanation}>Loading...</div> :
+            error ? <div className={classes.explanation}>Fehler beim Laden</div> :
                 <div className={classes.explanation} dangerouslySetInnerHTML={{__html: explanation}}></div>
 
     return (
@@ -45,10 +45,11 @@ const GraphVisualisation = props => {
                     ref={canvasRef}
                     className={classes.canvas}
                 />
-                    <SearchTreeControl
-                        canvas={canvas}
-                        type={props.url}/>
-
+                <ControlSelector
+                    canvas={canvas}
+                    url={props.url}
+                    type={props.displayedType}
+                />
             </div>
             {explanationDiv}
         </div>

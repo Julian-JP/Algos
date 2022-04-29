@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import classes from "./SearchTreeControl.module.css"
+import classes from "./SearchTreeControl.module.css";
 import useFetch from "../../hooks/useFetch";
+import InputWithSubmit from "../UI/InputWithSubmit";
 
 const SearchTreeControl = ({canvas, type}) => {
 
@@ -123,15 +124,13 @@ const SearchTreeControl = ({canvas, type}) => {
     }
 
     return (
-        <div className={classes.control}>
+        <React.Fragment>
             <form className={classes.card} onSubmit={onAdd}>
-                <input type="number" className={classes.inputBox} onChange={(val) => setAddval(val.target.value)}/>
-                <button type="submit" className={classes.buttonAddRemove}>Add</button>
+                <InputWithSubmit type="number" onChange={(val) => setAddval(val.target.value)} btnLabel="Add" />
             </form>
             <div className={classes.break}></div>
             <form className={classes.card} onSubmit={onRemove}>
-                <input type={"number"} className={classes.inputBox} onChange={(val) => setRemoveval(val.target.value)}/>
-                <button type="submit" className={classes.buttonAddRemove}>Remove</button>
+                <InputWithSubmit type={"number"} onChange={(val) => setRemoveval(val.target.value)} btnLabel="Remove"/>
             </form>
             <div className={classes.break}></div>
             <div className={classes.undo}>
@@ -140,7 +139,7 @@ const SearchTreeControl = ({canvas, type}) => {
             <div className={classes.redo}>
                 <button className={classes.buttonUndoRedo} onClick={onRedo} disabled={redoStack.length === 0}>Redo</button>
             </div>
-        </div>
+        </React.Fragment>
     );
 };
 

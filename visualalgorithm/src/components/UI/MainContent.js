@@ -4,12 +4,12 @@ import AlgorithmList from "../control/AlgorithmList/AlgorithmList";
 
 const MainContent = () => {
 
-    const [displayedContent, setDisplayedContent] = useState({type: 'algorithmlist'});
+    const [displayedContent, setDisplayedContent] = useState({displayed: 'algorithmlist'});
 
     return <React.Fragment>
-        {displayedContent.type === 'graphAlgorithm' &&
-            <GraphVisualisation changeDisplayedContent={setDisplayedContent} url={displayedContent.url}/>}
-        {displayedContent.type === 'algorithmlist' && <AlgorithmList changeDisplayedContent={setDisplayedContent}/>}
+        {displayedContent.displayed === 'graph' &&
+            <GraphVisualisation changeDisplayedContent={setDisplayedContent} url={displayedContent.url} displayedType={displayedContent.graphType}/>}
+        {displayedContent.displayed === 'algorithmlist' && <AlgorithmList changeDisplayedContent={setDisplayedContent}/>}
     </React.Fragment>
 }
 

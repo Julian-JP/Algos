@@ -13,8 +13,6 @@ import java.nio.file.Files;
 @Service
 public class BinarySearchTreeService extends SearchTreeService {
 
-
-
     public BinarySearchTree insert(int value, String tree) throws JSONException {
         BinarySearchTree bst = convJSON(tree);
         bst.add(value);
@@ -47,10 +45,8 @@ public class BinarySearchTreeService extends SearchTreeService {
         BSTNode left = null;
         BSTNode right = null;
 
-
         if (root.optJSONObject("left") != null) left = convNodeJSON(root.getString("left"));
         if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
-
 
         int value = root.getInt("value");
 

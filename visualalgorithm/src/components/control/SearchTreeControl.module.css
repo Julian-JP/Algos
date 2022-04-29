@@ -1,39 +1,6 @@
-.control {
-    padding: 0 10px;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-    width: 26%;
-    max-width: 350px;
-    border-radius: 0 15px 15px 0;
-    background-color: lightgray;
-}
-
 .card {
     width: 70%;
     height: 15%;
-}
-
-.inputBox {
-    width: 80%;
-    padding-left: 10%;
-    padding-right: 10%;
-    margin: 0;
-    border: none;
-    border-radius: 15px 15px 0 0;
-    height: min(50%, 50px);
-    font-size: 100%;
-    text-align: center;
-}
-
-.buttonAddRemove {
-    width: 100%;
-    border-radius: 0 0 15px 15px;
-    border: none;
-    height: min(50%, 50px);
-    font-size: min(1.2vw, 25px);
 }
 
 .buttonAddRemove:active {

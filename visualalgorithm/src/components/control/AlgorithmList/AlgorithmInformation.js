@@ -12,7 +12,7 @@ const AlgorithmInformation = props => {
 
     const fetchAlogrithmInformation = () => {
         const applyResponse = (response) => {
-            setAlgorithmInformation({name: response.name, url: response.url});
+            setAlgorithmInformation({name: response.name, url: response.url, type: response.type});
         }
 
         sendRequest({
@@ -22,7 +22,7 @@ const AlgorithmInformation = props => {
     }
 
     const handleDisplayedContentChange = () => {
-        props.changeDisplayedContent({type: "graphAlgorithm", url: algorithmInformation.url});
+        props.changeDisplayedContent({displayed: "graph", graphType: algorithmInformation.type, url: algorithmInformation.url});
     }
 
     const information = isLoading ? <div className={classes.card}>{"Loading..."}</div> :
