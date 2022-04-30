@@ -1,6 +1,8 @@
 package com.example.algorithm.Controller;
 
 import com.example.algorithm.Heaps.BinaryHeap;
+import com.example.algorithm.Heaps.BinaryHeapNode;
+import com.example.algorithm.Heaps.BinaryHeapResponse;
 import com.example.algorithm.Heaps.BinaryHeapService;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -25,14 +27,14 @@ public class HeapController {
     @PostMapping(
             path = "/{heap}/insert/{value}"
     )
-    public ResponseEntity<BinaryHeap> insert(@PathVariable("value") int value, @PathVariable("heap") String heapType, RequestEntity<String> heap) {
+    public ResponseEntity<BinaryHeapResponse> insert(@PathVariable("value") int value, @PathVariable("heap") String heapType, RequestEntity<String> heap) {
         try {
             BinaryHeapService service = stringToService(heapType);
 
-            logger.info("New BinarySearchtree insert-request: " + value + " in " + heap.getBody());
+            logger.info("New Heap insert-request: " + value + " in " + heap.getBody());
             return new ResponseEntity<>(service.insert(value, heap.getBody()), HttpStatus.OK);
         } catch (JSONException e) {
-            logger.error("BinarySearchtree insert JSON failed: " + heap);
+            logger.error("Heap insert JSON failed: " + heap);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
             logger.error("Heap insert failed: " + e.getMessage());
@@ -41,8 +43,8 @@ public class HeapController {
     }
 
     @PostMapping("/{heap}/new/{value}")
-    public ResponseEntity<BinaryHeap> BSTcreate(@PathVariable("value") int value, @PathVariable("heap") String heapType) {
-        logger.info("New BinarySearchtree create-request: " + value);
+    public ResponseEntity<BinaryHeapResponse> BSTcreate(@PathVariable("value") int value, @PathVariable("heap") String heapType) {
+        logger.info("New Heap create-request: " + value);
         BinaryHeapService service = null;
         try {
             service = stringToService(heapType);

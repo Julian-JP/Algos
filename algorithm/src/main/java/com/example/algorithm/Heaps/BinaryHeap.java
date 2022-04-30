@@ -17,7 +17,7 @@ public class BinaryHeap {
         heap.add(newValue);
     }
 
-    public Integer getLowest() {
+    public Integer getMinimum() {
         if (heap.size() != 0) {
             int lowestValue = heap.get(0);
             if (heap.size() == 1) {
@@ -59,7 +59,9 @@ public class BinaryHeap {
                     layerNext.add(node.getRight());
                 }
             }
+            ArrayList<BinaryHeapNode> temp = layerCurrent;
             layerCurrent = layerNext;
+            layerNext = temp;
             layerNext.clear();
         }
     }

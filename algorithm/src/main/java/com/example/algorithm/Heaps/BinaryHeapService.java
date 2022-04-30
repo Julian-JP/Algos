@@ -7,14 +7,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class BinaryHeapService {
 
-    public BinaryHeap insert(int value, String heap) throws JSONException {
+    public BinaryHeapResponse insert(int value, String heap) throws JSONException {
         BinaryHeap binaryHeap = convJSON(heap);
         binaryHeap.add(value);
-        return binaryHeap;
+        return new BinaryHeapResponse(binaryHeap.getRoot());
     }
 
-    public BinaryHeap create(int value) {
-        return new BinaryHeap(new BinaryHeapNode(value, null, null));
+    public BinaryHeapResponse create(int value) {
+        return new BinaryHeapResponse(new BinaryHeapNode(value, null, null));
+    }
+
+    public BinaryHeapResponse getMinimum(String heap) throws JSONException {
+        BinaryHeap binaryHeap = convJSON(heap);
+        binaryHeap.getMinimum();
+        return new BinaryHeapResponse(binaryHeap.getRoot());
     }
 
     private BinaryHeap convJSON(String json) throws JSONException {
