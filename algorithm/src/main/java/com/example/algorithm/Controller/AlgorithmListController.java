@@ -113,7 +113,7 @@ public class AlgorithmListController {
     @GetMapping("/Heaps/BinaryHeap")
     public ResponseEntity<Algorithm> getBinaryHeap() {
         logger.info("Requested information to: BinaryHeap");
-        Algorithm binaryHeap = new Algorithm("Binary Min-Heap", "Heaps/BinaryHeap", "binarytree", 0);
+        Algorithm binaryHeap = new Algorithm("Binary Min-Heap", "Heaps/BinaryHeap", "binaryheap", 0);
         return new ResponseEntity<>(binaryHeap, HttpStatus.OK);
     }
 }

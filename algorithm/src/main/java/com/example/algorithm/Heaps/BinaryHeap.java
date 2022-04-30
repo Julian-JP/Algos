@@ -15,6 +15,7 @@ public class BinaryHeap {
 
     public void add(int newValue) {
         heap.add(newValue);
+        siftUp(heap.size()-1);
     }
 
     public Integer getMinimum() {
@@ -45,9 +46,12 @@ public class BinaryHeap {
     }
 
     private void fromHeapObj(BinaryHeapNode root) {
+        heap.clear();
+        if (root == null) {
+            return;
+        }
         ArrayList<BinaryHeapNode> layerCurrent = new ArrayList<>();
         ArrayList<BinaryHeapNode> layerNext = new ArrayList<>();
-        heap.clear();
         layerCurrent.add(root);
         while (!layerCurrent.isEmpty()) {
             for (BinaryHeapNode node : layerCurrent) {
@@ -67,7 +71,13 @@ public class BinaryHeap {
     }
 
     private void siftUp(int index) {
-       // while (index != 0 && )
+        int parentIndex = calcParentIndex(index);
+       if (index != 0 && heap.get(index) < heap.get(parentIndex)) {
+           int temp = heap.get(index);
+           heap.set(index, heap.get(parentIndex));
+           heap.set(parentIndex, temp);
+           siftUp(parentIndex);
+       }
     }
 
     private void siftDown(int index) {
@@ -80,13 +90,13 @@ public class BinaryHeap {
         if (heap.get(smallestChild) < heap.get(index)) {
             int temp = heap.get(index);
             heap.set(index, heap.get(smallestChild));
-            heap.set(smallestChild, heap.get(index));
+            heap.set(smallestChild, temp);
             siftDown(smallestChild);
         }
     }
 
     private boolean isLeaf(int index) {
-        return ((index + 1) * 2) - 1 < heap.size();
+        return !(((index + 1) * 2) - 1 < heap.size());
     }
 
     private int smallestDirectChildren(int index) {

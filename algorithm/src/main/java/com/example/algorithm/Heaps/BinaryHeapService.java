@@ -25,6 +25,9 @@ public class BinaryHeapService {
 
     private BinaryHeap convJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
+        if (root.getString("root") == "null") {
+            return new BinaryHeap(null);
+        }
         return new BinaryHeap(convNodeJSON(root.getString("root")));
     }
 

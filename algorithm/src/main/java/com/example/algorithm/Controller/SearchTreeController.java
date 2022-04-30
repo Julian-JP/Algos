@@ -61,7 +61,7 @@ public class SearchTreeController {
             logger.error("BinarySearchtree remove JSON failed: " + tree);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
-            logger.error("SearchTree insert failed: " + e.getMessage());
+            logger.error("SearchTree remove failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -86,10 +86,10 @@ public class SearchTreeController {
             SearchTreeService service = stringToService(treeType);
             return new ResponseEntity<>(service.getExplanation(), HttpStatus.OK);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("SearchTree explanation failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
-            logger.error("SearchTree insert failed: " + e.getMessage());
+            logger.error("SearchTree explanation failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

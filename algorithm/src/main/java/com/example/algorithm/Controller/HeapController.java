@@ -4,10 +4,13 @@ import com.example.algorithm.Heaps.BinaryHeap;
 import com.example.algorithm.Heaps.BinaryHeapNode;
 import com.example.algorithm.Heaps.BinaryHeapResponse;
 import com.example.algorithm.Heaps.BinaryHeapService;
+import com.example.algorithm.SearchTrees.SearchTree;
+import com.example.algorithm.SearchTrees.SearchTreeService;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +41,24 @@ public class HeapController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
             logger.error("Heap insert failed: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(
+            path = "/{tree}/remove",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<BinaryHeapResponse> BSTremove(@PathVariable("tree") String treeType, RequestEntity<String> tree) {
+        logger.info("New Heap remove-request: " + tree.getBody());
+        try {
+            BinaryHeapService service = stringToService(treeType);
+            return new ResponseEntity<>(service.getMinimum(tree.getBody()), HttpStatus.OK);
+        } catch (JSONException e) {
+            logger.error("Heap remove JSON failed: " + tree);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ServiceNotFoundException e) {
+            logger.error("Heap remove failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
