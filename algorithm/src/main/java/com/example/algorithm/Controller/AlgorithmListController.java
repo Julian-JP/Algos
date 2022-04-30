@@ -77,7 +77,7 @@ public class AlgorithmListController {
         logger.info("Requested list of all Categories of Algorithms");
         List<Category> categories = new ArrayList<>();
         String[] searchTreeAlgos = {"/SearchTrees/BinarySearchTree", "/SearchTrees/AVLTree", "/SearchTrees/RedBlackTree"};
-        String[] heapAlgos = {"/Heaps/BinaryHeap", "/Heaps/FibonacciHeap"};
+        String[] heapAlgos = {"/Heaps/BinaryHeap"};
         String[] shortestPathAlgos = {"/ShortestPath/BFS", "/ShortestPath/DFS", "/ShortestPath/AStar"};
         Category searchTrees = new Category("Searchtrees", searchTreeAlgos, 0);
         Category minHeap = new Category("Heaps", heapAlgos, 1);
@@ -115,5 +115,26 @@ public class AlgorithmListController {
         logger.info("Requested information to: BinaryHeap");
         Algorithm binaryHeap = new Algorithm("Binary Min-Heap", "Heaps/BinaryHeap", "binaryheap", 0);
         return new ResponseEntity<>(binaryHeap, HttpStatus.OK);
+    }
+
+    @GetMapping("/ShortestPath/BFS")
+    public ResponseEntity<Algorithm> getBFS() {
+        logger.info("Requested information to: Breadth-First Search");
+        Algorithm bfs = new Algorithm("Breadth-First Search", "/ShortestPath/BFS", "graph", 0);
+        return new ResponseEntity<>(bfs, HttpStatus.OK);
+    }
+
+    @GetMapping("/ShortestPath/DFS")
+    public ResponseEntity<Algorithm> getDFS() {
+        logger.info("Requested information to: Depth-First Search");
+        Algorithm dfs = new Algorithm("Depth-First Search", "/ShortestPath/DFS", "graph", 1);
+        return new ResponseEntity<>(dfs, HttpStatus.OK);
+    }
+
+    @GetMapping("/ShortestPath/AStar")
+    public ResponseEntity<Algorithm> getAStar() {
+        logger.info("Requested information to: Depth-First Search");
+        Algorithm astar = new Algorithm("A* Search", "/ShortestPath/AStar", "graph", 1);
+        return new ResponseEntity<>(astar, HttpStatus.OK);
     }
 }
