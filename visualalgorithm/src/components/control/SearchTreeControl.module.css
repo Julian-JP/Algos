@@ -3,39 +3,6 @@
     height: 15%;
 }
 
-.buttonAddRemove:active {
-    background-color: #a2a2a2;
-}
-
-.buttonUndoRedo {
-    width: 100%;
-    height: 100%;
-    border-radius: 15px;
-    border: none;
-    font-size: 1.2vw;;
-    font-size: min(1.2vw, 25px);
-}
-
-.buttonUndoRedo:active {
-    background-color: #a2a2a2;
-}
-
 .break {
     width: 100%;
-}
-
-.undo {
-    width: 45%;
-    height: min(10%, 50px);
-    margin-top: 10%;
-    padding-right: 5%;
-    padding-bottom: 5%;
-}
-
-.redo {
-    width: 45%;
-    height: min(10%, 50px);
-    margin-top: 10%;
-    padding-left: 5%;
-    padding-bottom: 5%;
 }

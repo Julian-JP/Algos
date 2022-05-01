@@ -1,8 +1,13 @@
 package com.example.algorithm.Heaps;
 
+import com.example.algorithm.Explanation.Explanation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 public class BinaryHeapService {
@@ -21,6 +26,11 @@ public class BinaryHeapService {
         BinaryHeap binaryHeap = convJSON(heap);
         binaryHeap.getMinimum();
         return new BinaryHeapResponse(binaryHeap.getRoot());
+    }
+
+    public Explanation getExplanation() throws IOException {
+        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/binaryHeap.txt").toPath()));
+        return new Explanation(explanation);
     }
 
     private BinaryHeap convJSON(String json) throws JSONException {

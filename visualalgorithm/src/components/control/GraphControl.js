@@ -1,6 +1,7 @@
 import React from "react";
 import InputWithSubmit from "../UI/InputWithSubmit";
 import classes from "./GraphControl.module.css";
+import UndRedoFields from "../UI/UndRedoFields";
 
 const GraphControl = (props) => {
     return (

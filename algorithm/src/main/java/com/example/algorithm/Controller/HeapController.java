@@ -1,5 +1,6 @@
 package com.example.algorithm.Controller;
 
+import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Heaps.BinaryHeap;
 import com.example.algorithm.Heaps.BinaryHeapNode;
 import com.example.algorithm.Heaps.BinaryHeapResponse;
@@ -14,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/algos/Heaps")
@@ -74,6 +77,21 @@ public class HeapController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(service.create(value), HttpStatus.OK);
+    }
+
+    @GetMapping("/{heap}/explanation")
+    public ResponseEntity<Explanation> BSTgetExpl(@PathVariable("heap") String heapType) {
+        logger.info("Requested Explanation Heap");
+        try {
+            BinaryHeapService service = stringToService(heapType);
+            return new ResponseEntity<>(service.getExplanation(), HttpStatus.OK);
+        } catch (IOException e) {
+            logger.error("Heap explanation failed: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (ServiceNotFoundException e) {
+            logger.error("Heap explanation failed: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     private BinaryHeapService stringToService(String service) throws ServiceNotFoundException {

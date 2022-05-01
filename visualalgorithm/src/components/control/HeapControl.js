@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import classes from "./HeapControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import InputWithSubmit from "../UI/InputWithSubmit";
+import UndRedoFields from "../UI/UndRedoFields";
 
 const HeapControl = ({canvas, type}) => {
 
-    const [tree, setTree] = useState(null);
+    const [heap, setHeap] = useState(null);
     const [addval, setAddval] = useState('');
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
@@ -15,43 +16,24 @@ const HeapControl = ({canvas, type}) => {
     const nodecolor = 'blue';
     const linecolor = 'black';
 
-    const onUndo = () => {
-        if (undoStack.length > 0) {
-            const undo = undoStack.pop();
-            setUndoStack(undoStack.splice(0, undoStack.length));
-            setRedoStack((old) => [...old, tree]);
-            if (undo != null) {
-                printTree(undo, 5, nodecolor, linecolor);
-            } else {
-                canvas.clear();
-            }
-            setTree(undo);
+    const handleNewPrint = (heap) => {
+        if (heap != null) {
+            printHeap(heap, 5, nodecolor, linecolor);
+        } else {
+            canvas.clear();
         }
-    }
-
-    const onRedo = () => {
-        if (redoStack.length > 0) {
-            const redo = redoStack.pop();
-            setRedoStack(redoStack.splice(0, redoStack.length));
-            setUndoStack((old) => [...old, tree]);
-            if (redo != null) {
-                printTree(redo, 5, nodecolor, linecolor);
-            } else {
-                canvas.clear();
-            }
-            setTree(redo)
-        }
+        setHeap(heap);
     }
 
     const onAdd = (event) => {
         event.preventDefault();
         if (addval === '') return;
-        if (tree == null) {
-            const createTreeFromJSON = (response) => {
-                setTree(response.root);
+        if (heap == null) {
+            const createHeapFromJSON = (response) => {
+                setHeap(response.root);
                 setUndoStack((old) => [...old, null]);
                 setRedoStack([]);
-                printTree(response.root, 5, nodecolor, linecolor);
+                printHeap(response.root, 5, nodecolor, linecolor);
             }
             sendRequest({
                 url: 'http://localhost:8080/algos/' + type + '/new/' + addval,
@@ -59,15 +41,15 @@ const HeapControl = ({canvas, type}) => {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }, createTreeFromJSON);
+            }, createHeapFromJSON);
         } else {
-            const createTreeFromJSON = (response) => {
-                if (JSON.stringify(tree) !== JSON.stringify(response.root)) {
-                    setUndoStack((old) => [...old, tree]);
+            const createHeapFromJSON = (response) => {
+                if (JSON.stringify(heap) !== JSON.stringify(response.root)) {
+                    setUndoStack((old) => [...old, heap]);
                     setRedoStack([]);
                 }
-                setTree(response.root);
-                printTree(response.root, 5, nodecolor, linecolor);
+                setHeap(response.root);
+                printHeap(response.root, 5, nodecolor, linecolor);
             }
 
             sendRequest({
@@ -76,20 +58,20 @@ const HeapControl = ({canvas, type}) => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: {root: tree}
-            }, createTreeFromJSON);
+                body: {root: heap}
+            }, createHeapFromJSON);
         }
     }
 
     const onRemove = (event) => {
         event.preventDefault();
 
-        const createTreeFromJSON = (response) => {
-            if (tree != null && JSON.stringify(tree) !== JSON.stringify(response.root)) {
-                setUndoStack((old) => [...old, tree]);
+        const createHeapFromJSON = (response) => {
+            if (heap != null && JSON.stringify(heap) !== JSON.stringify(response.root)) {
+                setUndoStack((old) => [...old, heap]);
                 setRedoStack([]);
-                setTree(response.root);
-                printTree(response.root, 5, nodecolor, linecolor);
+                setHeap(response.root);
+                printHeap(response.root, 5, nodecolor, linecolor);
             }
         }
         sendRequest({
@@ -98,25 +80,25 @@ const HeapControl = ({canvas, type}) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: {root: tree}
-        }, createTreeFromJSON);
+            body: {root: heap}
+        }, createHeapFromJSON);
     }
 
-    const printTree = (tree, depth, color, lcolor) => {
+    const printHeap = (tree, depth, color, lcolor) => {
         canvas.clear();
         if (tree != null) {
-            printSubTree(tree, 0, 0, canvas.width, canvas.height, depth, color, lcolor);
+            printSubHeap(tree, 0, 0, canvas.width, canvas.height, depth, color, lcolor);
         }
     }
 
-    const printSubTree = ({value, left, right}, x, y, width, height, depth, color, lcolor) => {
+    const printSubHeap = ({value, left, right}, x, y, width, height, depth, color, lcolor) => {
         if (left) {
             canvas.drawLine(x + (width / 2), y + (height / 8), x + width / 4, y + height / 4, lcolor);
-            printSubTree(left, x + 0, y + (height / 8), (width / 2), height, depth - 1, color, lcolor);
+            printSubHeap(left, x + 0, y + (height / 8), (width / 2), height, depth - 1, color, lcolor);
         }
         if (right) {
             canvas.drawLine(x + (width / 2), y + (height / 8), x + width / 2 + width / 4, y + height / 4, lcolor);
-            printSubTree(right, x + (width / 2), y + (height / 8), width / 2, height, depth - 1, color, lcolor);
+            printSubHeap(right, x + (width / 2), y + (height / 8), width / 2, height, depth - 1, color, lcolor);
         }
         canvas.drawCircle(x + (width / 2), y + (height / 8), 20, color, value);
     }
@@ -131,12 +113,14 @@ const HeapControl = ({canvas, type}) => {
                 <button type="submit" className={classes.remove}>Remove</button>
             </form>
             <div className={classes.break}></div>
-            <div className={classes.undo}>
-                <button className={classes.buttonUndoRedo} onClick={onUndo} disabled={undoStack.length === 0}>Undo</button>
-            </div>
-            <div className={classes.redo}>
-                <button className={classes.buttonUndoRedo} onClick={onRedo} disabled={redoStack.length === 0}>Redo</button>
-            </div>
+            <UndRedoFields
+                currentDrawing={heap}
+                undoStackState={[undoStack, setUndoStack]}
+                redoStackState={[redoStack, setRedoStack]}
+                undoDisable={undoStack.length === 0}
+                redoDisable={redoStack.length === 0}
+                handleNewPrint={handleNewPrint}
+            />
         </React.Fragment>
     );
 };

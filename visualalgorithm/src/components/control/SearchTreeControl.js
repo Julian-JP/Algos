@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import classes from "./SearchTreeControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import InputWithSubmit from "../UI/InputWithSubmit";
+import UndRedoFields from "../UI/UndRedoFields";
 
 const SearchTreeControl = ({canvas, type}) => {
 
@@ -16,32 +17,13 @@ const SearchTreeControl = ({canvas, type}) => {
     const nodecolor = 'blue';
     const linecolor = 'black';
 
-    const onUndo = () => {
-        if (undoStack.length > 0) {
-            const undo = undoStack.pop();
-            setUndoStack(undoStack.splice(0, undoStack.length));
-            setRedoStack((old) => [...old, tree]);
-            if (undo != null) {
-                printTree(undo, 5, nodecolor, linecolor);
-            } else {
-                canvas.clear();
-            }
-            setTree(undo);
+    const handleNewPrint = (newTree) => {
+        if (newTree != null) {
+            printTree(newTree, 5, nodecolor, linecolor);
+        } else {
+            canvas.clear();
         }
-    }
-
-    const onRedo = () => {
-        if (redoStack.length > 0) {
-            const redo = redoStack.pop();
-            setRedoStack(redoStack.splice(0, redoStack.length));
-            setUndoStack((old) => [...old, tree]);
-            if (redo != null) {
-                printTree(redo, 5, nodecolor, linecolor);
-            } else {
-                canvas.clear();
-            }
-            setTree(redo)
-        }
+        setTree(newTree);
     }
 
     const onAdd = (event) => {
@@ -133,12 +115,14 @@ const SearchTreeControl = ({canvas, type}) => {
                 <InputWithSubmit type={"number"} onChange={(val) => setRemoveval(val.target.value)} btnLabel="Remove"/>
             </form>
             <div className={classes.break}></div>
-            <div className={classes.undo}>
-                <button className={classes.buttonUndoRedo} onClick={onUndo} disabled={undoStack.length === 0}>Undo</button>
-            </div>
-            <div className={classes.redo}>
-                <button className={classes.buttonUndoRedo} onClick={onRedo} disabled={redoStack.length === 0}>Redo</button>
-            </div>
+            <UndRedoFields
+                currentDrawing={tree}
+                undoStackState={[undoStack, setUndoStack]}
+                redoStackState={[redoStack, setRedoStack]}
+                undoDisable={undoStack.length === 0}
+                redoDisable={redoStack.length === 0}
+                handleNewPrint={handleNewPrint}
+            />
         </React.Fragment>
     );
 };
