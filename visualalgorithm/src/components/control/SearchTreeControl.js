@@ -26,7 +26,7 @@ const SearchTreeControl = ({canvas, type}) => {
         setTree(newTree);
     }
 
-    const onAdd = (event) => {
+    const handleAdd = (event) => {
         event.preventDefault();
         if (addval === '') return;
         if (tree == null) {
@@ -64,7 +64,7 @@ const SearchTreeControl = ({canvas, type}) => {
         }
     }
 
-    const onRemove = (event) => {
+    const handleRemove = (event) => {
         event.preventDefault();
         if (removeval === '' || tree == null) return;
 
@@ -107,11 +107,11 @@ const SearchTreeControl = ({canvas, type}) => {
 
     return (
         <React.Fragment>
-            <form className={classes.card} onSubmit={onAdd}>
+            <form className={classes.card} onSubmit={handleAdd}>
                 <InputWithSubmit type="number" onChange={(val) => setAddval(val.target.value)} btnLabel="Add" />
             </form>
             <div className={classes.break}></div>
-            <form className={classes.card} onSubmit={onRemove}>
+            <form className={classes.card} onSubmit={handleRemove}>
                 <InputWithSubmit type={"number"} onChange={(val) => setRemoveval(val.target.value)} btnLabel="Remove"/>
             </form>
             <div className={classes.break}></div>
