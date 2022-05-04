@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import classes from "./HeapControl.module.css";
 import useFetch from "../../hooks/useFetch";
-import InputWithSubmit from "../UI/InputWithSubmit";
+import InputWithSubmit from "../UI/Input/InputWithSubmit";
 import UndRedoFields from "../UI/UndRedoFields";
 
 const HeapControl = ({canvas, type}) => {

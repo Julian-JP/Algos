@@ -1,0 +1,56 @@
+.form {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-auto-rows: auto;
+    width: 100%
+}
+
+.inputBox {
+    box-sizing: border-box;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin: 0;
+    border: none;
+    border-radius: 0 0 0 0;
+    font-size: 100%;
+    text-align: center;
+}
+
+.inputBoxRightTop {
+    border-radius: 0 15px 0 0;
+    padding: 0 10% 0 0 ;
+}
+
+.inputBoxRight {
+    padding: 0 10% 0 0 ;
+}
+
+.inputBoxFullTop {
+    border-radius: 15px 15px 0 0;
+}
+
+.label {
+    padding: 0 0 0 10%;
+    border: none;
+    border-radius: 0 0 0 0;
+    font-size: 100%;
+    text-align: center;
+    background-color: white;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.labelTop {
+    border-radius: 15px 0 0 0}
+
+.button {
+    grid-row-start: 4;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    width: 100%;
+    border-radius: 0 0 15px 15px;
+    border: none;
+    height: min(2vw, 25px);
+    font-size: min(1.2vw, 25px);
+}

@@ -1,18 +1,15 @@
 import React, {useState} from "react";
-import InputWithSubmit from "../UI/InputWithSubmit";
+import InputWithSubmit from "../UI/Input/InputWithSubmit";
 import classes from "./GraphControl.module.css";
 import UndRedoFields from "../UI/UndRedoFields";
 import useFetch from "../../hooks/useFetch";
+import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
 const GraphControl = ({canvas, type}) => {
 
     const [{vertices, edges}, setGraph] = useState({
-        vertices:
-            [{x: 50, y: 50, color: 'blue', value: 10},
-                {x: 900, y: 50, color: 'red', value: 6},
-                {x: 50, y: 500, color: 'blue', value: 7},],
-        edges:
-            [[{color: "purple"}, {color: "black"}, {color: "green"}], [null, null, null], [null, null, null]]
+        vertices: [],
+        edges: []
     });
 
     const [addNode, setAddNode] = useState('');
@@ -33,24 +30,40 @@ const GraphControl = ({canvas, type}) => {
 
     const handleAddNode = (event) => {
         event.preventDefault();
+        console.log(addNode)
         if (addNode === '') return;
 
-        setGraph(({oldVertices, edges}) => {
-            return {[...oldVertices, {x: 100, y:500, color: "red", value: addNode}], null}
-        }
-        )
+        setGraph((graphOld) => {
+            let oldVertices = graphOld.vertices;
+            let oldEdges = graphOld.edges;
+
+            let newVertices = [...oldVertices, {
+                x: Math.floor(Math.random() * 1000),
+                y: 100,
+                color: "red",
+                value: addNode
+            }];
+            let edgesFromNewNode = [null, null];
+            for (let i = 0; i < oldEdges.length; i++) {
+                oldEdges[i].push(null);
+                edgesFromNewNode.push(null);
+            }
+
+            edgesFromNewNode = [...oldEdges, edgesFromNewNode];
+            printGraph(newVertices, edgesFromNewNode);
+            return {vertices: newVertices, edges: edgesFromNewNode}
+        });
     }
 
-    const printGraph = () => {
+    const printGraph = (vertices, edges) => {
         canvas.clear();
-        for (var i = 0; i < edges.length; i++) {
-            for (var j = 0; j < edges[i].length; j++) {
+        for (let i = 0; i < edges.length; i++) {
+            for (let j = 0; j < edges[i].length; j++) {
                 if (edges[i][j] !== null) {
                     canvas.drawLine(vertices[i].x, vertices[i].y, vertices[j].x, vertices[j].y, edges[i][j].color);
                 }
             }
         }
-
 
         for (let vertex of vertices) {
             canvas.drawCircle(vertex.x, vertex.y, 20, vertex.color, vertex.value);
@@ -59,9 +72,24 @@ const GraphControl = ({canvas, type}) => {
 
     return (
         <React.Fragment>
-            <form onClick={printGraph}>
-                <InputWithSubmit type="text" onChange={(val) => null} btnLabel="Add"/>
+            <form onSubmit={handleAddNode}>
+                <InputWithSubmit type="text" onChange={(val) => setAddNode(val.target.value)} btnLabel="Add"/>
             </form>
+            <div className={classes.break}/>
+            <MultidataInputWithSubmit
+                btnLabel={"Change"}
+                data={
+                    [{
+                        type: "number", onChange: () => {
+                        }, label: "X"
+                    }, {
+                        type: "number", onChange: () => {
+                        }, label: "Y"
+                    }, {
+                        type: "number", onChange: () => {
+                        }, label: "Color"
+                    }]
+                }/>
             <div className={classes.break}/>
             <form>
                 <InputWithSubmit type="text" onChange={(val) => null} btnLabel="Remove"/>
