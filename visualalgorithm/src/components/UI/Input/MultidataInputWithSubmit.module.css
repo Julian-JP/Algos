@@ -6,31 +6,34 @@
 }
 
 .inputBox {
-    box-sizing: border-box;
-    padding-left: 10%;
-    padding-right: 10%;
     margin: 0;
     border: none;
-    border-radius: 0 0 0 0;
     font-size: 100%;
     text-align: center;
+    padding: 2% 10% 2% 0;
 }
 
-.inputBoxRightTop {
+.inputBoxTopWithLabel {
     border-radius: 0 15px 0 0;
-    padding: 0 10% 0 0 ;
 }
 
-.inputBoxRight {
-    padding: 0 10% 0 0 ;
-}
-
-.inputBoxFullTop {
+.inputBoxTopNoLabel {
     border-radius: 15px 15px 0 0;
+    padding: 2% 10% 2% 10%;
+}
+
+
+.inputBoxWithLabel {
+    padding: 2% 10% 2% 10%;
+}
+
+.inputBoxNoLabel {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 .label {
-    padding: 0 0 0 10%;
+    padding: 2% 10% 2% 10%;
     border: none;
     border-radius: 0 0 0 0;
     font-size: 100%;
@@ -44,13 +47,11 @@
     border-radius: 15px 0 0 0}
 
 .button {
-    grid-row-start: 4;
-    grid-row-end: 4;
     grid-column-start: 1;
     grid-column-end: 3;
     width: 100%;
     border-radius: 0 0 15px 15px;
     border: none;
-    height: min(2vw, 25px);
+    height: min(2vw, 50px);
     font-size: min(1.2vw, 25px);
 }

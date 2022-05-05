@@ -3,27 +3,39 @@ import classes from "./MultidataInputWithSubmit.module.css";
 
 const MultidataInputWithSubmit = props => {
 
-    let input = [];
-
-    input.push(
-        <React.Fragment>
-            <label htmlFor={props.data[0].label}
-                   className={`${classes.label} ${classes.labelTop}`}>{props.data[0].label}</label>
-            <input id={props.data[0].label} key={props.data[0].label} type={props.data[0].type}
-                   className={`${classes.inputBox} ${props.data[0].label !== null ? classes.inputBoxRightTop : classes.inputBoxFullTop}`}
-                   onChange={props.data[0].onChange}/>
-        </React.Fragment>)
-
-    for (let i = 1; i < props.data.length; i++) {
-        input.push(
-            <React.Fragment>
-                <label htmlFor={props.data[i].label} className={classes.label}>{props.data[i].label}</label>
-                <input id={props.data[i].label} key={props.data[i].label} type={props.data[i].type}
-                       className={props.data[0].label !== null ? `${classes.inputBox} ${classes.inputBoxRight}` : classes.inputBox}
-                       onChange={props.data[i].onChange}/>
-            </React.Fragment>
-        );
-    }
+    const input = props.data.map((data, index) => {
+        if (index === 0 && data.noLabel) {
+            return (
+                <input type={data.type}
+                       key={data.label}
+                       className={`${classes.inputBox} ${classes.inputBoxTopNoLabel} ${classes.inputBoxNoLabel}`}
+                       onChange={data.onChange}/>
+            )
+        } else if (index === 0) {
+            return (
+                <React.Fragment key={data.label}>
+                    <label htmlFor={data.label} className={`${classes.label} ${classes.labelTop}`}>{data.label}</label>
+                    <input id={data.label} type={data.type}
+                           className={`${classes.inputBox} ${classes.inputBoxTopWithLabel}`}
+                           onChange={data.onChange}/>
+                </React.Fragment>
+            )
+        } else if (data.noLabel) {
+            return <input type={data.type}
+                   key={data.label}
+                   className={`${classes.inputBox} ${classes.inputBoxNoLabel}`}
+                   onChange={data.onChange}/>
+        } else {
+            return (
+                <React.Fragment key={data.label}>
+                    <label htmlFor={data.label} className={classes.label}>{data.label}</label>
+                    <input id={data.label} type={data.type}
+                           className={classes.inputBox}
+                           onChange={data.onChange}/>
+                </React.Fragment>
+            )
+        }
+    })
 
 
     return (

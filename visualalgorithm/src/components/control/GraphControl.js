@@ -72,14 +72,23 @@ const GraphControl = ({canvas, type}) => {
 
     return (
         <React.Fragment>
-            <form onSubmit={handleAddNode}>
-                <InputWithSubmit type="text" onChange={(val) => setAddNode(val.target.value)} btnLabel="Add"/>
-            </form>
+            <MultidataInputWithSubmit
+                btnLabel={"Add"}
+                data={
+                    [{
+                        type: "number", onChange: (event) => setAddNode(event.target.value), label: "Add", noLabel:true
+                    }]
+                }
+                onSubmit={handleAddNode}
+            />
             <div className={classes.break}/>
             <MultidataInputWithSubmit
                 btnLabel={"Change"}
                 data={
                     [{
+                        type: "text", onChange: () => {
+                        }, label: "Node"
+                    }, {
                         type: "number", onChange: () => {
                         }, label: "X"
                     }, {
@@ -91,9 +100,9 @@ const GraphControl = ({canvas, type}) => {
                     }]
                 }/>
             <div className={classes.break}/>
-            <form>
-                <InputWithSubmit type="text" onChange={(val) => null} btnLabel="Remove"/>
-            </form>
+            <MultidataInputWithSubmit
+                btnLabel={"Remove"}
+                data={[{type: "text", label: "Remove", onChange: (event) => setRemoveNode(event.target.value), noLabel: true}]} />
             <div className={classes.break}></div>
             <UndRedoFields
                 currentDrawing={{vertices, edges}}
