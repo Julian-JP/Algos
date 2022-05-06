@@ -1,6 +1,12 @@
-.card {
-    width: 70%;
-    height: 15%;
+.container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(1, auto);
+    grid-auto-rows: auto;
+    column-gap: 1%;
+    row-gap: 10px;
+    height: max-content;
+    min-height: 500px;
 }
 
 .buttonAddRemove:active {
@@ -46,4 +52,11 @@
     border: none;
     height: min(50%, 50px);
     font-size: min(1.2vw, 25px);
+}
+
+.undoRedo {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    padding: 0 10%;
+    box-sizing: border-box;
 }

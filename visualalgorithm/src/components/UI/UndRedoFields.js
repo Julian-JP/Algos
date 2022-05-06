@@ -25,14 +25,14 @@ const UndRedoFields = props => {
         }
     }
 
-    return <React.Fragment>
+    return <div className={props.className}>
         <div className={classes.undo}>
             <button className={classes.buttonUndoRedo} onClick={handleUndo} disabled={props.undoDisable}>Undo</button>
         </div>
         <div className={classes.redo}>
             <button className={classes.buttonUndoRedo} onClick={handleRedo} disabled={props.redoDisable}>Redo</button>
         </div>
-    </React.Fragment>
+    </div>
 }
 
 export default UndRedoFields;

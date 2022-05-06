@@ -3,6 +3,7 @@ import classes from "./SearchTreeControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import InputWithSubmit from "../UI/Input/InputWithSubmit";
 import UndRedoFields from "../UI/UndRedoFields";
+import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
 const SearchTreeControl = ({canvas, type}) => {
 
@@ -106,16 +107,29 @@ const SearchTreeControl = ({canvas, type}) => {
     }
 
     return (
-        <React.Fragment>
-            <form className={classes.card} onSubmit={handleAdd}>
-                <InputWithSubmit type="number" onChange={(val) => setAddval(val.target.value)} btnLabel="Add" />
-            </form>
-            <div className={classes.break}></div>
-            <form className={classes.card} onSubmit={handleRemove}>
-                <InputWithSubmit type={"number"} onChange={(val) => setRemoveval(val.target.value)} btnLabel="Remove"/>
-            </form>
-            <div className={classes.break}></div>
+        <div className={classes.container}>
+            <MultidataInputWithSubmit
+                className={classes.undoRedo}
+                onSubmit={handleAdd}
+                btnLabel={"Add"}
+                data={
+                    [{
+                        type: "number", onChange: (val) => setAddval(val.target.value), label: "add", noLabel: true
+                    }]
+                }
+            />
+            <MultidataInputWithSubmit
+                className={classes.undoRedo}
+                onSubmit={handleRemove}
+                btnLabel={"Remove"}
+                data={
+                    [{
+                        type: "number", onChange: (val) => setRemoveval(val.target.value), label: "remove", noLabel: true
+                    }]
+                }
+            />
             <UndRedoFields
+                className={classes.undoRedo}
                 currentDrawing={tree}
                 undoStackState={[undoStack, setUndoStack]}
                 redoStackState={[redoStack, setRedoStack]}
@@ -123,7 +137,7 @@ const SearchTreeControl = ({canvas, type}) => {
                 redoDisable={redoStack.length === 0}
                 handleNewPrint={handleNewPrint}
             />
-        </React.Fragment>
+        </div>
     );
 };
 

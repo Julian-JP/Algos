@@ -22,9 +22,9 @@ const MultidataInputWithSubmit = props => {
             )
         } else if (data.noLabel) {
             return <input type={data.type}
-                   key={data.label}
-                   className={`${classes.inputBox} ${classes.inputBoxNoLabel}`}
-                   onChange={data.onChange}/>
+                          key={data.label}
+                          className={`${classes.inputBox} ${classes.inputBoxNoLabel}`}
+                          onChange={data.onChange}/>
         } else {
             return (
                 <React.Fragment key={data.label}>
@@ -39,10 +39,12 @@ const MultidataInputWithSubmit = props => {
 
 
     return (
-        <form onSubmit={props.onSubmit} className={classes.form}>
-            {input}
-            <button type="submit" className={classes.button}>{props.btnLabel}</button>
-        </form>
+        <React.Fragment>
+            <form onSubmit={props.onSubmit} className={`${classes.form} ${props.className}`}>
+                {input}
+                <button type="submit" className={classes.button}>{props.btnLabel}</button>
+            </form>
+        </React.Fragment>
     )
 }
 

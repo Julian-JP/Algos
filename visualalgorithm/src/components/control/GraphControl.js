@@ -71,7 +71,7 @@ const GraphControl = ({canvas, type}) => {
     }
 
     return (
-        <React.Fragment>
+        <div className={classes.container}>
             <MultidataInputWithSubmit
                 btnLabel={"Add"}
                 data={
@@ -81,8 +81,11 @@ const GraphControl = ({canvas, type}) => {
                 }
                 onSubmit={handleAddNode}
             />
-            <div className={classes.break}/>
             <MultidataInputWithSubmit
+                btnLabel={"Remove"}
+                data={[{type: "text", label: "Remove", onChange: (event) => setRemoveNode(event.target.value), noLabel: true}]} />
+            <MultidataInputWithSubmit
+                className={classes.change}
                 btnLabel={"Change"}
                 data={
                     [{
@@ -99,12 +102,8 @@ const GraphControl = ({canvas, type}) => {
                         }, label: "Color"
                     }]
                 }/>
-            <div className={classes.break}/>
-            <MultidataInputWithSubmit
-                btnLabel={"Remove"}
-                data={[{type: "text", label: "Remove", onChange: (event) => setRemoveNode(event.target.value), noLabel: true}]} />
-            <div className={classes.break}></div>
             <UndRedoFields
+                className={classes.undoRedo}
                 currentDrawing={{vertices, edges}}
                 undoStackState={[undoStack, setUndoStack]}
                 redoStackState={[redoStack, setRedoStack]}
@@ -112,7 +111,7 @@ const GraphControl = ({canvas, type}) => {
                 redoDisable={redoStack.length === 0}
                 handleNewPrint={handleNewPrint}
             />
-        </React.Fragment>
+        </div>
     )
 }
 

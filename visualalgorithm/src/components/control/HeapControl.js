@@ -3,6 +3,7 @@ import classes from "./HeapControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import InputWithSubmit from "../UI/Input/InputWithSubmit";
 import UndRedoFields from "../UI/UndRedoFields";
+import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
 const HeapControl = ({canvas, type}) => {
 
@@ -104,16 +105,22 @@ const HeapControl = ({canvas, type}) => {
     }
 
     return (
-        <React.Fragment>
-            <form className={classes.card} onSubmit={onAdd}>
-                <InputWithSubmit type="number" onChange={(val) => setAddval(val.target.value)} btnLabel="Add" />
-            </form>
-            <div className={classes.break}></div>
-            <form className={classes.card} onSubmit={onRemove}>
+        <div className={classes.container}>
+            <MultidataInputWithSubmit
+                className={classes.undoRedo}
+                onSubmit={onAdd}
+                btnLabel={"Add"}
+                data={
+                    [{
+                        type: "number", onChange: (val) => setAddval(val.target.value), label: "add", noLabel: true
+                    }]
+                }
+            />
+            <form className={classes.undoRedo} onSubmit={onRemove}>
                 <button type="submit" className={classes.remove}>Remove</button>
             </form>
-            <div className={classes.break}></div>
             <UndRedoFields
+                className={classes.undoRedo}
                 currentDrawing={heap}
                 undoStackState={[undoStack, setUndoStack]}
                 redoStackState={[redoStack, setRedoStack]}
@@ -121,7 +128,7 @@ const HeapControl = ({canvas, type}) => {
                 redoDisable={redoStack.length === 0}
                 handleNewPrint={handleNewPrint}
             />
-        </React.Fragment>
+        </div>
     );
 };
 
