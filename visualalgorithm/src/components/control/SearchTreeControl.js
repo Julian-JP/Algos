@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import classes from "./SearchTreeControl.module.css";
 import useFetch from "../../hooks/useFetch";
-import InputWithSubmit from "../UI/Input/InputWithSubmit";
 import UndRedoFields from "../UI/UndRedoFields";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
@@ -124,7 +123,10 @@ const SearchTreeControl = ({canvas, type}) => {
                 btnLabel={"Remove"}
                 data={
                     [{
-                        type: "number", onChange: (val) => setRemoveval(val.target.value), label: "remove", noLabel: true
+                        type: "number",
+                        onChange: (val) => setRemoveval(val.target.value),
+                        label: "remove",
+                        noLabel: true
                     }]
                 }
             />

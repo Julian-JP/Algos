@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import classes from "./HeapControl.module.css";
 import useFetch from "../../hooks/useFetch";
-import InputWithSubmit from "../UI/Input/InputWithSubmit";
 import UndRedoFields from "../UI/UndRedoFields";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 

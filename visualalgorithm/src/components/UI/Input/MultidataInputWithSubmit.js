@@ -4,6 +4,24 @@ import classes from "./MultidataInputWithSubmit.module.css";
 const MultidataInputWithSubmit = props => {
 
     const input = props.data.map((data, index) => {
+        if (data.isArray && index === 0) {
+            const ret = data.map((dataElement, index) => {
+                if (index === 0) {
+                    return (
+                        <React.Fragment key={dataElement.label}>
+                            <label htmlFor={dataElement.label} className={`${classes.label} ${classes.labelTop}`}>{dataElement.label}</label>
+                            <input id={dataElement.label} type={dataElement.type}
+                                   className={`${classes.inputBox} ${classes.inputBoxTopWithLabel}`}
+                                   onChange={dataElement.onChange}/>
+                        </React.Fragment>
+                    )
+                }
+            });
+
+            
+        } else if (data.isArray) {
+
+        }
         if (index === 0 && data.noLabel) {
             return (
                 <input type={data.type}
