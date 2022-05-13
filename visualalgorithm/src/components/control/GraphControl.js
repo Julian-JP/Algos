@@ -53,23 +53,41 @@ const GraphControl = ({canvas, type}) => {
     }
 
     const handleRemoveNode = (event) => {
-        //TODO
         event.preventDefault();
+
+        let index = vertices.findIndex(elem => removeNode == elem.value);
+        if (index < 0) return;
+
         setUndoStack((old) => [...old, {vertices, edges}]);
         setRedoStack([]);
-        setGraph(({vertices, edges}) => {
-            vertices = vertices.filter(item => item.value != removeNode);
-            let edgesNew = new Array(edges.length -1);
-            for (let i=0; i<edges.length; i++) {
-                if (i != vertices.findIndex(vertex => vertex.value == removeNode)) {
-                    for (let j = 0; j < edges.length; j++) {
 
-                    }
+        setGraph(({vertices, edges}) => {
+            let newVertices = vertices.filter(item => item.value != removeNode);
+            let newEdges = removeIndex(index, edges);
+            let newGraph = {vertices: newVertices, edges: newEdges}
+
+            printGraph(newGraph.vertices, newGraph.edges);
+            return newGraph;
+        })
+    }
+
+    const removeIndex = (index, matrix) => {
+        let newMatrix = new Array(matrix.length - 1);
+        let oldIndex = 0;
+
+        for (let i = 0; i < newMatrix.length; i++) {
+            oldIndex++;
+            if (i == index) {
+                oldIndex++;
+            } else {
+                newMatrix[i] = new Array(matrix.length - 1);
+                for (let j = 0; j < newMatrix.length; j++) {
+                    newMatrix[i][j] = matrix[oldIndex][j > index ? j + 1 : j];
                 }
             }
-            printGraph(vertices, edges);
-            return {vertices, edges}
-        })
+        }
+
+        return newMatrix;
     }
 
     const printGraph = (vertices, edges) => {
