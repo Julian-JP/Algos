@@ -47,10 +47,10 @@ const GraphControl = ({type, setDisplayed}) => {
                 y: vertex.y,
                 fill: "red",
                 stroke: "black",
-                onMouseDown: handleMouseDown,
                 textFill: "black",
                 value: vertex.value,
-                draggable: true
+                draggable: true,
+                onClick: handleOnClick
             });
         }
 
@@ -96,6 +96,10 @@ const GraphControl = ({type, setDisplayed}) => {
         });
     }
 
+    const handleOnClick = (event) => {
+        console.log("Clicked")
+    }
+
     const handleRemoveNode = (event) => {
         event.preventDefault();
 
@@ -128,13 +132,6 @@ const GraphControl = ({type, setDisplayed}) => {
             oldIndex++;
         }
         return newMatrix;
-    }
-
-    const handleMouseDown = (event) => {
-        console.log(event.currentTarget.offsetLeft);
-        event.setConfig(old => {
-            return {...old, cx: event.pageX - 15, cy: event.pageY - 70}
-        })
     }
 
     return (<div className={classes.container}>

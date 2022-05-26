@@ -14,7 +14,7 @@ const SearchTreeControl = ({setDisplayed, type}) => {
 
     const {isLoading, error, sendRequest} = useFetch();
 
-    const nodecolor = 'blue';
+    const nodecolor = 'white';
     const linecolor = 'black';
 
     useEffect(() => {

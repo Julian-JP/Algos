@@ -59,6 +59,7 @@ const GraphVisualisation = props => {
                     stroke={item.stroke}
                     value={item.value}
                     draggable={item.draggable}
+                    onClick={item.onClick}
                 />
             }
             case "line": {
