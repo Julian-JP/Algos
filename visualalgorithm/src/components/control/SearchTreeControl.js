@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import classes from "./SearchTreeControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import UndRedoFields from "../UI/UndRedoFields";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
-const SearchTreeControl = ({canvas, type}) => {
+const SearchTreeControl = ({setDisplayed, type}) => {
 
     const [tree, setTree] = useState(null);
     const [addval, setAddval] = useState('');
@@ -17,13 +17,64 @@ const SearchTreeControl = ({canvas, type}) => {
     const nodecolor = 'blue';
     const linecolor = 'black';
 
-    const handleNewPrint = (newTree) => {
-        if (newTree != null) {
-            printTree(newTree, 5, nodecolor, linecolor);
-        } else {
-            canvas.clear();
+    useEffect(() => {
+        let display = [];
+        drawSubtree(tree, 1, display, nodecolor, linecolor, getDepth(tree), 0);
+        setDisplayed(display);
+    }, [tree]);
+
+    const drawSubtree = (tree, numElemInLine, display, color, lcolor, depth, curDepth) => {
+        if (tree === null) {
+            return;
         }
-        setTree(newTree);
+        if (tree.left) {
+            display.push({
+                type: "line",
+                x1: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
+                y1: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
+                x2: ((100 / (2 ** (curDepth + 1) + 1)) * ((numElemInLine * 2) - 1)) + "%",
+                y2: ((100 / (depth + 1)) * (curDepth + 2)) + "%",
+                stroke: lcolor
+            })
+            drawSubtree(tree.left, (numElemInLine * 2) - 1, display, color, lcolor, depth, curDepth + 1);
+        }
+        if (tree.right) {
+            display.push({
+                type: "line",
+                x1: ((100 / (2**curDepth + 1)) * numElemInLine) + "%",
+                y1: ((100 / (depth + 1)) * (curDepth+1)) + "%",
+                x2: ((100 / (2**(curDepth+1) + 1)) * (numElemInLine * 2)) + "%",
+                y2: ((100 / (depth + 1)) * (curDepth+2)) + "%",
+                stroke: lcolor
+            })
+            drawSubtree(tree.right, (numElemInLine * 2), display, color, lcolor, depth, curDepth + 1);
+        }
+
+        display.push({
+            type: "circle",
+            x: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
+            y: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
+            fill: color,
+            stroke: "black",
+            textFill: "black",
+            value: tree.value,
+            draggable: false
+        });
+    }
+
+    const getDepth = (tree) => {
+        if (tree === null) {
+            return 0;
+        }
+        let depth1 = 0;
+        let depth2 = 0;
+        if (tree.left) {
+            depth1 = getDepth(tree.left)
+        }
+        if (tree.right) {
+            depth2 = getDepth(tree.right);
+        }
+        return (depth1 > depth2 ? depth1 : depth2) + 1;
     }
 
     const handleAdd = (event) => {
@@ -34,7 +85,6 @@ const SearchTreeControl = ({canvas, type}) => {
                 setTree(response.root);
                 setUndoStack((old) => [...old, null]);
                 setRedoStack([]);
-                printTree(response.root, 5, nodecolor, linecolor);
             }
             sendRequest({
                 url: 'http://localhost:8080/algos/' + type + '/new/' + addval,
@@ -50,7 +100,6 @@ const SearchTreeControl = ({canvas, type}) => {
                     setRedoStack([]);
                 }
                 setTree(response.root);
-                printTree(response.root, 5, nodecolor, linecolor);
             }
 
             sendRequest({
@@ -73,7 +122,6 @@ const SearchTreeControl = ({canvas, type}) => {
                 setUndoStack((old) => [...old, tree]);
                 setRedoStack([]);
                 setTree(response.root);
-                printTree(response.root, 5, nodecolor, linecolor);
             }
         }
         sendRequest({
@@ -84,25 +132,6 @@ const SearchTreeControl = ({canvas, type}) => {
             },
             body: {root: tree}
         }, createTreeFromJSON);
-    }
-
-    const printTree = (tree, depth, color, lcolor) => {
-        canvas.clear();
-        if (tree != null) {
-            printSubTree(tree, 0, 0, canvas.width, canvas.height, depth, color, lcolor);
-        }
-    }
-
-    const printSubTree = ({value, left, right}, x, y, width, height, depth, color, lcolor) => {
-        if (left) {
-            canvas.drawLine(x + (width / 2), y + (height / 8), x + width / 4, y + height / 4, lcolor);
-            printSubTree(left, x + 0, y + (height / 8), (width / 2), height, depth - 1, color, lcolor);
-        }
-        if (right) {
-            canvas.drawLine(x + (width / 2), y + (height / 8), x + width / 2 + width / 4, y + height / 4, lcolor);
-            printSubTree(right, x + (width / 2), y + (height / 8), width / 2, height, depth - 1, color, lcolor);
-        }
-        canvas.drawCircle(x + (width / 2), y + (height / 8), 20, color, value);
     }
 
     return (
@@ -137,7 +166,6 @@ const SearchTreeControl = ({canvas, type}) => {
                 redoStackState={[redoStack, setRedoStack]}
                 undoDisable={undoStack.length === 0}
                 redoDisable={redoStack.length === 0}
-                handleNewPrint={handleNewPrint}
             />
         </div>
     );

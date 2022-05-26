@@ -12,7 +12,7 @@ const UndRedoFields = props => {
             const undo = undoStack.pop();
             setUndoStack(undoStack.splice(0, undoStack.length));
             setRedoStack((old) => [...old, currentDrawing]);
-            props.handleNewPrint(undo);
+            props.setCurrent(undo);
         }
     }
 
@@ -21,7 +21,7 @@ const UndRedoFields = props => {
             const redo = redoStack.pop();
             setRedoStack(redoStack.splice(0, redoStack.length));
             setUndoStack((old) => [...old, currentDrawing]);
-            props.handleNewPrint(redo);
+            props.setCurrent(redo);
         }
     }
 

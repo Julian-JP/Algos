@@ -11,9 +11,8 @@
 
 .canvas {
     background-color: lightgray;
-    width: 50px;
-    flex-grow: 1;
-    flex-shrink: 1;
+    width: auto;
+    height: auto;
     border-radius: 15px 0 0 15px;
 }
 

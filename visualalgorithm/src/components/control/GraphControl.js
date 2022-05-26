@@ -1,13 +1,14 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import classes from "./GraphControl.module.css";
 import UndRedoFields from "../UI/UndRedoFields";
 import useFetch from "../../hooks/useFetch";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
-const GraphControl = ({canvas, type}) => {
+const GraphControl = ({type, setDisplayed}) => {
 
-    const [{vertices, edges}, setGraph] = useState({
-        vertices: [], edges: []
+    const [graph, setGraph] = useState({
+        vertices: [{value: 1, x: 100, y: 20}, {value: 2, x: 200, y: 20}, {value: 3, x: 50, y: 200}],
+        edges: [[{color: "red"}, {color: "black"}, null], [null, null, {color: "pink"}], [null, null, null]]
     });
 
     const [addNode, setAddNode] = useState('');
@@ -17,20 +18,59 @@ const GraphControl = ({canvas, type}) => {
 
     const {isLoading, error, sendRequest} = useFetch();
 
-    const handleNewPrint = (newGraph) => {
-        if (newGraph != null) {
-            printGraph(newGraph.vertices, newGraph.edges);
-        } else {
-            canvas.clear();
+    useEffect(() => {
+        let display = [];
+        let edgeCount = 0;
+
+        for (let i = 0; i < graph.edges.length; i++) {
+            for (let j = 0; j < graph.edges[i].length; j++) {
+                if (graph.edges[i][j] !== null) {
+                    display.push({
+                        type: "line",
+                        from: i,
+                        to: j,
+                        x1: graph.vertices[i].x,
+                        y1: graph.vertices[i].y,
+                        x2: graph.vertices[j].x,
+                        y2: graph.vertices[j].y,
+                        stroke: graph.edges[i][j].color
+                    });
+                    edgeCount++;
+                }
+            }
         }
-        setGraph(newGraph);
-    }
+
+        for (let vertex of graph.vertices) {
+            display.push({
+                type: "circle",
+                x: vertex.x,
+                y: vertex.y,
+                fill: "red",
+                stroke: "black",
+                onMouseDown: handleMouseDown,
+                textFill: "black",
+                value: vertex.value,
+                draggable: true
+            });
+        }
+
+        for (let i = 0; i < display.length; i++) {
+            if (display[i].from !== undefined) {
+                display[i].from += edgeCount;
+            }
+            if (display[i].to !== undefined) {
+                display[i].to += edgeCount;
+            }
+        }
+
+        setDisplayed(display);
+    }, [graph])
 
     const handleAddNode = (event) => {
         event.preventDefault();
         if (addNode === '') return;
 
-        setUndoStack((old) => [...old, {vertices, edges}]);
+        setUndoStack((old) => [...old, {vertices: graph.vertices, edges: graph.edges}]);
         setRedoStack([]);
 
         setGraph((graphOld) => {
@@ -40,14 +80,18 @@ const GraphControl = ({canvas, type}) => {
             let newVertices = [...oldVertices, {
                 x: Math.floor(Math.random() * 1000), y: 100, color: "red", value: addNode
             }];
-            let edgesFromNewNode = [null, null];
-            for (let i = 0; i < oldEdges.length; i++) {
-                oldEdges[i].push(null);
-                edgesFromNewNode.push(null);
-            }
+            let edgesFromNewNode = [newVertices.length];
 
-            edgesFromNewNode = [...oldEdges, edgesFromNewNode];
-            printGraph(newVertices, edgesFromNewNode);
+            for (let i = 0; i < newVertices.length; i++) {
+                edgesFromNewNode[i] = [newVertices];
+                for (let j = 0; j < newVertices.length; j++) {
+                    if (i < newVertices.length - 1 && j < newVertices.length - 1) {
+                        edgesFromNewNode[i][j] = oldEdges[i][j];
+                    } else {
+                        edgesFromNewNode[i][j] = null;
+                    }
+                }
+            }
             return {vertices: newVertices, edges: edgesFromNewNode}
         });
     }
@@ -55,54 +99,42 @@ const GraphControl = ({canvas, type}) => {
     const handleRemoveNode = (event) => {
         event.preventDefault();
 
-        let index = vertices.findIndex(elem => removeNode == elem.value);
+        let index = graph.vertices.findIndex(elem => removeNode === elem.value);
         if (index < 0) return;
 
-        setUndoStack((old) => [...old, {vertices, edges}]);
+        setUndoStack((old) => [...old, {vertices: graph.vertices, edges: graph.edges}]);
         setRedoStack([]);
 
         setGraph(({vertices, edges}) => {
-            let newVertices = vertices.filter(item => item.value != removeNode);
+            let newVertices = vertices.filter(item => item.value !== removeNode);
             let newEdges = removeIndex(index, edges);
             let newGraph = {vertices: newVertices, edges: newEdges}
-
-            printGraph(newGraph.vertices, newGraph.edges);
             return newGraph;
         })
     }
 
     const removeIndex = (index, matrix) => {
-        let newMatrix = new Array(matrix.length - 1);
+        let newMatrix = [matrix.length - 1];
         let oldIndex = 0;
 
-        for (let i = 0; i < newMatrix.length; i++) {
-            oldIndex++;
-            if (i == index) {
+        for (let i = 0; i < matrix.length - 1; i++) {
+            if (i === index) {
                 oldIndex++;
-            } else {
-                newMatrix[i] = new Array(matrix.length - 1);
-                for (let j = 0; j < newMatrix.length; j++) {
-                    newMatrix[i][j] = matrix[oldIndex][j > index ? j + 1 : j];
-                }
             }
+            newMatrix[i] = [matrix.length - 1];
+            for (let j = 0; j < matrix.length - 1; j++) {
+                newMatrix[i][j] = matrix[oldIndex][j >= index ? j + 1 : j];
+            }
+            oldIndex++;
         }
-
         return newMatrix;
     }
 
-    const printGraph = (vertices, edges) => {
-        canvas.clear();
-        for (let i = 0; i < edges.length; i++) {
-            for (let j = 0; j < edges[i].length; j++) {
-                if (edges[i][j] !== null) {
-                    canvas.drawLine(vertices[i].x, vertices[i].y, vertices[j].x, vertices[j].y, edges[i][j].color);
-                }
-            }
-        }
-
-        for (let vertex of vertices) {
-            canvas.drawCircle(vertex.x, vertex.y, 20, vertex.color, vertex.value);
-        }
+    const handleMouseDown = (event) => {
+        console.log(event.currentTarget.offsetLeft);
+        event.setConfig(old => {
+            return {...old, cx: event.pageX - 15, cy: event.pageY - 70}
+        })
     }
 
     return (<div className={classes.container}>
@@ -138,12 +170,12 @@ const GraphControl = ({canvas, type}) => {
             }]}/>
         <UndRedoFields
             className={classes.undoRedo}
-            currentDrawing={{vertices, edges}}
+            currentDrawing={{vertices: graph.vertices, edges: graph.edges}}
             undoStackState={[undoStack, setUndoStack]}
             redoStackState={[redoStack, setRedoStack]}
             undoDisable={undoStack.length === 0}
             redoDisable={redoStack.length === 0}
-            handleNewPrint={handleNewPrint}
+            setCurrent={setGraph}
         />
     </div>)
 }
