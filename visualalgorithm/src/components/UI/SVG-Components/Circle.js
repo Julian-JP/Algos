@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import Draggable from "react-draggable";
 
-const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRightClick, onLeftClick}) => {
-    const [info, setInfo] = useState({dx: 0, dy: 0, cx: cx, cy: cy})
+const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRightClick, onLeftClick, deps}) => {
+    const [info, setInfo] = useState({dx: 0, dy: 0, cx: cx, cy: cy, dragging: false});
 
     const handleMouseDown = (event) => {
         if (onRightClick && event.type === 'contextmenu') {
@@ -13,7 +13,7 @@ const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRig
         }
     }
 
-    const group = ( <g onClick={handleMouseDown} onContextMenu={handleMouseDown}>
+    const group = (<g>
         <circle
             r={20}
             cx={cx}
@@ -37,14 +37,26 @@ const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRig
         return group;
     } else {
         return <Draggable
-            onStart={event => setInfo({dx: event.clientX - info.cx, dy: event.clientY - info.cy})}
-            onDrag={event => handleDrag({
-                ...event,
-                newX: event.clientX - info.dx,
-                newY: event.clientY - info.dy,
-                id: id
-            })}
-            onStop={event => setInfo({dx: 0, dy: 0, cx: event.clientX - info.dx, cy: event.clientY - info.dy})}
+            onStart={event => {
+                setInfo(old => {
+                    return {...old, dx: event.clientX - info.cx, dy: event.clientY - info.cy}
+                });
+            }}
+            onDrag={event => {
+                setInfo(old => {
+                    return {...old, dragging: true}
+                });
+                handleDrag(id, event.clientX - info.dx, event.clientY - info.dy)
+            }}
+            onStop={event => {
+                if (!info.dragging) {
+                    handleMouseDown(event)
+                    return;
+                }
+                setInfo(old => {
+                    return {dx: 0, dy: 0, cx: event.clientX - old.dx, cy: event.clientY - old.dy, dragging: false}
+                });
+            }}
         >
             {group}
         </Draggable>

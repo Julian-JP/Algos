@@ -7,8 +7,10 @@ import Circle from "../UI/SVG-Components/Circle";
 const GraphVisualisation = props => {
 
     const [explanation, setExplanation] = useState(null);
-    const [displayed, setDisplayed] = useState([]);
-
+    const [edges, setEdges] = useState([]);
+    const [displayedEdges, setDisplayedEdges] = useState([]);
+    const [vertices, setVertices] = useState([]);
+    const [displayedVertices, setDisplayedVertices] = useState([]);
     const {isLoading, error, sendRequest} = useFetch();
 
     useEffect(() => {
@@ -21,48 +23,38 @@ const GraphVisualisation = props => {
 
     }, [sendRequest]);
 
-    const dragging = (event) => {
-        setDisplayed(old => {
-            let ret = [old.length];
-            let index = old.findIndex((elem) => elem.x + "" + elem.y + elem.value === event.id);
-            for (let i = 0; i < old.length; i++) {
-                if (old[i].from === index) {
-                    old[i].x1 = event.newX;
-                    old[i].y1 = event.newY;
-                }
-                if (old[i].to === index) {
-                    old[i].x2 = event.newX;
-                    old[i].y2 = event.newY;
-                }
-                ret[i] = old[i];
-            }
-            return ret;
-        })
-    }
+    useEffect(() => {
+        convertedEdges();
+    }, [edges]);
 
-    const explanationDiv = isLoading ? <div className={classes.explanation}>Loading...</div> : error ?
-        <div className={classes.explanation}>Fehler beim Laden</div> :
-        <div className={classes.explanation} dangerouslySetInnerHTML={{__html: explanation}}></div>
+    useEffect(() => {
+        convertVertices();
+    }, [vertices]);
 
-    const convertedSVG = displayed.map(item => {
-        switch (item.type) {
-            case "circle": {
+    const convertVertices = () => {
+        setDisplayedVertices(
+            vertices.map(item => {
                 return <Circle
-                    handleDrag={dragging}
+                    handleDrag={handleDrag}
                     r={20}
                     cx={item.x}
                     cy={item.y}
                     key={item.x + "" + item.y + item.textFill}
-                    id={item.x + "" + item.y + item.value}
+                    id={item.value}
                     fill={item.fill}
                     textFill={item.textFill}
                     stroke={item.stroke}
                     value={item.value}
                     draggable={item.draggable}
-                    onClick={item.onClick}
+                    onLeftClick={item.onClick}
                 />
-            }
-            case "line": {
+            })
+        )
+    }
+
+    const convertedEdges = () => {
+        setDisplayedEdges(
+            edges.map((item) => {
                 return <line
                     x1={item.x1}
                     x2={item.x2}
@@ -70,26 +62,75 @@ const GraphVisualisation = props => {
                     y2={item.y2}
                     stroke={item.stroke}
                     strokeWidth={3}
-                    key={item.x1 + "" + item.x2}/>
+                    key={item.x1 + "" + item.x2}
+                />
+            })
+        );
+    }
+
+    const addVertex = (vertex) => {
+        setVertices((old) => [...old, vertex]);
+    }
+
+    const removeVertex = (id) => {
+        setVertices((old) => {
+            old.filter((vertex) => vertex.id === id);
+            return [...old];
+        });
+    }
+
+    const addEdge = (edge) => {
+        setEdges((old) => {
+            return [...old, edge];
+        });
+    }
+
+    const removeEdge = (from, to) => {
+        setEdges(old => {
+            old.filter((edge) => edge.from === from && edge.to === to);
+            return [...old];
+        });
+    }
+
+    const handleDrag = (id, newX, newY) => {
+        setEdges(old => {
+            let ret = [];
+            for (let i=0; i<old.length; i++) {
+                if (old[i].from === id) {
+                    old[i].x1 = newX;
+                    old[i].y1 = newY;
+                    ret.push(old[i]);
+                } else if (old[i].to === id) {
+                    old[i].x2 = newX;
+                    old[i].y2 = newY;
+                    ret.push(old[i]);
+                } else {
+                    ret.push(old[i]);
+                }
             }
-            default:
-                return null;
-        }
-    })
+            return ret;
+        });
+    }
+
+    const explanationDiv = isLoading ? <div className={classes.explanation}>Loading...</div> : error ?
+        <div className={classes.explanation}>Fehler beim Laden</div> :
+        <div className={classes.explanation} dangerouslySetInnerHTML={{__html: explanation}}></div>
 
     return (<div className={classes.background}>
         <div className={classes.card}>
             <svg className={classes.canvas} width={"100%"} height={"100%"}>
-                {convertedSVG}
+                {displayedEdges}
+                {displayedVertices}
             </svg>
             <ControlSelector
                 type={props.displayedType}
-                setDisplayed={setDisplayed}
+                vertex={{addVertex, removeVertex, setVertices}}
+                edge={{addEdge, removeEdge, setEdges}}
                 url={props.url}
             />
         </div>
         {explanationDiv}
-    </div>);
-};
+    </div>)
+}
 
 export default GraphVisualisation;

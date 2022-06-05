@@ -4,34 +4,36 @@ import UndRedoFields from "../UI/UndRedoFields";
 import useFetch from "../../hooks/useFetch";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
-const GraphControl = ({type, setDisplayed}) => {
+const GraphControl = (props) => {
 
     const [graph, setGraph] = useState({
         vertices: [{value: 1, x: 100, y: 20}, {value: 2, x: 200, y: 20}, {value: 3, x: 50, y: 200}],
-        edges: [[{color: "red"}, {color: "black"}, null], [null, null, {color: "pink"}], [null, null, null]]
+        edges: [[null, {color: "black"}, null], [null, null, null], [null, null, null]]
     });
 
     const [addNode, setAddNode] = useState('');
     const [removeNode, setRemoveNode] = useState('');
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
+    const [markedNodes, setMarkedNode] = useState([]);
 
     const {isLoading, error, sendRequest} = useFetch();
 
     useEffect(() => {
-        let display = [];
+        let edgesLst = [];
+        let verticesLst = [];
         let edgeCount = 0;
 
         for (let i = 0; i < graph.edges.length; i++) {
             for (let j = 0; j < graph.edges[i].length; j++) {
                 if (graph.edges[i][j] !== null) {
-                    display.push({
+                    edgesLst.push({
                         type: "line",
-                        from: i,
-                        to: j,
+                        from: graph.vertices[i].value,
+                        to: graph.vertices[j].value,
                         x1: graph.vertices[i].x,
-                        y1: graph.vertices[i].y,
                         x2: graph.vertices[j].x,
+                        y1: graph.vertices[i].y,
                         y2: graph.vertices[j].y,
                         stroke: graph.edges[i][j].color
                     });
@@ -40,30 +42,22 @@ const GraphControl = ({type, setDisplayed}) => {
             }
         }
 
-        for (let vertex of graph.vertices) {
-            display.push({
+        for (let i = 0; i < graph.vertices.length; i++) {
+            verticesLst.push({
                 type: "circle",
-                x: vertex.x,
-                y: vertex.y,
+                x: graph.vertices[i].x,
+                y: graph.vertices[i].y,
                 fill: "red",
                 stroke: "black",
                 textFill: "black",
-                value: vertex.value,
+                value: graph.vertices[i].value,
                 draggable: true,
-                onClick: handleOnClick
+                onClick: (event) => handleOnClick(i, event)
             });
         }
 
-        for (let i = 0; i < display.length; i++) {
-            if (display[i].from !== undefined) {
-                display[i].from += edgeCount;
-            }
-            if (display[i].to !== undefined) {
-                display[i].to += edgeCount;
-            }
-        }
-
-        setDisplayed(display);
+        props.vertex.setVertices(verticesLst);
+        props.edge.setEdges(edgesLst);
     }, [graph])
 
     const handleAddNode = (event) => {
@@ -96,8 +90,36 @@ const GraphControl = ({type, setDisplayed}) => {
         });
     }
 
-    const handleOnClick = (event) => {
-        console.log("Clicked")
+    const handleOnClick = (id, event) => {
+        markNode(id);
+    }
+
+    const markNode = (nodeIndex) => {
+        setMarkedNode((old) => {
+            if (old.length === 0) {
+                return [nodeIndex];
+            } else if (old[1] === nodeIndex) {
+                return [];
+            } else {
+                setGraph(({vertices: oldVertices, edges: oldEdges}) => {
+                    let ret = [];
+                    for (let i=0; i<oldEdges.length; i++) {
+                        ret[i] = [...oldEdges[i]];
+                    }
+
+                    if (ret[old[0]][nodeIndex] !== null) {
+                        ret[old[0]][nodeIndex] = null;
+                    } else {
+                        ret[old[0]][nodeIndex] = {color: "black"};
+                    }
+
+                    console.log(ret)
+
+                    return {vertices: oldVertices, edges: ret};
+                });
+                return [];
+            }
+        })
     }
 
     const handleRemoveNode = (event) => {

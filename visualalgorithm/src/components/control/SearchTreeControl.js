@@ -166,6 +166,7 @@ const SearchTreeControl = ({setDisplayed, type}) => {
                 redoStackState={[redoStack, setRedoStack]}
                 undoDisable={undoStack.length === 0}
                 redoDisable={redoStack.length === 0}
+                setCurrent={setTree}
             />
         </div>
     );
