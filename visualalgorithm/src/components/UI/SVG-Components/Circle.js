@@ -5,11 +5,16 @@ const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRig
     const [info, setInfo] = useState({dx: 0, dy: 0, cx: cx, cy: cy, dragging: false});
 
     const handleMouseDown = (event) => {
-        if (onRightClick && event.type === 'contextmenu') {
+        if (onLeftClick) {
             event.preventDefault()
-            onRightClick({...event, value});
-        } else if (onLeftClick) {
-            onLeftClick({...event, value});
+            onLeftClick({...event, id});
+        }
+    }
+
+    const handleRightClick = (event) => {
+        if (onRightClick) {
+            event.preventDefault();
+            onRightClick({...event, id});
         }
     }
 
@@ -21,6 +26,7 @@ const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRig
             key={cx}
             fill={fill}
             id={cx + "" + cy + value}
+            onContextMenu={handleRightClick}
         />
         <text
             x={cx}

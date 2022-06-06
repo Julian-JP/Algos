@@ -34,8 +34,9 @@ const GraphVisualisation = props => {
 
     const convertVertices = () => {
         setVerticesLocation((old) => {
-            let ret = vertices.map((item, index) => {
-                if (index < old.length) {
+            let ret = vertices.map((item) => {
+                let index = old.findIndex(vertex => vertex.id === item.id)
+                if (index >= 0) {
                     item.x = old[index].x;
                     item.y = old[index].y
                 }
@@ -51,16 +52,25 @@ const GraphVisualisation = props => {
                     cx={item.x}
                     cy={item.y}
                     key={item.x + "" + item.y + item.textFill}
-                    id={item.value}
+                    id={item.id}
                     fill={item.fill}
                     textFill={item.textFill}
                     stroke={item.stroke}
                     value={item.value}
                     draggable={item.draggable}
                     onLeftClick={item.onClick}
+                    onRightClick={item.onRightClick}
                 />
             })
         );
+    }
+
+    const getVertex = (id) => {
+        return verticesLocation.find(item => item.id === id);
+    }
+
+    const getInitVertex = (id) => {
+        return vertices.find(item => item.id === id)
     }
 
     const convertedEdges = () => {
@@ -69,16 +79,16 @@ const GraphVisualisation = props => {
                 let x1,x2,y1,y2;
 
                 if (item.from != undefined && item.to !== undefined) {
-                    if (verticesLocation[item.from] && verticesLocation[item.to]) {
-                        x1 = verticesLocation[item.from].x;
-                        x2 = verticesLocation[item.to].x;
-                        y1 = verticesLocation[item.from].y;
-                        y2 = verticesLocation[item.to].y;
-                    } else if (vertices[item.from] && vertices[item.to]) {
-                        x1 = vertices[item.from].x;
-                        x2 = vertices[item.to].x;
-                        y1 = vertices[item.from].y;
-                        y2 = vertices[item.to].y;
+                    if (getVertex(item.from) && getVertex(item.to)) {
+                        x1 = getVertex(item.from).x;
+                        x2 = getVertex(item.to).x;
+                        y1 = getVertex(item.from).y;
+                        y2 = getVertex(item.to).y;
+                    } else if (getInitVertex(item.from) && getInitVertex(item.to)) {
+                        x1 = getInitVertex(item.to).x;
+                        x2 = getInitVertex(item.from).x;
+                        y1 = getInitVertex(item.from).y;
+                        y2 = getInitVertex(item.to).y;
                     }
                 } else {
                     x1 = item.x1;

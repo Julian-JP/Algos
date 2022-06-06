@@ -6,17 +6,14 @@ import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
 const GraphControl = (props) => {
 
-    const DEFAULT_VERTEX_COLOR = "red";
-    const MARKED_VERTEX_COLOR = "blue";
+    const DEFAULT_VERTEX_COLOR = "white";
+    const MARKED_VERTEX_COLOR = "#e0e0e0";
 
-    const [vertices, setVertices] = useState([{value: 1, x: 100, y: 20, color: DEFAULT_VERTEX_COLOR},{value: 2, x: 200, y: 20, color: DEFAULT_VERTEX_COLOR},{value: 3, x: 50, y: 200, color: DEFAULT_VERTEX_COLOR}]);
-    const [edges, setEdges] = useState([[null, {color: "black"}, null], [null, null, null], [null, null, null]]);
+    const [vertices, setVertices] = useState([]);
+    const [edges, setEdges] = useState([]);
 
-    const [addNode, setAddNode] = useState('');
-    const [removeNode, setRemoveNode] = useState('');
-    const [undoStack, setUndoStack] = useState([]);
-    const [redoStack, setRedoStack] = useState([]);
     const [markedNodes, setMarkedNode] = useState([]);
+    const [addVal, setAddVal] = useState(null)
 
     const {isLoading, error, sendRequest} = useFetch();
 
@@ -28,8 +25,8 @@ const GraphControl = (props) => {
                 if (edges[i][j] !== null) {
                     edgesLst.push({
                         type: "line",
-                        from: i,
-                        to: j,
+                        from: vertices[i].value,
+                        to: vertices[j].value,
                         x1: vertices[i].x,
                         x2: vertices[j].x,
                         y1: vertices[i].y,
@@ -52,9 +49,11 @@ const GraphControl = (props) => {
                 fill: vertices[i].color,
                 stroke: "black",
                 textFill: "black",
+                id: vertices[i].value,
                 value: vertices[i].value,
                 draggable: true,
-                onClick: (event) => handleOnClick(i, event)
+                onClick: (event) => handleOnClick(i, event),
+                onRightClick: handleRemoveNode
             });
         }
         props.setVertices(verticesLst)
@@ -83,32 +82,28 @@ const GraphControl = (props) => {
 
     const handleAddNode = (event) => {
         event.preventDefault();
-        if (addNode === '') return;
+        if (addVal === '' || vertices.filter(item => (item.value != addVal)).length !== vertices.length) return;
 
-        setUndoStack((old) => [...old, {vertices: vertices, edges: edges}]);
-        setRedoStack([]);
-
-        setGraph((graphOld) => {
-            let oldVertices = graphOld.vertices;
-            let oldEdges = graphOld.edges;
-
-            let newVertices = [...oldVertices, {
-                x: Math.floor(Math.random() * 1000), y: 100, color: "red", value: addNode
-            }];
-            let edgesFromNewNode = [newVertices.length];
-
-            for (let i = 0; i < newVertices.length; i++) {
-                edgesFromNewNode[i] = [newVertices];
-                for (let j = 0; j < newVertices.length; j++) {
-                    if (i < newVertices.length - 1 && j < newVertices.length - 1) {
+        setEdges(oldEdges => {
+            let edgesFromNewNode = [oldEdges.length+1];
+            for (let i = 0; i < oldEdges.length+1; i++) {
+                edgesFromNewNode[i] = [oldEdges.length+1];
+                for (let j = 0; j < oldEdges.length+1; j++) {
+                    if (i < oldEdges.length && j < oldEdges.length) {
                         edgesFromNewNode[i][j] = oldEdges[i][j];
                     } else {
                         edgesFromNewNode[i][j] = null;
                     }
                 }
             }
-            return {vertices: newVertices, edges: edgesFromNewNode}
-        });
+            return edgesFromNewNode;
+        })
+
+        setVertices(oldVertices => {
+            return [...oldVertices, {
+                x: Math.floor(Math.random() * 1000), y: 100, color: DEFAULT_VERTEX_COLOR, value: addVal
+            }];
+        })
     }
 
     const handleOnClick = (id, event) => {
@@ -140,25 +135,18 @@ const GraphControl = (props) => {
     }
 
     const handleRemoveNode = (event) => {
-        event.preventDefault();
 
-        let index = vertices.findIndex(elem => removeNode === elem.value);
+        setMarkedNode([]);
+        let index = vertices.findIndex(elem => event.id === elem.value);
         if (index < 0) return;
 
-        setUndoStack((old) => [...old, {vertices: vertices, edges: edges}]);
-        setRedoStack([]);
-
-        setEdges(old => {
+        setEdges((old) => {
             return removeIndex(index, old);
         });
-        setVertices(old => {
-            return vertices.filter(item => item.value !== removeNode);
-        });
-    }
 
-    const setGraph = ({edges, vertices}) => {
-        setEdges(edges);
-        setVertices(vertices);
+        setVertices(old => {
+            return vertices.filter(item => item.value !== event.id);
+        })
     }
 
     const removeIndex = (index, matrix) => {
@@ -180,43 +168,14 @@ const GraphControl = (props) => {
 
     return (<div className={classes.container}>
         <MultidataInputWithSubmit
-            btnLabel={"Add"}
-            data={[{
-                type: "number", onChange: (event) => setAddNode(event.target.value), label: "Add", noLabel: true
-            }]}
-            onSubmit={handleAddNode}
-        />
-        <MultidataInputWithSubmit
-            btnLabel={"Remove"}
-            data={[{
-                type: "number", label: "Remove", onChange: (event) => setRemoveNode(event.target.value), noLabel: true
-            }]}
-            onSubmit={handleRemoveNode}
-        />
-        <MultidataInputWithSubmit
-            className={classes.change}
-            btnLabel={"Change"}
-            data={[{
-                type: "text", onChange: () => {
-                }, label: "Node"
-            }, {
-                type: "number", onChange: () => {
-                }, label: "X"
-            }, {
-                type: "number", onChange: () => {
-                }, label: "Y"
-            }, {
-                type: "number", onChange: () => {
-                }, label: "Color"
-            }]}/>
-        <UndRedoFields
             className={classes.undoRedo}
-            currentDrawing={{vertices: vertices, edges: edges}}
-            undoStackState={[undoStack, setUndoStack]}
-            redoStackState={[redoStack, setRedoStack]}
-            undoDisable={undoStack.length === 0}
-            redoDisable={redoStack.length === 0}
-            setCurrent={setGraph}
+            onSubmit={handleAddNode}
+            btnLabel={"Add"}
+            data={
+                [{
+                    type: "number", onChange: (val) => setAddVal(val.target.value), label: "add", noLabel: true
+                }]
+            }
         />
     </div>)
 }
