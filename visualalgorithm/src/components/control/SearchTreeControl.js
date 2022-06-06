@@ -4,7 +4,7 @@ import useFetch from "../../hooks/useFetch";
 import UndRedoFields from "../UI/UndRedoFields";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
-const SearchTreeControl = ({setDisplayed, type}) => {
+const SearchTreeControl = ({setEdges, setVertices, type}) => {
 
     const [tree, setTree] = useState(null);
     const [addval, setAddval] = useState('');
@@ -18,17 +18,19 @@ const SearchTreeControl = ({setDisplayed, type}) => {
     const linecolor = 'black';
 
     useEffect(() => {
-        let display = [];
-        drawSubtree(tree, 1, display, nodecolor, linecolor, getDepth(tree), 0);
-        setDisplayed(display);
+        let edges = [];
+        let vertices = [];
+        drawSubtree(tree, 1, edges, vertices, nodecolor, linecolor, getDepth(tree), 0);
+        setVertices(vertices);
+        setEdges(edges);
     }, [tree]);
 
-    const drawSubtree = (tree, numElemInLine, display, color, lcolor, depth, curDepth) => {
+    const drawSubtree = (tree, numElemInLine, edges, vertices, color, lcolor, depth, curDepth) => {
         if (tree === null) {
             return;
         }
         if (tree.left) {
-            display.push({
+            edges.push({
                 type: "line",
                 x1: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
                 y1: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
@@ -36,10 +38,10 @@ const SearchTreeControl = ({setDisplayed, type}) => {
                 y2: ((100 / (depth + 1)) * (curDepth + 2)) + "%",
                 stroke: lcolor
             })
-            drawSubtree(tree.left, (numElemInLine * 2) - 1, display, color, lcolor, depth, curDepth + 1);
+            drawSubtree(tree.left, (numElemInLine * 2) - 1, edges, vertices, color, lcolor, depth, curDepth + 1);
         }
         if (tree.right) {
-            display.push({
+            edges.push({
                 type: "line",
                 x1: ((100 / (2**curDepth + 1)) * numElemInLine) + "%",
                 y1: ((100 / (depth + 1)) * (curDepth+1)) + "%",
@@ -47,10 +49,10 @@ const SearchTreeControl = ({setDisplayed, type}) => {
                 y2: ((100 / (depth + 1)) * (curDepth+2)) + "%",
                 stroke: lcolor
             })
-            drawSubtree(tree.right, (numElemInLine * 2), display, color, lcolor, depth, curDepth + 1);
+            drawSubtree(tree.right, (numElemInLine * 2), edges, vertices, color, lcolor, depth, curDepth + 1);
         }
 
-        display.push({
+        vertices.push({
             type: "circle",
             x: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
             y: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
