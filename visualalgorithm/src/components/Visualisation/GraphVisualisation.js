@@ -51,7 +51,7 @@ const GraphVisualisation = props => {
                     r={20}
                     cx={item.x}
                     cy={item.y}
-                    key={item.x + "" + item.y + item.textFill}
+                    key={item.id}
                     id={item.id}
                     fill={item.fill}
                     textFill={item.textFill}
@@ -101,10 +101,10 @@ const GraphVisualisation = props => {
                     x2={x2}
                     y1={y1}
                     y2={y2}
-
+                    id={item.id}
                     stroke={item.stroke}
                     strokeWidth={3}
-                    key={x1 + "" + x2}
+                    key={item.id}
                 />
             })
         );

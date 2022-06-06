@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import classes from "./GraphControl.module.css";
-import UndRedoFields from "../UI/UndRedoFields";
 import useFetch from "../../hooks/useFetch";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
@@ -31,7 +30,8 @@ const GraphControl = (props) => {
                         x2: vertices[j].x,
                         y1: vertices[i].y,
                         y2: vertices[j].y,
-                        stroke: edges[i][j].color
+                        stroke: edges[i][j].color,
+                        id: vertices[j].value + "-" + vertices[i].value
                     });
                 }
             }
@@ -177,6 +177,8 @@ const GraphControl = (props) => {
                 }]
             }
         />
+        <button className={classes.remove}>◄</button>
+        <button className={classes.remove}>►</button>
     </div>)
 }
 
