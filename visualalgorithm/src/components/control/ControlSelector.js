@@ -8,18 +8,18 @@ const ControlSelector = props => {
     return (
         <div className={classes.control}>
             {props['type'] === "binarytree" && <SearchTreeControl
-                vertex={props.vertex}
-                edge={props.edge}
+                setVertices={props.setVertices}
+                setEdges={props.setEdges}
                 type={props.url}/>
             }
             {props['type'] === "binaryheap" && <HeapControl
-                vertex={props.vertex}
-                edge={props.edge}
+                setVertices={props.setVertices}
+                setEdges={props.setEdges}
                 type={props.url}/>
             }
             {props['type'] === "graph" && <GraphControl
-                vertex={props.vertex}
-                edge={props.edge}
+                setVertices={props.setVertices}
+                setEdges={props.setEdges}
                 type={props.url}/>
             }
         </div>

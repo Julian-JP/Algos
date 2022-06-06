@@ -10,6 +10,7 @@ const GraphVisualisation = props => {
     const [edges, setEdges] = useState([]);
     const [displayedEdges, setDisplayedEdges] = useState([]);
     const [vertices, setVertices] = useState([]);
+    const [verticesLocation, setVerticesLocation] = useState([]);
     const [displayedVertices, setDisplayedVertices] = useState([]);
     const {isLoading, error, sendRequest} = useFetch();
 
@@ -32,8 +33,18 @@ const GraphVisualisation = props => {
     }, [vertices]);
 
     const convertVertices = () => {
+        setVerticesLocation((old) => {
+            let ret = vertices.map((item, index) => {
+                if (index < old.length) {
+                    item.x = old[index].x;
+                    item.y = old[index].y
+                }
+                return item;
+            })
+            return ret;
+        });
         setDisplayedVertices(
-            vertices.map(item => {
+            vertices.map((item, index) => {
                 return <Circle
                     handleDrag={handleDrag}
                     r={20}
@@ -49,53 +60,63 @@ const GraphVisualisation = props => {
                     onLeftClick={item.onClick}
                 />
             })
-        )
+        );
     }
 
     const convertedEdges = () => {
         setDisplayedEdges(
             edges.map((item) => {
+                let x1,x2,y1,y2;
+
+                if (item.from != undefined && item.to !== undefined) {
+                    if (verticesLocation[item.from] && verticesLocation[item.to]) {
+                        x1 = verticesLocation[item.from].x;
+                        x2 = verticesLocation[item.to].x;
+                        y1 = verticesLocation[item.from].y;
+                        y2 = verticesLocation[item.to].y;
+                    } else if (vertices[item.from] && vertices[item.to]) {
+                        x1 = vertices[item.from].x;
+                        x2 = vertices[item.to].x;
+                        y1 = vertices[item.from].y;
+                        y2 = vertices[item.to].y;
+                    }
+                } else {
+                    x1 = item.x1;
+                    x2 = item.x2;
+                    y1 = item.y1;
+                    y2 = item.y2;
+                }
                 return <line
-                    x1={item.x1}
-                    x2={item.x2}
-                    y1={item.y1}
-                    y2={item.y2}
+                    x1={x1}
+                    x2={x2}
+                    y1={y1}
+                    y2={y2}
+
                     stroke={item.stroke}
                     strokeWidth={3}
-                    key={item.x1 + "" + item.x2}
+                    key={x1 + "" + x2}
                 />
             })
         );
     }
 
-    const addVertex = (vertex) => {
-        setVertices((old) => [...old, vertex]);
-    }
-
-    const removeVertex = (id) => {
-        setVertices((old) => {
-            old.filter((vertex) => vertex.id === id);
-            return [...old];
-        });
-    }
-
-    const addEdge = (edge) => {
-        setEdges((old) => {
-            return [...old, edge];
-        });
-    }
-
-    const removeEdge = (from, to) => {
-        setEdges(old => {
-            old.filter((edge) => edge.from === from && edge.to === to);
-            return [...old];
-        });
-    }
-
     const handleDrag = (id, newX, newY) => {
+        setVerticesLocation(old => {
+            let ret = [];
+            for (let i = 0; i < old.length; i++) {
+                if (old[i].value === id) {
+                    old[i].x = newX;
+                    old[i].y = newY;
+                    ret.push(old[i]);
+                } else {
+                    ret.push(old[i]);
+                }
+            }
+            return ret;
+        })
         setEdges(old => {
             let ret = [];
-            for (let i=0; i<old.length; i++) {
+            for (let i = 0; i < old.length; i++) {
                 if (old[i].from === id) {
                     old[i].x1 = newX;
                     old[i].y1 = newY;
@@ -124,8 +145,8 @@ const GraphVisualisation = props => {
             </svg>
             <ControlSelector
                 type={props.displayedType}
-                vertex={{addVertex, removeVertex, setVertices}}
-                edge={{addEdge, removeEdge, setEdges}}
+                setVertices={setVertices}
+                setEdges={setEdges}
                 url={props.url}
             />
         </div>

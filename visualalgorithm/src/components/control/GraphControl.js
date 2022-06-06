@@ -6,10 +6,11 @@ import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
 
 const GraphControl = (props) => {
 
-    const [graph, setGraph] = useState({
-        vertices: [{value: 1, x: 100, y: 20}, {value: 2, x: 200, y: 20}, {value: 3, x: 50, y: 200}],
-        edges: [[null, {color: "black"}, null], [null, null, null], [null, null, null]]
-    });
+    const DEFAULT_VERTEX_COLOR = "red";
+    const MARKED_VERTEX_COLOR = "blue";
+
+    const [vertices, setVertices] = useState([{value: 1, x: 100, y: 20, color: DEFAULT_VERTEX_COLOR},{value: 2, x: 200, y: 20, color: DEFAULT_VERTEX_COLOR},{value: 3, x: 50, y: 200, color: DEFAULT_VERTEX_COLOR}]);
+    const [edges, setEdges] = useState([[null, {color: "black"}, null], [null, null, null], [null, null, null]]);
 
     const [addNode, setAddNode] = useState('');
     const [removeNode, setRemoveNode] = useState('');
@@ -21,50 +22,70 @@ const GraphControl = (props) => {
 
     useEffect(() => {
         let edgesLst = [];
-        let verticesLst = [];
-        let edgeCount = 0;
 
-        for (let i = 0; i < graph.edges.length; i++) {
-            for (let j = 0; j < graph.edges[i].length; j++) {
-                if (graph.edges[i][j] !== null) {
+        for (let i = 0; i < edges.length; i++) {
+            for (let j = 0; j < edges[i].length; j++) {
+                if (edges[i][j] !== null) {
                     edgesLst.push({
                         type: "line",
-                        from: graph.vertices[i].value,
-                        to: graph.vertices[j].value,
-                        x1: graph.vertices[i].x,
-                        x2: graph.vertices[j].x,
-                        y1: graph.vertices[i].y,
-                        y2: graph.vertices[j].y,
-                        stroke: graph.edges[i][j].color
+                        from: i,
+                        to: j,
+                        x1: vertices[i].x,
+                        x2: vertices[j].x,
+                        y1: vertices[i].y,
+                        y2: vertices[j].y,
+                        stroke: edges[i][j].color
                     });
-                    edgeCount++;
                 }
             }
         }
+        props.setEdges(edgesLst);
+    }, [edges])
 
-        for (let i = 0; i < graph.vertices.length; i++) {
+    useEffect(() => {
+        let verticesLst = [];
+        for (let i = 0; i < vertices.length; i++) {
             verticesLst.push({
                 type: "circle",
-                x: graph.vertices[i].x,
-                y: graph.vertices[i].y,
-                fill: "red",
+                x: vertices[i].x,
+                y: vertices[i].y,
+                fill: vertices[i].color,
                 stroke: "black",
                 textFill: "black",
-                value: graph.vertices[i].value,
+                value: vertices[i].value,
                 draggable: true,
                 onClick: (event) => handleOnClick(i, event)
             });
         }
+        props.setVertices(verticesLst)
+    }, [vertices]);
 
-        props.vertex.setVertices(verticesLst);
-        props.edge.setEdges(edgesLst);
-    }, [graph])
+    useEffect(() => {
+        if (markedNodes.length >= 2) {
+            setEdges((oldEdges) => {
+                let ret = [];
+                for (let i=0; i<oldEdges.length; i++) {
+                    ret[i] = [...oldEdges[i]];
+                }
+
+                if (ret[markedNodes[0]][markedNodes[1]] !== null || ret[markedNodes[1]][markedNodes[0]] !== null) {
+                    ret[markedNodes[0]][markedNodes[1]] = null;
+                    ret[markedNodes[1]][markedNodes[0]] = null;
+                } else {
+                    ret[markedNodes[0]][markedNodes[1]] = {color: "black"};
+                }
+
+                return ret;
+            });
+            setMarkedNode([])
+        }
+    }, [markedNodes])
 
     const handleAddNode = (event) => {
         event.preventDefault();
         if (addNode === '') return;
 
-        setUndoStack((old) => [...old, {vertices: graph.vertices, edges: graph.edges}]);
+        setUndoStack((old) => [...old, {vertices: vertices, edges: edges}]);
         setRedoStack([]);
 
         setGraph((graphOld) => {
@@ -94,30 +115,26 @@ const GraphControl = (props) => {
         markNode(id);
     }
 
+    const colorMarkVertex = (nodeIndex, mark) => {
+        setVertices((oldVertex) => {
+            oldVertex[nodeIndex].color = mark ? MARKED_VERTEX_COLOR : DEFAULT_VERTEX_COLOR;
+            return [...oldVertex];
+        });
+    }
+
     const markNode = (nodeIndex) => {
         setMarkedNode((old) => {
             if (old.length === 0) {
+                colorMarkVertex(nodeIndex, true);
                 return [nodeIndex];
             } else if (old[1] === nodeIndex) {
+                colorMarkVertex(nodeIndex, false);
                 return [];
             } else {
-                setGraph(({vertices: oldVertices, edges: oldEdges}) => {
-                    let ret = [];
-                    for (let i=0; i<oldEdges.length; i++) {
-                        ret[i] = [...oldEdges[i]];
-                    }
+                colorMarkVertex(nodeIndex, false);
+                colorMarkVertex(old[0], false);
 
-                    if (ret[old[0]][nodeIndex] !== null) {
-                        ret[old[0]][nodeIndex] = null;
-                    } else {
-                        ret[old[0]][nodeIndex] = {color: "black"};
-                    }
-
-                    console.log(ret)
-
-                    return {vertices: oldVertices, edges: ret};
-                });
-                return [];
+                return [...old, nodeIndex];
             }
         })
     }
@@ -125,18 +142,23 @@ const GraphControl = (props) => {
     const handleRemoveNode = (event) => {
         event.preventDefault();
 
-        let index = graph.vertices.findIndex(elem => removeNode === elem.value);
+        let index = vertices.findIndex(elem => removeNode === elem.value);
         if (index < 0) return;
 
-        setUndoStack((old) => [...old, {vertices: graph.vertices, edges: graph.edges}]);
+        setUndoStack((old) => [...old, {vertices: vertices, edges: edges}]);
         setRedoStack([]);
 
-        setGraph(({vertices, edges}) => {
-            let newVertices = vertices.filter(item => item.value !== removeNode);
-            let newEdges = removeIndex(index, edges);
-            let newGraph = {vertices: newVertices, edges: newEdges}
-            return newGraph;
-        })
+        setEdges(old => {
+            return removeIndex(index, old);
+        });
+        setVertices(old => {
+            return vertices.filter(item => item.value !== removeNode);
+        });
+    }
+
+    const setGraph = ({edges, vertices}) => {
+        setEdges(edges);
+        setVertices(vertices);
     }
 
     const removeIndex = (index, matrix) => {
@@ -189,7 +211,7 @@ const GraphControl = (props) => {
             }]}/>
         <UndRedoFields
             className={classes.undoRedo}
-            currentDrawing={{vertices: graph.vertices, edges: graph.edges}}
+            currentDrawing={{vertices: vertices, edges: edges}}
             undoStackState={[undoStack, setUndoStack]}
             redoStackState={[redoStack, setRedoStack]}
             undoDisable={undoStack.length === 0}
