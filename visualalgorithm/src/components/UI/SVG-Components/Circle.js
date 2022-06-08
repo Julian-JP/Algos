@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import Draggable from "react-draggable";
 
-const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRightClick, onLeftClick}) => {
+const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggable, onRightClick, onLeftClick}) => {
     const [info, setInfo] = useState({dx: 0, dy: 0, cx: cx, cy: cy, dragging: false});
 
     const handleMouseDown = (event) => {
@@ -27,6 +27,7 @@ const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRig
             fill={fill}
             id={cx + "" + cy + value}
             onContextMenu={handleRightClick}
+            opacity={opacity}
         />
         <text
             x={cx}

@@ -54,6 +54,7 @@ const GraphVisualisation = props => {
                     key={item.id}
                     id={item.id}
                     fill={item.fill}
+                    opacity={item.opacity}
                     textFill={item.textFill}
                     stroke={item.stroke}
                     value={item.value}

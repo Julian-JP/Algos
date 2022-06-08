@@ -7,13 +7,17 @@ const GraphControl = (props) => {
 
     const DEFAULT_VERTEX_COLOR = "white";
     const MARKED_VERTEX_COLOR = "#e0e0e0";
+    const START_END_COLOR = "blue";
 
     const [vertices, setVertices] = useState([]);
     const [edges, setEdges] = useState([]);
 
     const [markedNodes, setMarkedNode] = useState([]);
     const [addVal, setAddVal] = useState(null);
-    const [prev, setPrev] = useState([])
+    const [prev, setPrev] = useState([]);
+
+    const[start, setStart] = useState(undefined);
+    const[end, setEnd] = useState(undefined);
 
     const {isLoading, error, sendRequest} = useFetch();
 
@@ -52,6 +56,7 @@ const GraphControl = (props) => {
                 textFill: "black",
                 id: vertices[i].value,
                 value: vertices[i].value,
+                opacity: vertices[i].opacity,
                 draggable: true,
                 onClick: (event) => handleOnClick(i, event),
                 onRightClick: handleRemoveNode
@@ -111,9 +116,9 @@ const GraphControl = (props) => {
         markNode(id);
     }
 
-    const colorMarkVertex = (nodeIndex, mark) => {
+    const markVertex = (nodeIndex, marked) => {
         setVertices((oldVertex) => {
-            oldVertex[nodeIndex].color = mark ? MARKED_VERTEX_COLOR : DEFAULT_VERTEX_COLOR;
+            oldVertex[nodeIndex].opacity = marked ? 0.5 : 1;
             return [...oldVertex];
         });
     }
@@ -121,14 +126,14 @@ const GraphControl = (props) => {
     const markNode = (nodeIndex) => {
         setMarkedNode((old) => {
             if (old.length === 0) {
-                colorMarkVertex(nodeIndex, true);
+                markVertex(nodeIndex, true);
                 return [nodeIndex];
             } else if (old[1] === nodeIndex) {
-                colorMarkVertex(nodeIndex, false);
+                markVertex(nodeIndex, false);
                 return [];
             } else {
-                colorMarkVertex(nodeIndex, false);
-                colorMarkVertex(old[0], false);
+                markVertex(nodeIndex, false);
+                markVertex(old[0], false);
 
                 return [...old, nodeIndex];
             }
@@ -182,10 +187,46 @@ const GraphControl = (props) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: {edges: edges, vertices: vertices}
+            body: {edges: edges, vertices: vertices, start: start, end: end}
         }, createGraphFromJSON);
-
     }
+
+    const updateStartEndColor = (newEnd, newStart) => {
+        setVertices((oldVertex) => {
+            if (end !== undefined) oldVertex[end].color = DEFAULT_VERTEX_COLOR;
+            if (start !== undefined) oldVertex[start].color = DEFAULT_VERTEX_COLOR;
+            if (newEnd !== undefined) oldVertex[newEnd].color = START_END_COLOR;
+            if (newStart !== undefined) oldVertex[newStart].color = START_END_COLOR;
+            return [...oldVertex];
+        });
+    }
+
+    const handleStartEnd = (isStart) => {
+        if (markedNodes.length === 0) {
+            return;
+        } else if (start === markedNodes[0] && isStart) {
+            updateStartEndColor(end, undefined);
+            markNode(markedNodes[0], false);
+            setMarkedNode([]);
+            setStart(undefined);
+        } else if (end === markedNodes[0] && !isStart) {
+            updateStartEndColor(undefined, start);
+            markNode(markedNodes[0], false);
+            setMarkedNode([]);
+            setEnd(undefined);
+        } else if (isStart === true) {
+            updateStartEndColor(end, markedNodes[0]);
+            markNode(markedNodes[0], false);
+            setStart(markedNodes[0]);
+            setMarkedNode([]);
+        } else if (!isStart) {
+            updateStartEndColor(markedNodes[0], start);
+            markNode(markedNodes[0], false);
+            setEnd(markedNodes[0]);
+            setMarkedNode([]);
+        }
+    }
+
 
     return (<div className={classes.container}>
         <MultidataInputWithSubmit
@@ -197,6 +238,10 @@ const GraphControl = (props) => {
                 }]
             }
         />
+        <div className={classes.algoNavigationContainer}>
+            <button className={classes.prev} onClick={() => handleStartEnd(true)}>Start</button>
+            <button className={classes.next} onClick={() => handleStartEnd(false)}>End</button>
+        </div>
         <div className={classes.algoNavigationContainer}>
             <button className={classes.prev}>◄</button>
             <button className={classes.next} onClick={() => next(1)}>►</button>
