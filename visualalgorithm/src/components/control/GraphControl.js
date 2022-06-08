@@ -12,7 +12,8 @@ const GraphControl = (props) => {
     const [edges, setEdges] = useState([]);
 
     const [markedNodes, setMarkedNode] = useState([]);
-    const [addVal, setAddVal] = useState(null)
+    const [addVal, setAddVal] = useState(null);
+    const [prev, setPrev] = useState([])
 
     const {isLoading, error, sendRequest} = useFetch();
 
@@ -63,7 +64,7 @@ const GraphControl = (props) => {
         if (markedNodes.length >= 2) {
             setEdges((oldEdges) => {
                 let ret = [];
-                for (let i=0; i<oldEdges.length; i++) {
+                for (let i = 0; i < oldEdges.length; i++) {
                     ret[i] = [...oldEdges[i]];
                 }
 
@@ -85,10 +86,10 @@ const GraphControl = (props) => {
         if (addVal === '' || vertices.filter(item => (item.value != addVal)).length !== vertices.length) return;
 
         setEdges(oldEdges => {
-            let edgesFromNewNode = [oldEdges.length+1];
-            for (let i = 0; i < oldEdges.length+1; i++) {
-                edgesFromNewNode[i] = [oldEdges.length+1];
-                for (let j = 0; j < oldEdges.length+1; j++) {
+            let edgesFromNewNode = [oldEdges.length + 1];
+            for (let i = 0; i < oldEdges.length + 1; i++) {
+                edgesFromNewNode[i] = [oldEdges.length + 1];
+                for (let j = 0; j < oldEdges.length + 1; j++) {
                     if (i < oldEdges.length && j < oldEdges.length) {
                         edgesFromNewNode[i][j] = oldEdges[i][j];
                     } else {
@@ -150,7 +151,7 @@ const GraphControl = (props) => {
     }
 
     const removeIndex = (index, matrix) => {
-        let newMatrix = [matrix.length - 1];
+        let newMatrix = Array(matrix.length - 1);
         let oldIndex = 0;
 
         for (let i = 0; i < matrix.length - 1; i++) {
@@ -166,19 +167,41 @@ const GraphControl = (props) => {
         return newMatrix;
     }
 
+    const next = (steps) => {
+        const createGraphFromJSON = (response) => {
+            if (JSON.stringify({edges: edges, vertices: vertices}) !== JSON.stringify(response.root)) {
+                setPrev((old) => [...old, {edges: edges, vertices: vertices}]);
+            }
+            setVertices(response.vertices);
+            setEdges(response.edges);
+        }
+
+        sendRequest({
+            url: 'http://localhost:8080/algos/' + props.type + '/step/' + steps,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: {edges: edges, vertices: vertices}
+        }, createGraphFromJSON);
+
+    }
+
     return (<div className={classes.container}>
         <MultidataInputWithSubmit
-            className={classes.undoRedo}
             onSubmit={handleAddNode}
             btnLabel={"Add"}
             data={
                 [{
-                    type: "number", onChange: (val) => setAddVal(val.target.value), label: "add", noLabel: true
+                    type: "text", onChange: (val) => setAddVal(val.target.value), label: "add", noLabel: true
                 }]
             }
         />
-        <button className={classes.remove}>◄</button>
-        <button className={classes.remove}>►</button>
+        <div className={classes.algoNavigationContainer}>
+            <button className={classes.prev}>◄</button>
+            <button className={classes.next} onClick={() => next(1)}>►</button>
+        </div>
+
     </div>)
 }
 

@@ -147,11 +147,10 @@ const HeapControl = ({setEdges, setVertices, type}) => {
                     }]
                 }
             />
-            <form className={classes.undoRedo} onSubmit={onRemove}>
+            <form onSubmit={onRemove}>
                 <button type="submit" className={classes.remove}>Remove</button>
             </form>
             <UndRedoFields
-                className={classes.undoRedo}
                 currentDrawing={heap}
                 undoStackState={[undoStack, setUndoStack]}
                 redoStackState={[redoStack, setRedoStack]}

@@ -1,7 +1,7 @@
 .container {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(1, auto);
     grid-auto-rows: auto;
     column-gap: 1%;
     row-gap: 10px;
@@ -9,7 +9,22 @@
     min-height: 500px;
 }
 
-.undoRedo {
-    grid-column-start: 1;
-    grid-column-end: 3;
+.algoNavigationContainer {
+    width: 100%
+}
+
+.prev {
+    width: 50%;
+    border-radius: 15px 0 0 15px;
+    border: none;
+    height: min(2vw, 50px);
+    font-size: min(1.2vw, 25px);
+}
+
+.next {
+    width: 50%;
+    border-radius: 0 15px 15px 0;
+    border: none;
+    height: min(2vw, 50px);
+    font-size: min(1.2vw, 25px);
 }

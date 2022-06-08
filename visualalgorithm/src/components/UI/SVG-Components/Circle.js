@@ -36,6 +36,7 @@ const Circle = ({cx, cy, fill, value, textFill, id, handleDrag, draggable, onRig
             alignmentBaseline="central"
             key={value}
             id={cx + "" + cy + value}
+            onContextMenu={handleRightClick}
         >{value}</text>
     </g>);
 
