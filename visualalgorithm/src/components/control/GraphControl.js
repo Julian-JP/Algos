@@ -172,7 +172,7 @@ const GraphControl = (props) => {
         return newMatrix;
     }
 
-    const next = (steps) => {
+    const next = () => {
         const createGraphFromJSON = (response) => {
             if (JSON.stringify({edges: edges, vertices: vertices}) !== JSON.stringify(response.root)) {
                 setPrev((old) => [...old, {edges: edges, vertices: vertices}]);
@@ -182,7 +182,7 @@ const GraphControl = (props) => {
         }
 
         sendRequest({
-            url: 'http://localhost:8080/algos/' + props.type + '/step/' + steps,
+            url: 'http://localhost:8080/algos/' + props.type + '/step',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

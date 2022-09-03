@@ -155,6 +155,7 @@ const GraphVisualisation = props => {
                 {displayedVertices}
             </svg>
             <ControlSelector
+                class={classes.control}
                 type={props.displayedType}
                 setVertices={setVertices}
                 setEdges={setEdges}

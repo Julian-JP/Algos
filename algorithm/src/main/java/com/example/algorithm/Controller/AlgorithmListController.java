@@ -120,21 +120,21 @@ public class AlgorithmListController {
     @GetMapping("/ShortestPath/BFS")
     public ResponseEntity<Algorithm> getBFS() {
         logger.info("Requested information to: Breadth-First Search");
-        Algorithm bfs = new Algorithm("Breadth-First Search", "/ShortestPath/BFS", "graph", 0);
+        Algorithm bfs = new Algorithm("Breadth-First Search", "ShortestPath/BFS", "graph", 0);
         return new ResponseEntity<>(bfs, HttpStatus.OK);
     }
 
     @GetMapping("/ShortestPath/DFS")
     public ResponseEntity<Algorithm> getDFS() {
         logger.info("Requested information to: Depth-First Search");
-        Algorithm dfs = new Algorithm("Depth-First Search", "/ShortestPath/DFS", "graph", 1);
+        Algorithm dfs = new Algorithm("Depth-First Search", "ShortestPath/DFS", "graph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
     @GetMapping("/ShortestPath/AStar")
     public ResponseEntity<Algorithm> getAStar() {
         logger.info("Requested information to: Depth-First Search");
-        Algorithm astar = new Algorithm("A* Search", "/ShortestPath/AStar", "graph", 1);
+        Algorithm astar = new Algorithm("A-Star Search", "ShortestPath/AStar", "graph", 1);
         return new ResponseEntity<>(astar, HttpStatus.OK);
     }
 }

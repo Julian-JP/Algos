@@ -9,9 +9,13 @@
     gap: 5px;
 }
 
+.control {
+    width: 300px;
+}
+
 .canvas {
     background-color: lightgray;
-    width: auto;
+    width: calc(100% - 300px);
     height: auto;
     border-radius: 15px 0 0 15px;
 }
