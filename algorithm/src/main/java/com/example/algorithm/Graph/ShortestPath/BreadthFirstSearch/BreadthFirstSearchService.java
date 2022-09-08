@@ -15,7 +15,7 @@ public class BreadthFirstSearchService extends ShortestPathService {
     @Override
     public GraphResponse step(String graphString) throws JSONException {
         ShortestPathGraph graph = new ShortestPathGraph(graphString);
-        return null;
+        return graph.breadthFirstSearch();
     }
 
     @Override

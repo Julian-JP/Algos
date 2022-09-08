@@ -33,7 +33,8 @@ public class ShortestPathController {
             ShortestPathService service = stringToService(searchType);
 
             logger.info("New ShortestPath nextstep-request: " + graph.getBody());
-            return new ResponseEntity<>(service.step(graph.getBody()), HttpStatus.OK);
+            GraphResponse temp = service.step(graph.getBody());
+            return new ResponseEntity<>(temp, HttpStatus.OK);
         } catch (JSONException e) {
             logger.error("ShortestPath step JSON failed: " + graph);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

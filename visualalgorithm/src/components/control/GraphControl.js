@@ -174,10 +174,7 @@ const GraphControl = (props) => {
 
     const next = () => {
         const createGraphFromJSON = (response) => {
-            if (JSON.stringify({edges: edges, vertices: vertices}) !== JSON.stringify(response.root)) {
-                setPrev((old) => [...old, {edges: edges, vertices: vertices}]);
-            }
-            setVertices(response.vertices);
+            console.log(response);
             setEdges(response.edges);
         }
 
@@ -187,7 +184,7 @@ const GraphControl = (props) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: {edges: edges, vertices: vertices, start: start, end: end}
+            body: {edges: edges, start: start, vertices: vertices, end: end}
         }, createGraphFromJSON);
     }
 
