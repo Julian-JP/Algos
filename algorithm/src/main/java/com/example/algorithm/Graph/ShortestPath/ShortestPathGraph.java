@@ -5,6 +5,8 @@ import com.example.algorithm.Graph.GraphEdge;
 import com.example.algorithm.Graph.GraphResponse;
 import org.json.JSONException;
 
+import java.util.*;
+
 public class ShortestPathGraph extends Graph {
     public ShortestPathGraph(GraphEdge[][] adjazensMatrix, int start, int end) {
         super(adjazensMatrix, start, end);
@@ -14,26 +16,50 @@ public class ShortestPathGraph extends Graph {
     }
 
     public GraphResponse breadthFirstSearch() {
-        Status[] visited = new Status[adjazensMatrix.length];
-        visited[start] = Status.inQueue;
-        breadthFirstSearchRecursive(visited);
+        Queue<ArrayDeque<Integer>> todo = new ArrayDeque<>();
+        ArrayDeque<Integer> temp = new ArrayDeque<>();
+        temp.add(start);
+        todo.add(temp);
+        Status[] status = new Status[adjazensMatrix.length];
+        Arrays.fill(status, Status.notVisited);
+        status[start] = Status.inQueue;
+        breadthFirstSearchRecursive(todo, status);
         return new GraphResponse(adjazensMatrix, start, end);
     }
 
-    private boolean breadthFirstSearchRecursive(Status[] inQueue) {
-        for (int i = 0; i < inQueue.length; i++) {
-            for (int j = 0; j < adjazensMatrix.length && inQueue[i] == Status.inQueue; j++) {
-                if (adjazensMatrix[i][j] != null) {
-                    if (adjazensMatrix[i][j].isVisited() == false) {
-                        return true;
-                    } else if (inQueue[j] == Status.notVisited) {
-                        inQueue[j] = Status.inQueue;
-                    }
+    private void breadthFirstSearchRecursive(Queue<ArrayDeque<Integer>> todo, Status[] status) {
+        if (todo.isEmpty()) return;
+
+        ArrayDeque<Integer> current = todo.poll();
+        for (int i = 0; i < status.length; i++) {
+            if (status[i] == Status.notVisited && adjazensMatrix[current.getLast()][i] != null) {
+                ArrayDeque<Integer> currentUpdatet = current.clone();
+
+                if (i == end) {
+                    currentUpdatet.add(i);
+                    colorPath(currentUpdatet);
+                    return;
+                }
+                if (adjazensMatrix[currentUpdatet.getLast()][i].isVisited()) {
+                    currentUpdatet.add(i);
+                    todo.add(currentUpdatet);
+                    status[i] = Status.inQueue;
+                } else {
+                    return;
                 }
             }
-            inQueue[i] = Status.finished;
         }
-        return false;
+        status[current.getLast()] = Status.finished;
+        breadthFirstSearchRecursive(todo, status);
+    }
+
+    private void colorPath(ArrayDeque<Integer> path) {
+        while (!path.isEmpty()) {
+            Integer first = path.poll();
+            Integer seconde = path.getFirst();
+            adjazensMatrix[first][seconde].finish();
+            adjazensMatrix[seconde][first].finish();
+        }
     }
 
     enum Status {

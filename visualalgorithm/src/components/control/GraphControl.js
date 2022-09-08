@@ -36,7 +36,8 @@ const GraphControl = (props) => {
                         y1: vertices[i].y,
                         y2: vertices[j].y,
                         stroke: edges[i][j].color,
-                        id: vertices[j].value + "-" + vertices[i].value
+                        id: vertices[j].value + "-" + vertices[i].value,
+                        offset: i < j ? 3 : -3
                     });
                 }
             }
@@ -73,9 +74,8 @@ const GraphControl = (props) => {
                     ret[i] = [...oldEdges[i]];
                 }
 
-                if (ret[markedNodes[0]][markedNodes[1]] !== null || ret[markedNodes[1]][markedNodes[0]] !== null) {
+                if (ret[markedNodes[0]][markedNodes[1]] !== null) {
                     ret[markedNodes[0]][markedNodes[1]] = null;
-                    ret[markedNodes[1]][markedNodes[0]] = null;
                 } else {
                     ret[markedNodes[0]][markedNodes[1]] = {color: "black"};
                 }

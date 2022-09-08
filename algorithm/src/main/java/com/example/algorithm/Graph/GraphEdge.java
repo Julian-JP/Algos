@@ -2,6 +2,7 @@ package com.example.algorithm.Graph;
 
 public class GraphEdge {
     private String VISITED_COLOR = "blue";
+    private String FINAL_COLOR = "red";
     private String color;
 
     public GraphEdge(String color) {
@@ -19,5 +20,9 @@ public class GraphEdge {
             color = VISITED_COLOR;
             return false;
         }
+    }
+
+    public void finish() {
+        color = FINAL_COLOR;
     }
 }

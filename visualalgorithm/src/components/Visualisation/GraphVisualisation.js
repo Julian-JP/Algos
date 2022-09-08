@@ -78,18 +78,21 @@ const GraphVisualisation = props => {
         setDisplayedEdges(
             edges.map((item) => {
                 let x1,x2,y1,y2;
+                let offset = (item.offset === null ? 0 : item.offset);
+                let offsetflip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
+                    || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
 
                 if (item.from != undefined && item.to !== undefined) {
                     if (getVertex(item.from) && getVertex(item.to)) {
-                        x1 = getVertex(item.from).x;
-                        x2 = getVertex(item.to).x;
-                        y1 = getVertex(item.from).y;
-                        y2 = getVertex(item.to).y;
+                        x1 = getVertex(item.from).x + (offset * offsetflip);
+                        x2 = getVertex(item.to).x + (offset * offsetflip);
+                        y1 = getVertex(item.from).y + offset;
+                        y2 = getVertex(item.to).y + offset;
                     } else if (getInitVertex(item.from) && getInitVertex(item.to)) {
-                        x1 = getInitVertex(item.to).x;
-                        x2 = getInitVertex(item.from).x;
-                        y1 = getInitVertex(item.from).y;
-                        y2 = getInitVertex(item.to).y;
+                        x1 = getInitVertex(item.to).x +  offset;
+                        x2 = getInitVertex(item.from).x + offset;
+                        y1 = getInitVertex(item.from).y + offset;
+                        y2 = getInitVertex(item.to).y + offset;
                     }
                 } else {
                     x1 = item.x1;
