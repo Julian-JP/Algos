@@ -37,7 +37,7 @@ const GraphControl = (props) => {
                         y2: vertices[j].y,
                         stroke: edges[i][j].color,
                         id: vertices[j].value + "-" + vertices[i].value,
-                        offset: i < j ? 3 : -3
+                        directed: true
                     });
                 }
             }

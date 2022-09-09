@@ -77,39 +77,56 @@ const GraphVisualisation = props => {
     const convertedEdges = () => {
         setDisplayedEdges(
             edges.map((item) => {
-                let x1,x2,y1,y2;
-                let offset = (item.offset === null ? 0 : item.offset);
+                let x1, x2, y1, y2;
+                let arrow;
                 let offsetflip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
-                    || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
+                || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
+
+                let lineflip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
+                || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
 
                 if (item.from != undefined && item.to !== undefined) {
+                    let offset = item.from > item.to ? 3 : -3;
                     if (getVertex(item.from) && getVertex(item.to)) {
                         x1 = getVertex(item.from).x + (offset * offsetflip);
                         x2 = getVertex(item.to).x + (offset * offsetflip);
                         y1 = getVertex(item.from).y + offset;
                         y2 = getVertex(item.to).y + offset;
                     } else if (getInitVertex(item.from) && getInitVertex(item.to)) {
-                        x1 = getInitVertex(item.to).x +  offset;
+                        x1 = getInitVertex(item.to).x + offset;
                         x2 = getInitVertex(item.from).x + offset;
                         y1 = getInitVertex(item.from).y + offset;
                         y2 = getInitVertex(item.to).y + offset;
                     }
+                    arrow = <line
+                        x1={(x1 + x2) / 2}
+                        x2={(x1 + x2) / 2 - (offset * 5)}
+                        y1={(y1 + y2) / 2}
+                        y2={(y1 + y2) / 2 + (offset * 2)}
+                        id={item.id + "arrow"}
+                        stroke={item.stroke}
+                        strokeWidth={3}
+                        key={item.id + "arrow"}
+                    />
                 } else {
                     x1 = item.x1;
                     x2 = item.x2;
                     y1 = item.y1;
                     y2 = item.y2;
                 }
-                return <line
-                    x1={x1}
-                    x2={x2}
-                    y1={y1}
-                    y2={y2}
-                    id={item.id}
-                    stroke={item.stroke}
-                    strokeWidth={3}
-                    key={item.id}
-                />
+                return <g>
+                    <line
+                        x1={x1}
+                        x2={x2}
+                        y1={y1}
+                        y2={y2}
+                        id={item.id}
+                        stroke={item.stroke}
+                        strokeWidth={3}
+                        key={item.id}
+                    />
+                    {item.directed ? arrow : null}
+                </g>
             })
         );
     }
