@@ -77,12 +77,22 @@ const GraphVisualisation = props => {
     const convertedEdges = () => {
         setDisplayedEdges(
             edges.map((item) => {
+                if (item.from === item.to) {
+                    return <circle
+                        r={15}
+                        cx={getVertex(item.to).x}
+                        cy={getVertex(item.to).y + 25}
+                        key={item.id}
+                        id={item.id}
+                        fill={"none"}
+                        stroke={item.stroke}
+                        strokeWidth={3}
+                    />
+                }
+
                 let x1, x2, y1, y2;
                 let arrow;
                 let offsetflip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
-                || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
-
-                let lineflip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
                 || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
 
                 if (item.from != undefined && item.to !== undefined) {
@@ -98,16 +108,16 @@ const GraphVisualisation = props => {
                         y1 = getInitVertex(item.from).y + offset;
                         y2 = getInitVertex(item.to).y + offset;
                     }
-                    arrow = <line
-                        x1={(x1 + x2) / 2}
-                        x2={(x1 + x2) / 2 - (offset * 5)}
-                        y1={(y1 + y2) / 2}
-                        y2={(y1 + y2) / 2 + (offset * 2)}
-                        id={item.id + "arrow"}
-                        stroke={item.stroke}
-                        strokeWidth={3}
-                        key={item.id + "arrow"}
-                    />
+                    arrow = <g key={"marker" + item.id}>
+                        <defs>
+                            <marker id="arrowhead" markerWidth={10} markerHeight={3}
+                                    refX="0" refY="1.5" orient="auto">
+                                <polygon points="0 0, 10 1.5, 0 3" fill={item.stroke}/>
+                            </marker>
+                        </defs>
+                        <line x1={x1} y1={y1} x2={x1-(x1-x2)/3} y2={y1-(y1-y2)/3} stroke={item.stroke} strokeWidth={3}
+                              markerEnd="url(#arrowhead)"/>
+                    </g>
                 } else {
                     x1 = item.x1;
                     x2 = item.x2;

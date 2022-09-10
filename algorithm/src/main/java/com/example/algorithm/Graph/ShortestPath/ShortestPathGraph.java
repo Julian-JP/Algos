@@ -54,11 +54,10 @@ public class ShortestPathGraph extends Graph {
     }
 
     private void colorPath(ArrayDeque<Integer> path) {
-        while (!path.isEmpty()) {
+        while (path.size() > 1) {
             Integer first = path.poll();
             Integer seconde = path.getFirst();
             adjazensMatrix[first][seconde].finish();
-            adjazensMatrix[seconde][first].finish();
         }
     }
 
