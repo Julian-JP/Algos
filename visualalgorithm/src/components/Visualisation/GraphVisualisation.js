@@ -77,7 +77,7 @@ const GraphVisualisation = props => {
     const convertedEdges = () => {
         setDisplayedEdges(
             edges.map((item) => {
-                if (item.from === item.to) {
+                if (item.from === item.to && item.from !== undefined) {
                     return <circle
                         r={15}
                         cx={getVertex(item.to).x}
@@ -160,6 +160,16 @@ const GraphVisualisation = props => {
                               markerEnd={item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke==="blue" ? "url(#arrowheadblue)" : "url(#arrowheadred)")}
                               key={"markerline" + item.id}
                         />
+                        <line
+                            x1={x1}
+                            x2={x2}
+                            y1={y1}
+                            y2={y2}
+                            id={item.id}
+                            stroke={item.stroke}
+                            strokeWidth={3}
+                            key={item.id}
+                        />
                     </g>
                 } else {
                     x1 = item.x1;
@@ -167,8 +177,7 @@ const GraphVisualisation = props => {
                     y1 = item.y1;
                     y2 = item.y2;
                 }
-                return <g key={"group" + item.id}>
-                    <line
+                return item.directed ? arrow : <line
                         x1={x1}
                         x2={x2}
                         y1={y1}
@@ -178,8 +187,6 @@ const GraphVisualisation = props => {
                         strokeWidth={3}
                         key={item.id}
                     />
-                    {item.directed ? arrow : null}
-                </g>
             })
         );
     }

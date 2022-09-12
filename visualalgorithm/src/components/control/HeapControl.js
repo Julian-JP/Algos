@@ -29,25 +29,30 @@ const HeapControl = ({setEdges, setVertices, type}) => {
         if (tree === null) {
             return;
         }
+        let x1 = ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%";
+        let y1 = ((100 / (depth + 1)) * (curDepth + 1)) + "%";
+
         if (tree.left) {
             edges.push({
                 type: "line",
-                x1: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
-                y1: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
+                x1: x1,
+                y1: y1,
                 x2: ((100 / (2 ** (curDepth + 1) + 1)) * ((numElemInLine * 2) - 1)) + "%",
                 y2: ((100 / (depth + 1)) * (curDepth + 2)) + "%",
-                stroke: lcolor
+                stroke: lcolor,
+                directed: false
             })
             drawSubtree(tree.left, (numElemInLine * 2) - 1, edges, vertices, color, lcolor, depth, curDepth + 1);
         }
         if (tree.right) {
             edges.push({
                 type: "line",
-                x1: ((100 / (2**curDepth + 1)) * numElemInLine) + "%",
-                y1: ((100 / (depth + 1)) * (curDepth+1)) + "%",
+                x1: x1,
+                y1: y1,
                 x2: ((100 / (2**(curDepth+1) + 1)) * (numElemInLine * 2)) + "%",
                 y2: ((100 / (depth + 1)) * (curDepth+2)) + "%",
-                stroke: lcolor
+                stroke: lcolor,
+                directed: false
             })
             drawSubtree(tree.right, (numElemInLine * 2), edges, vertices, color, lcolor, depth, curDepth + 1);
         }
