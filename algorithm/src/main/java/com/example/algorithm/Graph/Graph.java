@@ -25,7 +25,6 @@ public class Graph {
             for (int j = 0; j < adjMatrixJSON.getJSONArray(i).length(); j++) {
                 try {
                     adjazensMatrix[i][j] = new GraphEdge(adjMatrixJSON.getJSONArray(i).getJSONObject(j).getString("color"));
-                    System.out.println(adjMatrixJSON.getJSONArray(i).getJSONObject(j).getString("color"));
                 } catch (JSONException e) {
                     adjazensMatrix[i][j] = null;
                 }

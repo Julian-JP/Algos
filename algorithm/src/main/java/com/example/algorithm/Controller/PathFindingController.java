@@ -2,8 +2,9 @@ package com.example.algorithm.Controller;
 
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.GraphResponse;
-import com.example.algorithm.Graph.ShortestPath.BreadthFirstSearch.BreadthFirstSearchService;
-import com.example.algorithm.Graph.ShortestPath.ShortestPathService;
+import com.example.algorithm.Graph.PathFinding.BreadthFirstSearch.BreadthFirstSearchService;
+import com.example.algorithm.Graph.PathFinding.DepthFirstSearch.DepthFirstSearchService;
+import com.example.algorithm.Graph.PathFinding.PathFindingService;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +16,16 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/algos/ShortestPath/")
+@RequestMapping("/algos/PathFinding/")
 @CrossOrigin("*")
-public class ShortestPathController {
+public class PathFindingController {
     private final BreadthFirstSearchService bfService;
+    private final DepthFirstSearchService dfService;
     private final Logger logger = LoggerFactory.getLogger(SearchTreeController.class);
 
-    public ShortestPathController(BreadthFirstSearchService bfService) {
+    public PathFindingController(BreadthFirstSearchService bfService, DepthFirstSearchService dfService) {
         this.bfService = bfService;
+        this.dfService = dfService;
     }
 
     @PostMapping(
@@ -30,38 +33,39 @@ public class ShortestPathController {
     )
     public ResponseEntity<GraphResponse> step(@PathVariable("searchType") String searchType, RequestEntity<String> graph) {
         try {
-            ShortestPathService service = stringToService(searchType);
+            PathFindingService service = stringToService(searchType);
 
-            logger.info("New ShortestPath nextstep-request: " + graph.getBody());
+            logger.info("New PathFinding nextstep-request: " + graph.getBody());
             GraphResponse temp = service.step(graph.getBody());
             return new ResponseEntity<>(temp, HttpStatus.OK);
         } catch (JSONException e) {
-            logger.error("ShortestPath step JSON failed: " + graph);
+            logger.error("PathFinding step JSON failed: " + graph);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
-            logger.error("ShortestPath step failed: " + e.getMessage());
+            logger.error("PathFinding step failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/{searchtype}/explanation")
-    public ResponseEntity<Explanation> ShortestpathgetExpl(@PathVariable("searchtype") String searchType) {
-        logger.info("Requested Explanation ShortestPath");
+    public ResponseEntity<Explanation> PathFindinggetExpl(@PathVariable("searchtype") String searchType) {
+        logger.info("Requested Explanation PathFinding");
         try {
-            ShortestPathService service = stringToService(searchType);
+            PathFindingService service = stringToService(searchType);
             return new ResponseEntity<>(service.getExplanation(), HttpStatus.OK);
         } catch (IOException e) {
-            logger.error("SearchTree explanation failed: " + e.getMessage());
+            logger.error("PathFinding explanation failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
-            logger.error("SearchTree explanation failed: " + e.getMessage());
+            logger.error("PathFinding explanation failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    private ShortestPathService stringToService(String service) throws ServiceNotFoundException {
+    private PathFindingService stringToService(String service) throws ServiceNotFoundException {
         switch (service) {
             case "BFS": return bfService;
+            case "DFS": return dfService;
             default: throw new ServiceNotFoundException("Service: " + service + " Not Found");
         }
     }

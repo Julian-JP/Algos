@@ -174,7 +174,6 @@ const GraphControl = (props) => {
 
     const next = () => {
         const createGraphFromJSON = (response) => {
-            console.log(response);
             setEdges(response.edges);
         }
 

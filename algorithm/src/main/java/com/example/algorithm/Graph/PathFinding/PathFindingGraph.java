@@ -1,4 +1,4 @@
-package com.example.algorithm.Graph.ShortestPath;
+package com.example.algorithm.Graph.PathFinding;
 
 import com.example.algorithm.Graph.Graph;
 import com.example.algorithm.Graph.GraphEdge;
@@ -7,11 +7,11 @@ import org.json.JSONException;
 
 import java.util.*;
 
-public class ShortestPathGraph extends Graph {
-    public ShortestPathGraph(GraphEdge[][] adjazensMatrix, int start, int end) {
+public class PathFindingGraph extends Graph {
+    public PathFindingGraph(GraphEdge[][] adjazensMatrix, int start, int end) {
         super(adjazensMatrix, start, end);
     }
-    public ShortestPathGraph(String graphJSON) throws JSONException {
+    public PathFindingGraph(String graphJSON) throws JSONException {
         super(graphJSON);
     }
 
@@ -24,6 +24,10 @@ public class ShortestPathGraph extends Graph {
         Arrays.fill(status, Status.notVisited);
         status[start] = Status.inQueue;
         breadthFirstSearchRecursive(todo, status);
+        return new GraphResponse(adjazensMatrix, start, end);
+    }
+
+    public GraphResponse depthFirstSearch() {
         return new GraphResponse(adjazensMatrix, start, end);
     }
 

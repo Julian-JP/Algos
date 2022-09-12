@@ -78,14 +78,14 @@ public class AlgorithmListController {
         List<Category> categories = new ArrayList<>();
         String[] searchTreeAlgos = {"/SearchTrees/BinarySearchTree", "/SearchTrees/AVLTree", "/SearchTrees/RedBlackTree"};
         String[] heapAlgos = {"/Heaps/BinaryHeap"};
-        String[] shortestPathAlgos = {"/ShortestPath/BFS", "/ShortestPath/DFS", "/ShortestPath/AStar"};
+        String[] pathFindingAlgos = {"/PathFinding/BFS", "/PathFinding/DFS", "/PathFinding/AStar"};
         Category searchTrees = new Category("Searchtrees", searchTreeAlgos, 0);
         Category minHeap = new Category("Heaps", heapAlgos, 1);
-        Category shortestPath = new Category("Shortest Path", shortestPathAlgos, 2);
+        Category pathFinding = new Category("PathFinding", pathFindingAlgos, 2);
 
         categories.add(searchTrees);
         categories.add(minHeap);
-        categories.add(shortestPath);
+        categories.add(pathFinding);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
@@ -117,24 +117,24 @@ public class AlgorithmListController {
         return new ResponseEntity<>(binaryHeap, HttpStatus.OK);
     }
 
-    @GetMapping("/ShortestPath/BFS")
+    @GetMapping("/PathFinding/BFS")
     public ResponseEntity<Algorithm> getBFS() {
         logger.info("Requested information to: Breadth-First Search");
-        Algorithm bfs = new Algorithm("Breadth-First Search", "ShortestPath/BFS", "graph", 0);
+        Algorithm bfs = new Algorithm("Breadth-First Search", "PathFinding/BFS", "graph", 0);
         return new ResponseEntity<>(bfs, HttpStatus.OK);
     }
 
-    @GetMapping("/ShortestPath/DFS")
+    @GetMapping("/PathFinding/DFS")
     public ResponseEntity<Algorithm> getDFS() {
         logger.info("Requested information to: Depth-First Search");
-        Algorithm dfs = new Algorithm("Depth-First Search", "ShortestPath/DFS", "graph", 1);
+        Algorithm dfs = new Algorithm("Depth-First Search", "PathFinding/DFS", "graph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
-    @GetMapping("/ShortestPath/AStar")
+    @GetMapping("/PathFinding/AStar")
     public ResponseEntity<Algorithm> getAStar() {
         logger.info("Requested information to: Depth-First Search");
-        Algorithm astar = new Algorithm("A-Star Search", "ShortestPath/AStar", "graph", 1);
+        Algorithm astar = new Algorithm("A-Star Search", "PathFinding/AStar", "graph", 1);
         return new ResponseEntity<>(astar, HttpStatus.OK);
     }
 }
