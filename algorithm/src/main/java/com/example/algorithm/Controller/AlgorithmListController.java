@@ -78,7 +78,7 @@ public class AlgorithmListController {
         List<Category> categories = new ArrayList<>();
         String[] searchTreeAlgos = {"/SearchTrees/BinarySearchTree", "/SearchTrees/AVLTree", "/SearchTrees/RedBlackTree"};
         String[] heapAlgos = {"/Heaps/BinaryHeap"};
-        String[] pathFindingAlgos = {"/PathFinding/BFS", "/PathFinding/DFS", "/PathFinding/AStar"};
+        String[] pathFindingAlgos = {"/PathFinding/BFS", "/PathFinding/DFS"};
         Category searchTrees = new Category("Searchtrees", searchTreeAlgos, 0);
         Category minHeap = new Category("Heaps", heapAlgos, 1);
         Category pathFinding = new Category("PathFinding", pathFindingAlgos, 2);
@@ -129,12 +129,5 @@ public class AlgorithmListController {
         logger.info("Requested information to: Depth-First Search");
         Algorithm dfs = new Algorithm("Depth-First Search", "PathFinding/DFS", "graph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
-    }
-
-    @GetMapping("/PathFinding/AStar")
-    public ResponseEntity<Algorithm> getAStar() {
-        logger.info("Requested information to: Depth-First Search");
-        Algorithm astar = new Algorithm("A-Star Search", "PathFinding/AStar", "graph", 1);
-        return new ResponseEntity<>(astar, HttpStatus.OK);
     }
 }

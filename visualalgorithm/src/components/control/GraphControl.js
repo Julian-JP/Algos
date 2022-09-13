@@ -8,6 +8,7 @@ const GraphControl = (props) => {
     const DEFAULT_VERTEX_COLOR = "white";
     const MARKED_VERTEX_COLOR = "#e0e0e0";
     const START_END_COLOR = "blue";
+    const DEFAULT_LINE_COLOR = "black"
 
     const [vertices, setVertices] = useState([]);
     const [edges, setEdges] = useState([]);
@@ -77,7 +78,7 @@ const GraphControl = (props) => {
                 if (ret[markedNodes[0]][markedNodes[1]] !== null) {
                     ret[markedNodes[0]][markedNodes[1]] = null;
                 } else {
-                    ret[markedNodes[0]][markedNodes[1]] = {color: "black"};
+                    ret[markedNodes[0]][markedNodes[1]] = {color: DEFAULT_LINE_COLOR};
                 }
 
                 return ret;
@@ -110,6 +111,7 @@ const GraphControl = (props) => {
                 x: Math.floor(Math.random() * 1000), y: 100, color: DEFAULT_VERTEX_COLOR, value: addVal
             }];
         })
+        clearPreviousStack();
     }
 
     const handleOnClick = (id, event) => {
@@ -153,6 +155,9 @@ const GraphControl = (props) => {
         setVertices(old => {
             return vertices.filter(item => item.value !== event.id);
         })
+
+        updateStartEndAfterRemovingIndex(index);
+        clearPreviousStack();
     }
 
     const removeIndex = (index, matrix) => {
@@ -164,12 +169,27 @@ const GraphControl = (props) => {
                 oldIndex++;
             }
             newMatrix[i] = [matrix.length - 1];
-            for (let j = 0; j < matrix.length - 1; j++) {
+            for (let j = 0; j < newMatrix.length; j++) {
                 newMatrix[i][j] = matrix[oldIndex][j >= index ? j + 1 : j];
             }
             oldIndex++;
         }
+
         return newMatrix;
+    }
+
+    const updateStartEndAfterRemovingIndex = (index) => {
+        if (start > index) {
+            setStart(old => old - 1);
+        } else if (start === index) {
+            setStart(null);
+        }
+
+        if (end > index) {
+            setEnd(old => old - 1);
+        } else if (end === index) {
+            setEnd(null);
+        }
     }
 
     const next = () => {
@@ -244,8 +264,21 @@ const GraphControl = (props) => {
             setEnd(markedNodes[0]);
             setMarkedNode([]);
         }
+        clearPreviousStack();
     }
 
+    const clearPreviousStack = () => {
+        setPrev([]);
+        setEdges(old => {
+            let temp = [...old];
+            for (let i = 0; i < temp.length; i++) {
+                for (let j = 0; j < temp.length; j++) {
+                    if (temp[i][j] !== null) temp[i][j].color = DEFAULT_LINE_COLOR;
+                }
+            }
+            return temp;
+        });
+    }
 
     return (<div className={classes.container}>
         <MultidataInputWithSubmit
