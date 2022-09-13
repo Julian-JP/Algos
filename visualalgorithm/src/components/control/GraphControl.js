@@ -173,6 +173,13 @@ const GraphControl = (props) => {
     }
 
     const next = () => {
+
+        setPrev(old => {
+            let temp = [...old];
+            temp.push({edges: edges, vertices: vertices, start: start, end: end});
+            return temp;
+        })
+
         const createGraphFromJSON = (response) => {
             setEdges(response.edges);
         }
@@ -185,6 +192,22 @@ const GraphControl = (props) => {
             },
             body: {edges: edges, start: start, vertices: vertices, end: end}
         }, createGraphFromJSON);
+    }
+
+    const previous = () => {
+        if (prev.length <= 0) return;
+
+        let previousState = prev[prev.length - 1];
+        setEdges(previousState.edges);
+        setVertices(previousState.vertices);
+        setStart(previousState.start);
+        setEnd(previousState.end);
+
+        setPrev(old => {
+            let temp = [...old];
+            temp.pop();
+            return temp;
+        })
     }
 
     const updateStartEndColor = (newEnd, newStart) => {
@@ -239,7 +262,7 @@ const GraphControl = (props) => {
             <button className={classes.next} onClick={() => handleStartEnd(false)}>End</button>
         </div>
         <div className={classes.algoNavigationContainer}>
-            <button className={classes.prev}>◄</button>
+            <button className={classes.prev} onClick={() => previous(1)}>◄</button>
             <button className={classes.next} onClick={() => next(1)}>►</button>
         </div>
 

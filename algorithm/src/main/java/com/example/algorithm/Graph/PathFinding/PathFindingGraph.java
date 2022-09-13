@@ -23,10 +23,6 @@ public class PathFindingGraph extends Graph {
         return new GraphResponse(adjacencyMatrix);
     }
 
-    public GraphResponse depthFirstSearch() {
-        return new GraphResponse(adjacencyMatrix);
-    }
-
     private void breadthFirstSearchRecursive(Queue<ArrayDeque<Integer>> todo, Status[] status) {
         if (todo.isEmpty()) return;
 
@@ -36,8 +32,7 @@ public class PathFindingGraph extends Graph {
                 ArrayDeque<Integer> currentUpdate = current.clone();
 
                 if (i == end) {
-                    currentUpdate.add(i);
-                    colorPath(currentUpdate);
+                    finishFoundedPath(currentUpdate);
                     return;
                 }
                 if (adjacencyMatrix[currentUpdate.getLast()][i].isVisited()) {
@@ -53,12 +48,58 @@ public class PathFindingGraph extends Graph {
         breadthFirstSearchRecursive(todo, status);
     }
 
+    public GraphResponse depthFirstSearch() {
+        Stack<ArrayDeque<Integer>> todo = new Stack<>();
+        ArrayDeque<Integer> temp = new ArrayDeque<>();
+        temp.add(start);
+        todo.add(temp);
+        Status[] status = new Status[adjacencyMatrix.length];
+        Arrays.fill(status, Status.notVisited);
+        status[start] = Status.inQueue;
+        depthFirstSearchRecursive(todo, status);
+        return new GraphResponse(adjacencyMatrix);
+    }
+
+    private boolean depthFirstSearchRecursive(Stack<ArrayDeque<Integer>> todo, Status[] status) {
+        if (todo.isEmpty()) return true;
+
+        ArrayDeque<Integer> current = todo.pop();
+        for (int i = 0; i < status.length; i++) {
+            ArrayDeque<Integer> currentUpdated = current.clone();
+            if (status[i] == Status.notVisited && adjacencyMatrix[current.getLast()][i] != null) {
+
+                status[i] = Status.inQueue;
+
+                if (i == end) {
+                    finishFoundedPath(currentUpdated);
+                    return true;
+                }
+
+                if (adjacencyMatrix[current.getLast()][i].isVisited() == false) {
+                    return true;
+                } else {
+                    currentUpdated.add(i);
+                    Stack<ArrayDeque<Integer>> todoTemp = new Stack<>();
+                    todoTemp.addAll(todo);
+                    todoTemp.add(currentUpdated);
+                    if (depthFirstSearchRecursive(todoTemp, status)) return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void colorPath(ArrayDeque<Integer> path) {
         while (path.size() > 1) {
             Integer first = path.poll();
             Integer second = path.getFirst();
             adjacencyMatrix[first][second].finish();
         }
+    }
+
+    private void finishFoundedPath(ArrayDeque<Integer> currentUpdate) {
+        currentUpdate.add(end);
+        colorPath(currentUpdate);
     }
 
     enum Status {

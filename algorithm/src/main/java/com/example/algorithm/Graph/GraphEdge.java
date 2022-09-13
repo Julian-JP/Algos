@@ -3,6 +3,7 @@ package com.example.algorithm.Graph;
 public class GraphEdge {
     private final String VISITED_COLOR = "blue";
     private final String FINAL_COLOR = "red";
+    private final String UNVISITED_COLOR = "black";
     private String color;
 
     public GraphEdge(String color) {
@@ -10,7 +11,7 @@ public class GraphEdge {
     }
 
     public boolean isVisited() {
-        if (color.equals(VISITED_COLOR)) {
+        if (color.equals(UNVISITED_COLOR) == false) {
             return true;
         } else {
             color = VISITED_COLOR;
@@ -20,5 +21,9 @@ public class GraphEdge {
 
     public void finish() {
         color = FINAL_COLOR;
+    }
+
+    public String getColor() {
+        return color;
     }
 }
