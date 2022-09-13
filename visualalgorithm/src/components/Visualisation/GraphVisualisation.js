@@ -34,18 +34,17 @@ const GraphVisualisation = props => {
 
     const convertVertices = () => {
         setVerticesLocation((old) => {
-            let ret = vertices.map((item) => {
+            return vertices.map((item) => {
                 let index = old.findIndex(vertex => vertex.id === item.id)
                 if (index >= 0) {
                     item.x = old[index].x;
                     item.y = old[index].y
                 }
                 return item;
-            })
-            return ret;
+            });
         });
         setDisplayedVertices(
-            vertices.map((item, index) => {
+            vertices.map((item) => {
                 return <Circle
                     handleDrag={handleDrag}
                     r={20}
@@ -95,7 +94,7 @@ const GraphVisualisation = props => {
                 let offsetflip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
                 || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
 
-                if (item.from != undefined && item.to !== undefined) {
+                if (item.from !== undefined && item.to !== undefined) {
                     let offset = item.from > item.to ? 3 : -3;
                     if (getVertex(item.from) && getVertex(item.to)) {
                         x1 = getVertex(item.from).x + (offset * offsetflip);

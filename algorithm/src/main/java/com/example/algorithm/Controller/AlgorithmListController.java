@@ -18,7 +18,7 @@ import java.util.List;
 public class AlgorithmListController {
     private final Logger logger = LoggerFactory.getLogger(AlgorithmListController.class);
 
-    public class Algorithm {
+    public static class Algorithm {
         private String name;
         private String url;
         private String type;
@@ -48,12 +48,12 @@ public class AlgorithmListController {
         }
     }
 
-    public class Category {
+    public static class Category {
         private String name;
         private String[] algorithmUrls;
         private long id;
 
-        public Category(String name, String childrenUrl[], long id) {
+        public Category(String name, String[] childrenUrl, long id) {
             this.name = name;
             this.algorithmUrls = childrenUrl;
             this.id = id;
@@ -92,7 +92,7 @@ public class AlgorithmListController {
     @GetMapping("/SearchTrees/BinarySearchTree")
     public ResponseEntity<Algorithm> getBinarySearchTree() {
         logger.info("Requested information to: Binary Search Tree");
-        Algorithm binarySearchTree = new Algorithm("Binary Search Tree", "SearchTrees/BinarySearchTree", "binarytree",0);
+        Algorithm binarySearchTree = new Algorithm("Binary Search Tree", "SearchTrees/BinarySearchTree", "binarytree", 0);
         return new ResponseEntity<>(binarySearchTree, HttpStatus.OK);
     }
 

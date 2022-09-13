@@ -4,6 +4,7 @@ public abstract class SearchTreeNode {
     private int value;
     private SearchTreeNode left;
     private SearchTreeNode right;
+    private String color = "white";
 
     public SearchTreeNode(int value) {
         this.value = value;
@@ -40,5 +41,13 @@ public abstract class SearchTreeNode {
 
     public void setRight(SearchTreeNode right) {
         this.right = right;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

@@ -23,11 +23,13 @@ public class SearchTreeController {
 
     private final BinarySearchTreeService bstService;
     private final AVLTreeService avlService;
+    private final RedBlackService redBlackService;
     private final Logger logger = LoggerFactory.getLogger(SearchTreeController.class);
 
-    public SearchTreeController(BinarySearchTreeService bstService, AVLTreeService avlService) {
+    public SearchTreeController(BinarySearchTreeService bstService, AVLTreeService avlService, RedBlackService redBlackService) {
         this.bstService = bstService;
         this.avlService = avlService;
+        this.redBlackService = redBlackService;
     }
 
     @PostMapping(
@@ -98,6 +100,7 @@ public class SearchTreeController {
         switch (service) {
             case "BinarySearchTree": return bstService;
             case "AVLTree": return avlService;
+            case "RedBlackTree": return redBlackService;
             default: throw new ServiceNotFoundException("Service: " + service + " Not Found");
         }
     }
