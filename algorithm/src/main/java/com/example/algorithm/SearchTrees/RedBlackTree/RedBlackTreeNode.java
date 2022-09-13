@@ -8,8 +8,9 @@ public class RedBlackTreeNode extends SearchTreeNode {
         setColor(isRed ? "red" : "black");
     }
 
-    public RedBlackTreeNode(int value, RedBlackTreeNode left, RedBlackTreeNode right) {
+    public RedBlackTreeNode(int value, RedBlackTreeNode left, RedBlackTreeNode right, String color) {
         super(value, left, right);
+        setColor(color);
     }
 
     @Override
@@ -20,28 +21,39 @@ public class RedBlackTreeNode extends SearchTreeNode {
     public RedBlackTreeNode add(int newValue, RedBlackTreeNode grandparent, RedBlackTreeNode uncle) {
         if (getValue() == newValue) {
             return this;
-        } else if (getValue() < newValue) {
+        } else if (getValue() > newValue) {
             if (getLeft() == null) {
                 setLeft(new RedBlackTreeNode(newValue, true));
-                selectCase(grandparent, this, uncle, (RedBlackTreeNode) getLeft());
+                selectCaseInsert(grandparent, this, uncle, (RedBlackTreeNode) getLeft());
             }
-        } else if (getValue() > newValue) {
+        } else if (getValue() < newValue) {
             if (getRight() == null) {
                 setRight(new RedBlackTreeNode(newValue, true));
-                selectCase(grandparent, this, uncle, (RedBlackTreeNode) getRight());
+                selectCaseInsert(grandparent, this, uncle, (RedBlackTreeNode) getRight());
             }
         }
+        return this;
     }
 
-    private void selectCase(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle, RedBlackTreeNode child) {
-        if (parent.getColor() == "black") caseBlackParent(child);
+    private void selectCaseInsert(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle, RedBlackTreeNode child) {
+        if (parent != null && parent.getColor() == "black") caseBlackParent(child);
+        else if (uncle != null && uncle.getColor() == "red") caseRedUncle(grandParent, parent, uncle, child);
+        else if (uncle == null || uncle.getColor() == "black") caseBlackUncle(child);
     }
 
     private void caseBlackParent(RedBlackTreeNode child) {
         child.setColor("black");
     }
 
-    private RedBlackTreeNode SelectCaseInsert(RedBlackTreeNode current, )
+    private void caseRedUncle(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle, RedBlackTreeNode child) {
+        parent.setColor("black");
+        uncle.setColor("black");
+        grandParent.setColor("red");
+    }
+
+    private void caseBlackUncle(RedBlackTreeNode child) {
+
+    }
 
     @Override
     public SearchTreeNode remove(int newValue) {

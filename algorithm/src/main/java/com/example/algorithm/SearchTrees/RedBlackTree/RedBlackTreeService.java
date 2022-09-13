@@ -45,14 +45,16 @@ public class RedBlackTreeService extends SearchTreeService {
         JSONObject root = new JSONObject(json);
         RedBlackTreeNode left = null;
         RedBlackTreeNode right = null;
+        String color;
 
 
         if (root.optJSONObject("left") != null) left = convNodeJSON(root.getString("left"));
         if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
+        color = root.getString("color");
 
 
         int value = root.getInt("value");
 
-        return new RedBlackTreeNode(value, left, right);
+        return new RedBlackTreeNode(value, left, right, color);
     }
 }

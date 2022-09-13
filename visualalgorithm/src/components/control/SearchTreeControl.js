@@ -52,13 +52,15 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
             drawSubtree(tree.right, (numElemInLine * 2), edges, vertices, color, lcolor, depth, curDepth + 1);
         }
 
+        console.log(tree)
+
         vertices.push({
             type: "circle",
             x: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
             y: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
-            fill: color,
+            fill: tree.color != null ? tree.color : color,
             stroke: "black",
-            textFill: "black",
+            textFill: tree.color !== "black" ? "black" : "white",
             value: tree.value,
             draggable: false
         });

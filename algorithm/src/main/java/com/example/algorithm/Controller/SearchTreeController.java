@@ -3,6 +3,7 @@ package com.example.algorithm.Controller;
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.SearchTrees.AVLTree.AVLTreeService;
 import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTreeService;
+import com.example.algorithm.SearchTrees.RedBlackTree.RedBlackTreeService;
 import com.example.algorithm.SearchTrees.SearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeService;
 import org.json.JSONException;
@@ -23,10 +24,10 @@ public class SearchTreeController {
 
     private final BinarySearchTreeService bstService;
     private final AVLTreeService avlService;
-    private final RedBlackService redBlackService;
+    private final RedBlackTreeService redBlackService;
     private final Logger logger = LoggerFactory.getLogger(SearchTreeController.class);
 
-    public SearchTreeController(BinarySearchTreeService bstService, AVLTreeService avlService, RedBlackService redBlackService) {
+    public SearchTreeController(BinarySearchTreeService bstService, AVLTreeService avlService, RedBlackTreeService redBlackService) {
         this.bstService = bstService;
         this.avlService = avlService;
         this.redBlackService = redBlackService;
