@@ -59,6 +59,4 @@ public class RedBlackTreeNode extends SearchTreeNode {
     public SearchTreeNode remove(int newValue) {
         return null;
     }
-
-
 }
