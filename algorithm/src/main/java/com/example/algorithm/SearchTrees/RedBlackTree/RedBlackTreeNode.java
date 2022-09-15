@@ -93,13 +93,11 @@ public class RedBlackTreeNode extends SearchTreeNode {
     }
 
     private RedBlackTreeNode caseBlackParent(RedBlackTreeNode grandParent, RedBlackTreeNode child) {
-        System.out.println("BlackParent");
         child.setColor("red");
         return grandParent;
     }
 
     private RedBlackTreeNode caseRedUncle(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle) {
-        System.out.println("Red Uncle");
         parent.setColor("black");
         uncle.setColor("black");
         grandParent.setColor("red");
@@ -107,12 +105,8 @@ public class RedBlackTreeNode extends SearchTreeNode {
     }
 
     private RedBlackTreeNode caseLeftLeft(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle, RedBlackTreeNode child) {
-        System.out.println("LeftLeft");
-        if (grandParent.parent != null && grandParent.parent.getRight() == grandParent) {
-            grandParent.parent.setRight(parent);
-        } else if (grandParent.parent != null) {
-            grandParent.parent.setLeft(parent);
-        }
+        linkWithGrandParentsParent(grandParent, parent);
+
         child.parent = parent;
         parent.parent = grandParent.parent;
         grandParent.parent = parent;
@@ -129,12 +123,8 @@ public class RedBlackTreeNode extends SearchTreeNode {
     }
 
     private RedBlackTreeNode caseLeftRight(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle, RedBlackTreeNode child) {
-        System.out.println("LeftRight");
-        if (grandParent.parent != null && grandParent.parent.getRight() == grandParent) {
-            grandParent.parent.setRight(child);
-        } else if (grandParent.parent != null) {
-            grandParent.parent.setLeft(child);
-        }
+        linkWithGrandParentsParent(grandParent, child);
+
         child.parent = grandParent.parent;
         grandParent.parent = child;
         parent.parent = child;
@@ -154,12 +144,8 @@ public class RedBlackTreeNode extends SearchTreeNode {
     }
 
     private RedBlackTreeNode caseRightRight(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle, RedBlackTreeNode child) {
-        System.out.println("RightRight");
-        if (grandParent.parent != null && grandParent.parent.getRight() == grandParent) {
-            grandParent.parent.setRight(parent);
-        } else if (grandParent.parent != null) {
-            grandParent.parent.setLeft(parent);
-        }
+        linkWithGrandParentsParent(grandParent, parent);
+
         parent.parent = grandParent.parent;
         grandParent.parent = parent;
         if (parent.getLeft() != null) {
@@ -175,12 +161,8 @@ public class RedBlackTreeNode extends SearchTreeNode {
     }
 
     private RedBlackTreeNode caseRightLeft(RedBlackTreeNode grandParent, RedBlackTreeNode parent, RedBlackTreeNode uncle, RedBlackTreeNode child) {
-        System.out.println("RightLeft");
-        if (grandParent.parent != null && grandParent.parent.getRight() == grandParent) {
-            grandParent.parent.setRight(child);
-        } else if (grandParent.parent != null) {
-            grandParent.parent.setLeft(child);
-        }
+        linkWithGrandParentsParent(grandParent, child);
+
         child.parent = grandParent.parent;
         grandParent.parent = child;
         parent.parent = child;
@@ -197,6 +179,14 @@ public class RedBlackTreeNode extends SearchTreeNode {
         child.setRight(parent);
 
         return child;
+    }
+
+    private void linkWithGrandParentsParent(RedBlackTreeNode grandParent, RedBlackTreeNode nodeToLink) {
+        if (grandParent.parent != null && grandParent.parent.getRight() == grandParent) {
+            grandParent.parent.setRight(nodeToLink);
+        } else if (grandParent.parent != null) {
+            grandParent.parent.setLeft(nodeToLink);
+        }
     }
 
     @Override

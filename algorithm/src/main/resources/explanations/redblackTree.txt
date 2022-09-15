@@ -16,6 +16,11 @@ Wende bei der Wurzel beginnend den folgenden Algorithmus an:
 Da durch die Invarianten eine komplette Entartung in eine Liste ausgeschlossen ist, liegt die Worstcase Lauzeit in O(log n), armortisiert liegt sie sogar in O(1).
 </br>
 <h2>Insert</h2>
+Füge den neuen Knoten wie in einem ganz normalen Binärem Suchbaum als roten Knoten ein. Betrachte zunächst den Eltern Knoten:
+<ol>
+    <li><h5>Schwarzer Eltern Knoten:</h5> Fertig, da weder Rotation noch Umfärbung nötig sind</li>
+    <li><h5>Roter Eltern Knoten:</h5> Betrachte den Onkel (Falls Onkel nicht vorhanden, an "Null-Knoten" denken also schwarze Färbung)</li>
+</ol>
 TODO 4 Cases + Nach rotation immer fertig +  beim umfärben Großvaterknoten als "Kind betrachten" und weiter von dort aus fixen + wurzel immer schwarz färben, ist allerdings
 je nach implementierung nicht immer notwendig, da invariante auch ohne das einfach eingehalten werden kann
 </br>
