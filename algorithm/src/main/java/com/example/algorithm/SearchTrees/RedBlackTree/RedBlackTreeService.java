@@ -6,8 +6,10 @@ import com.example.algorithm.SearchTrees.SearchTreeService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 public class RedBlackTreeService extends SearchTreeService {
@@ -27,17 +29,20 @@ public class RedBlackTreeService extends SearchTreeService {
 
     @Override
     public SearchTree create(int value) {
-        return new RedBlackTree(new RedBlackTreeNode(value, false));
+        return new RedBlackTree(new RedBlackTreeNode(value, false, null));
     }
 
     @Override
     public Explanation getExplanation() throws IOException {
-        return null;
+        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/redblackTree.txt").toPath()));
+        return new Explanation(explanation);
     }
 
     private RedBlackTree convJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
-        return new RedBlackTree(convNodeJSON(root.getString("root")));
+        RedBlackTree tree = new RedBlackTree(convNodeJSON(root.getString("root")));
+        tree.parents();
+        return tree;
     }
 
     @org.jetbrains.annotations.NotNull
@@ -55,6 +60,6 @@ public class RedBlackTreeService extends SearchTreeService {
 
         int value = root.getInt("value");
 
-        return new RedBlackTreeNode(value, left, right, color);
+        return new RedBlackTreeNode(value, left, right, color, null);
     }
 }

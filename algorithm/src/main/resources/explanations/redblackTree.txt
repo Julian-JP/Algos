@@ -1,0 +1,23 @@
+<h1>RedBlack Suchbaum</h1>
+Der RedBlack Suchbaum ist eine Suchstruktur basierend auf einem binärem Suchbaum, welcher durch Rotationen und Einführung der Knotenfärbungen Rot und schwarz die Daten "balanzierter" speichert. In einem RedBlack Suchbaum gelten die Folgenden Invarianten: </br>
+<ol>
+    <li><h5>Doppel-Rot:</h5> Ein Knoten mit roter Färbung darf kein Kind mit roter Färbung haben</li>
+    <li><h5>Blatt-Knoten 2:</h5> An jedem Knoten der keine/nur ein Kind hat hängen zwei/ein "Null-Knoten", welche(r) schwarz gefärbt ist. Dieser "Nullknoten" wird allerdings oft nicht hingezeichnet</li>
+    <li><h5>Anzahl schwarzer Knoten auf einem Pfad:</h5> Für jeden beliebigen Knoten gilt, jeder Pfad zu einem Blatt enthält von diesem Knoten aus gleich viele schwarze Knoten</li>
+</ol>
+</br>
+<h2>Find</h2>
+Wende bei der Wurzel beginnend den folgenden Algorithmus an:
+<ol>
+    <li>Vergleiche die Wurzel mit dem gesuchten Wert. Wenn es der richtige ist, sind wir fertig</li>
+    <li>Ist der gesuchte Wert kleiner als die Wurzel? Dann nehme den linken Kinderknoten, sonst nehme den rechten Kinderknoten</li>
+    <li>Betrachte diesen Knoten als neue Wurzel und führe wieder Schritt 1 aus</li>
+</ol>
+Da durch die Invarianten eine komplette Entartung in eine Liste ausgeschlossen ist, liegt die Worstcase Lauzeit in O(log n), armortisiert liegt sie sogar in O(1).
+</br>
+<h2>Insert</h2>
+TODO 4 Cases + Nach rotation immer fertig +  beim umfärben Großvaterknoten als "Kind betrachten" und weiter von dort aus fixen + wurzel immer schwarz färben, ist allerdings
+je nach implementierung nicht immer notwendig, da invariante auch ohne das einfach eingehalten werden kann
+</br>
+<h2>Remove</h2>
+TODO

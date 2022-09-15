@@ -11,7 +11,7 @@ public class RedBlackTree extends SearchTree {
     @Override
     public void add(int value) {
         if (getRoot() == null) {
-            setRoot(new RedBlackTreeNode(value, false));
+            setRoot(new RedBlackTreeNode(value, false, null));
         } else {
             setRoot(getRoot().add(value));
         }
@@ -22,5 +22,10 @@ public class RedBlackTree extends SearchTree {
         if (getRoot() != null) {
             setRoot(getRoot().remove(value));
         }
+    }
+
+    public void parents() {
+        ((RedBlackTreeNode) getRoot()).updateParents(null);
+
     }
 }

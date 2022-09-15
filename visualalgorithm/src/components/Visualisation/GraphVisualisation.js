@@ -107,15 +107,68 @@ const GraphVisualisation = props => {
                         y1 = getInitVertex(item.from).y + offset;
                         y2 = getInitVertex(item.to).y + offset;
                     }
-                    arrow = <g key={"marker" + item.id}>
-                        <defs>
-                            <marker id="arrowhead" markerWidth={10} markerHeight={3}
-                                    refX="0" refY="1.5" orient="auto">
-                                <polygon points="0 0, 10 1.5, 0 3" fill={item.stroke}/>
-                            </marker>
-                        </defs>
-                        <line x1={x1} y1={y1} x2={x1-(x1-x2)/3} y2={y1-(y1-y2)/3} stroke={item.stroke} strokeWidth={3}
-                              markerEnd="url(#arrowhead)"/>
+                    arrow = <g key={"group" + item.id}>
+                        <marker id="arrowheadblue"
+                                markerWidth={10}
+                                markerHeight={3}
+                                refX="0"
+                                refY="1.5"
+                                orient="auto"
+                                key={"marker-blue" + item.id}
+                                fill={"blue"}
+                        >
+                            <polygon
+                                points="0 0, 10 1.5, 0 3"
+                                key={"polygon" + item.id}
+                            />
+                        </marker>
+                        <marker id="arrowheadred"
+                                markerWidth={10}
+                                markerHeight={3}
+                                refX="0"
+                                refY="1.5"
+                                orient="auto"
+                                key={"marker-red" + item.id}
+                                fill={"red"}
+                        >
+                            <polygon
+                                points="0 0, 10 1.5, 0 3"
+                                key={"polygon" + item.id}
+                            />
+                        </marker>
+                        <marker id="arrowheadblack"
+                                markerWidth={10}
+                                markerHeight={3}
+                                refX="0"
+                                refY="1.5"
+                                orient="auto"
+                                key={"marker-black" + item.id}
+                                fill={"black"}
+                        >
+                            <polygon
+                                points="0 0, 10 1.5, 0 3"
+                                key={"polygon" + item.id}
+                            />
+                        </marker>
+                        <line x1={x1}
+                              y1={y1}
+                              x2={x1 - (x1 - x2) / 3}
+                              y2={y1 - (y1 - y2) / 3}
+                              stroke={item.stroke}
+                              strokeWidth={3}
+                              markerEnd={item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke==="blue" ? "url(#arrowheadblue)" : "url(#arrowheadred)")}
+                              key={"markerline" + item.id}
+                        />
+                        <line
+                            x1={x1}
+                            x2={x2}
+                            y1={y1}
+                            y2={y2}
+                            id={item.id}
+                            stroke={item.stroke}
+                            strokeWidth={3}
+                            key={item.id}
+                        />
                     </g>
                 } else {
                     x1 = item.x1;

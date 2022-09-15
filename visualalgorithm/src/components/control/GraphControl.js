@@ -83,7 +83,8 @@ const GraphControl = (props) => {
 
                 return ret;
             });
-            setMarkedNode([])
+            setMarkedNode([]);
+            clearPreviousStack();
         }
     }, [markedNodes])
 
