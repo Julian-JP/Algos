@@ -12,7 +12,7 @@ public class BSTNode extends SearchTreeNode {
     }
 
     @Override
-    public BSTNode add(int newValue) {
+    public BSTNode add(Integer newValue) {
         if (newValue < getValue()) {
             return addInLeftSubTree(newValue);
         } else if (newValue > getValue()) {
@@ -22,7 +22,7 @@ public class BSTNode extends SearchTreeNode {
     }
 
     @Override
-    public SearchTreeNode remove(int deleteValue) {
+    public SearchTreeNode remove(Integer deleteValue) {
         if (deleteValue < getValue()) {
             return removeInLeftSubTree(deleteValue);
         } else if (deleteValue > getValue()) {

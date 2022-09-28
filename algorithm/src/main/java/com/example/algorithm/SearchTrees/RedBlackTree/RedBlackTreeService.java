@@ -57,9 +57,10 @@ public class RedBlackTreeService extends SearchTreeService {
         if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
         color = root.getString("color");
 
-
-        int value = root.getInt("value");
-
-        return new RedBlackTreeNode(value, left, right, color, null);
+        if (root.getString("value").equals("null")) {
+            return new RedBlackTreeNode(null);
+        } else {
+            return new RedBlackTreeNode(root.getInt("value"), left, right, color, null);
+        }
     }
 }

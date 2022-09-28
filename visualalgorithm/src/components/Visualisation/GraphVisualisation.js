@@ -91,14 +91,14 @@ const GraphVisualisation = props => {
 
                 let x1, x2, y1, y2;
                 let arrow;
-                let offsetflip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
-                || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
 
                 if (item.from != undefined && item.to !== undefined) {
+                    let offsetFlip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
+                    || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
                     let offset = item.from > item.to ? 3 : -3;
                     if (getVertex(item.from) && getVertex(item.to)) {
-                        x1 = getVertex(item.from).x + (offset * offsetflip);
-                        x2 = getVertex(item.to).x + (offset * offsetflip);
+                        x1 = getVertex(item.from).x + (offset * offsetFlip);
+                        x2 = getVertex(item.to).x + (offset * offsetFlip);
                         y1 = getVertex(item.from).y + offset;
                         y2 = getVertex(item.to).y + offset;
                     } else if (getInitVertex(item.from) && getInitVertex(item.to)) {

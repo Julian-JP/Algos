@@ -1,25 +1,25 @@
 package com.example.algorithm.SearchTrees;
 
 public abstract class SearchTreeNode {
-    private int value;
+    private Integer value;
     private SearchTreeNode left;
     private SearchTreeNode right;
     private String color = "white";
 
-    public SearchTreeNode(int value) {
+    public SearchTreeNode(Integer value) {
         this.value = value;
     }
-    public SearchTreeNode(int value, SearchTreeNode left, SearchTreeNode right) {
+    public SearchTreeNode(Integer value, SearchTreeNode left, SearchTreeNode right) {
         this.value = value;
         this.left = left;
         this.right = right;
     }
 
-    public abstract SearchTreeNode add(int newValue);
+    public abstract SearchTreeNode add(Integer newValue);
 
-    public abstract SearchTreeNode remove(int newValue);
+    public abstract SearchTreeNode remove(Integer newValue);
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 

@@ -17,7 +17,7 @@ public class AVLTreeNode extends SearchTreeNode {
     }
 
     @Override
-    public AVLTreeNode add(int newValue) {
+    public AVLTreeNode add(Integer newValue) {
         if (getValue() == newValue) {
             return this;
         } else if (newValue < getValue()) {
@@ -37,7 +37,7 @@ public class AVLTreeNode extends SearchTreeNode {
     }
 
     @Override
-    public SearchTreeNode remove(int deleteValue) {
+    public SearchTreeNode remove(Integer deleteValue) {
         if (deleteValue < getValue()) {
             if (getLeft() != null) {
                 setLeft(getLeft().remove(deleteValue));
