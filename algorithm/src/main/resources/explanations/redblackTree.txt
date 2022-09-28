@@ -25,4 +25,84 @@ TODO 4 Cases + Nach rotation immer fertig +  beim umfärben Großvaterknoten als
 je nach implementierung nicht immer notwendig, da invariante auch ohne das einfach eingehalten werden kann
 </br>
 <h2>Remove</h2>
-TODO
+Für das Remove sind immer vier Knoten rellevant. Ein replacement Knoten und der Knoten der entfernt werden soll. Außerdem noch ein Knoten x und dessen Geschwisterknoten w
+Zuerst wird der Knoten der gelöscht werden soll lokalisiert. Ist er gefunden gibt es 3 Fälle um den replacement Knoten und den Knoten x zu lokalisieren.
+<ul>
+    <li><h5>Der zu entfernende Knoten hat zwei NIL-Kinder:</h5> Der replacement Knoten und Knoten x sind NIL Knoten</li>
+    <li><h5>Der zu entfernende Knoten hat genau ein NIL-Kind und ein Kind welches ein nicht NIL-Knoten ist:</h5> Das Kind welches kein NIL-Knoten ist, ist sowohl der replacement Knoten als auch der Knoten x</li>
+    <li><h5>Der zu entfernende Knoten hat zwei Kinder welche beide nicht NIL-Knoten sind:</h5> Wähle das rechte Kind als replacement Knoten und das rechte Kind des replacement Knotens als Knoten x</li>
+</ul>
+Führe nun die passenden Färbungen und Rotationen durch:
+<ul>
+    <li><h5>Entfernter Knoten ist rot und der replacement Knoten ist entweder rot oder ein NIL-Knoten:</h5> Fertig!</li>
+    <li><h5>Entfernter Knoten ist rot und der replacement Knoten ist schwarz und kein NIL-Knoten:</h5> Färbe den replacement Knoten rot und führe den passenden Fall aus</li>
+    <li><h5>Entfernter Knoten ist schwarz und der replacement Knoten ist rot:</h5> Färbe den Replacement Knoten schwarz. Fertig!</li>
+    <li><h5>Entfernter Knoten ist schwarz und der replacement Knoten ist schwarz:</h5> Führe den passenden Fall aus</li>
+</ul>
+Falls nötig wähle einen der Fälle 1-5 aus:
+<ul>
+    <li><h5>Fall 1 falls:</h5> Knoten x ist rot</li>
+    <li><h5>Fall 2 falls:</h5> Knoten x ist schwarz und der Geschwisterknoten w ist rot</li>
+    <li><h5>Fall 3 falls:</h5> Knoten x ist schwarz und der Geschwisterknoten w ist schwarz und beide von w's Kindern sind schwarz</li>
+    <li><h5>Fall 4 falls:</h5> Knoten x ist schwarz, der Geschwisterknoten w ist schwarz und<br>
+        <ul>
+            <li>Falls x ein linkes Kind ist und w linkes Kind rot und w rechtes Kind schwarz ist</li>
+            <li>Falls x ein rechtes Kind ist und w rechtes Kind rot und w linkes Kind schwarz ist</li>
+        </ul>
+    </li>
+    <li><h5>Fall 5 falls:</h5> Knoten x ist schwarz, der Geschwisterknote w ist schwarz und<br>
+    <ul>
+                <li>Falls x ein linkes Kind ist und w rechtes Kind rot ist</li>
+                <li>Falls x ein rechtes Kind ist und linkes Kind rot ist</li>
+            </ul>
+        </li>
+</ul>
+Führe den auswählten Fall anschließend aus:
+<ul>
+    <li><h5>Fall 1:</h5>
+        <ol>
+            <li>Färbe x schwarz</li>
+            <li>Fertig!</li>
+        </ol>
+    </li>
+    <li><h5>Fall 2:</h5>
+        <ol>
+            <li>Färbe den Geschwisterknoten w schwarz</li>
+            <li>Färbe x Vater Knoten rot</li>
+            <li>Rotiere an x Vater Knoten: Falls x ein linkes Kind links rotation sonst rechts rotation</li>
+            <li>Wähle den Geschwisterknoten w neu, da er sich durch die roation verschoben hat</li>
+            <li>Wähle nun einen der Fälle 3,4 oder 5 aus und führe diesen aus</li>
+        </ol>
+    </li>
+    <li><h5>Fall 3:</h5>
+        <ol>
+            <li>Färbe den Geschwisterknoten w rot</li>
+            <li>Wähle den Vater von x als den neuen Knoten x</li>
+            <li>
+                <ul>
+                    <li>Ist der neue Knoten x rot: Färbe ihn schwarz. Fertig!</li>
+                    <li>Ist der neue Knoten x schwarz und Wurzel des Baumes: Fertig!</li>
+                    <li>Ist der neue Knoten x schwarz und nicht Wurzel des Baumes: Wähle Fall 2,3,4 oder 5 aus und führe diesen aus, der Geschwisterknoten w muss neu gewählt werden</li>
+                </ul>
+            </li>
+        </ol>
+    </li>
+    <li><h5>Fall 4:</h5>
+        <ol>
+            <li>Färbe das rote Kind des Geschwisterknotens w schwarz</li>
+            <li>Färbe den Geschwisterknoten w rot</li>
+            <li>Rotiere am Geschwisterknoten w. Ist x ein linkes Kind führe ine rechts rotation durch sonst eine links rotation</li>
+            <li>Wähle den Geschwisterknoten w neu, da er sich durch die roation verschoben hat</li>
+            <li>Führe Fall 5 aus</li>
+        </ol>
+    </li>
+    <li><h5>Fall 5:</h5>
+        <ol>
+            <li>Färbe den Geschwisterknoten w gleich wie den Vater Knoten von x</li>
+            <li>Färbe x Vater Knoten schwarz</li>
+            <li>Falls x ein linkes Kind ist färbe das rechte Kind des Geschwisterknotens w schwarz sonst färbe das linke Kind von w schwarz</li>
+            <li>Rotiere am Vater Knoten von x. Falls x ein linkes Kind ist führe eine links rotation durch sonst eine rechtsrotation</li>
+            <li>Fertig!</li>
+        </ol>
+    </li>
+</ul>
