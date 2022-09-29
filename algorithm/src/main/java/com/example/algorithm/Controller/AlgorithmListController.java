@@ -79,13 +79,16 @@ public class AlgorithmListController {
         String[] searchTreeAlgos = {"/SearchTrees/BinarySearchTree", "/SearchTrees/AVLTree", "/SearchTrees/RedBlackTree"};
         String[] heapAlgos = {"/Heaps/BinaryHeap"};
         String[] pathFindingAlgos = {"/PathFinding/BFS", "/PathFinding/DFS", "/PathFinding/Dijkstra"};
+        String[] minimalSpanningTreeAlgos = {"/MinimalSpanningTree/JarnikPrim", "/MinimalSpanningTree/Kruskal"};
         Category searchTrees = new Category("Searchtrees", searchTreeAlgos, 0);
         Category minHeap = new Category("Heaps", heapAlgos, 1);
         Category pathFinding = new Category("PathFinding", pathFindingAlgos, 2);
+        Category minimalSpanningTree = new Category("MinimalSpanningTree", minimalSpanningTreeAlgos, 3);
 
         categories.add(searchTrees);
         categories.add(minHeap);
         categories.add(pathFinding);
+        categories.add(minimalSpanningTree);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
@@ -135,6 +138,20 @@ public class AlgorithmListController {
     public ResponseEntity<Algorithm> getDijkstra() {
         logger.info("Requested information to: Dijkstra");
         Algorithm dfs = new Algorithm("Dijkstra's algorithm", "PathFinding/Dijkstra", "weightedNonNegativeGraph", 1);
+        return new ResponseEntity<>(dfs, HttpStatus.OK);
+    }
+
+    @GetMapping("/MinimalSpanningTree/Kruskal")
+    public ResponseEntity<Algorithm> getkruskal() {
+        logger.info("Requested information to: Kruskal");
+        Algorithm dfs = new Algorithm("Kruskal's algorithm", "MinimalSpanningTree/Kruskal", "weightedGraph", 0);
+        return new ResponseEntity<>(dfs, HttpStatus.OK);
+    }
+
+    @GetMapping("/MinimalSpanningTree/JarnikPrim")
+    public ResponseEntity<Algorithm> getJarnikPrim() {
+        logger.info("Requested information to: JarnikPrim");
+        Algorithm dfs = new Algorithm("Jarník-Prim algorithm", "MinimalSpanningTree/JarnikPrim", "weightedGraph", 0);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 }
