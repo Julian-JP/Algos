@@ -5,9 +5,15 @@ public class GraphEdge {
     private final String FINAL_COLOR = "red";
     private final String UNVISITED_COLOR = "black";
     private String color;
+    private Double weight;
 
     public GraphEdge(String color) {
         this.color = color;
+        this.weight = null;
+    }
+    public GraphEdge(String color, Double weight) {
+        this.color = color;
+        this.weight = weight;
     }
 
     public boolean isVisited() {
@@ -25,5 +31,9 @@ public class GraphEdge {
 
     public String getColor() {
         return color;
+    }
+
+    public Double getWeight() {
+        return weight;
     }
 }

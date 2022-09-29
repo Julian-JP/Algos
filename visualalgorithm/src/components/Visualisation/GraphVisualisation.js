@@ -77,36 +77,57 @@ const GraphVisualisation = props => {
         setDisplayedEdges(
             edges.map((item) => {
                 if (item.from === item.to && item.from != null) {
-                    return <circle
-                        r={15}
-                        cx={getVertex(item.to).x}
-                        cy={getVertex(item.to).y + 25}
-                        key={item.id}
-                        id={item.id}
-                        fill={"none"}
-                        stroke={item.stroke}
-                        strokeWidth={3}
-                    />
+                    return <g key={"group" + item.id}>
+                        <circle
+                            r={15}
+                            cx={getVertex(item.to).x}
+                            cy={getVertex(item.to).y + 25}
+                            key={item.id}
+                            id={item.id}
+                            fill={"none"}
+                            stroke={item.stroke}
+                            strokeWidth={3}
+                        />
+                        {item.weight !== null ? <text
+                        alignmentBaseline={"middle"}
+                        dominantBaseline={"middle"}
+                        textAnchor={"middle"}
+                        x={getVertex(item.to).x}
+                        y={getVertex(item.to).y + 52}
+                    >{convertWeightToText(item.weight)}</text> : null}
+                    </g>
                 }
 
                 let x1, x2, y1, y2;
                 let arrow;
 
                 if (item.from != undefined && item.to !== undefined) {
-                    let offsetFlip = (getVertex(item.from).x < getVertex(item.to).x && getVertex(item.from).y < getVertex(item.to).y)
-                    || (getVertex(item.from).x > getVertex(item.to).x && getVertex(item.from).y > getVertex(item.to).y) ? -1 : 1;
-                    let offset = item.from > item.to ? 3 : -3;
+
+                    let vertexFromX, vertexToX, vertexFromY, vertexToY;
+
                     if (getVertex(item.from) && getVertex(item.to)) {
-                        x1 = getVertex(item.from).x + (offset * offsetFlip);
-                        x2 = getVertex(item.to).x + (offset * offsetFlip);
-                        y1 = getVertex(item.from).y + offset;
-                        y2 = getVertex(item.to).y + offset;
+                        vertexFromX = getVertex(item.from).x;
+                        vertexToX = getVertex(item.to).x;
+                        vertexFromY = getVertex(item.from).y;
+                        vertexToY = getVertex(item.to).y;
                     } else if (getInitVertex(item.from) && getInitVertex(item.to)) {
-                        x1 = getInitVertex(item.to).x + offset;
-                        x2 = getInitVertex(item.from).x + offset;
-                        y1 = getInitVertex(item.from).y + offset;
-                        y2 = getInitVertex(item.to).y + offset;
+                        vertexFromX = getInitVertex(item.from).x;
+                        vertexToX = getInitVertex(item.to).x;
+                        vertexFromY = getInitVertex(item.from).y;
+                        vertexToY = getInitVertex(item.to).y;
                     }
+
+                    const OFFSETLINE = 4;
+                    const OFFSETTEXT = 20
+
+                    let {
+                        x1,
+                        x2,
+                        y1,
+                        y2
+                    } = calcOffsetCoordinate(vertexFromX, vertexToX, vertexFromY, vertexToY, OFFSETLINE);
+                    let textCoordinates = calcOffsetCoordinate(vertexFromX, vertexToX, vertexFromY, vertexToY, OFFSETTEXT);
+
                     arrow = <g key={"group" + item.id}>
                         <marker id="arrowheadblue"
                                 markerWidth={10}
@@ -156,7 +177,7 @@ const GraphVisualisation = props => {
                               y2={y1 - (y1 - y2) / 3}
                               stroke={item.stroke}
                               strokeWidth={3}
-                              markerEnd={item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke==="blue" ? "url(#arrowheadblue)" : "url(#arrowheadred)")}
+                              markerEnd={item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke === "blue" ? "url(#arrowheadblue)" : "url(#arrowheadred)")}
                               key={"markerline" + item.id}
                         />
                         <line
@@ -169,6 +190,13 @@ const GraphVisualisation = props => {
                             strokeWidth={3}
                             key={item.id}
                         />
+                        {item.weight !== null ? <text
+                            alignmentBaseline={"middle"}
+                            dominantBaseline={"middle"}
+                            textAnchor={"middle"}
+                            x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
+                            y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
+                        >{convertWeightToText(item.weight)}</text> : null}
                     </g>
                 } else {
                     x1 = item.x1;
@@ -191,6 +219,31 @@ const GraphVisualisation = props => {
                 </g>
             })
         );
+    }
+
+    const convertWeightToText = (weight) => {
+        if (weight === "Infinity") {
+            return "∞"
+        } else if (weight === "-Infinity") {
+            return "-∞";
+        } else {
+            return weight;
+        }
+    }
+
+    const calcOffsetCoordinate = (vertexFromX, vertexToX, vertexFromY, vertexToY, offset) => {
+        let distanceX = Math.abs(vertexToX - vertexFromX);
+        let distanceY = Math.abs(vertexToY - vertexFromY);
+
+        if (vertexFromX <= vertexToX && distanceX >= distanceY) {
+            return {x1: vertexFromX, x2: vertexToX, y1: (vertexFromY + offset), y2: (vertexToY + offset)};
+        } else if (vertexFromX > vertexToX && distanceX >= distanceY) {
+            return {x1: vertexFromX, x2: vertexToX, y1: (vertexFromY - offset), y2: (vertexToY - offset)};
+        } else if (vertexFromX <= vertexToX && distanceX < distanceY) {
+            return {x1: (vertexFromX - offset), x2: (vertexToX - offset), y1: vertexFromY, y2: vertexToY};
+        } else {
+            return {x1: (vertexFromX + offset), x2: (vertexToX + offset), y1: vertexFromY, y2: vertexToY};
+        }
     }
 
     const handleDrag = (id, newX, newY) => {

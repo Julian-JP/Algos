@@ -20,6 +20,8 @@ const GraphControl = (props) => {
     const[start, setStart] = useState(undefined);
     const[end, setEnd] = useState(undefined);
 
+    const[weight, setWeight] = useState(0);
+
     const {isLoading, error, sendRequest} = useFetch();
 
     useEffect(() => {
@@ -38,7 +40,8 @@ const GraphControl = (props) => {
                         y2: vertices[j].y,
                         stroke: edges[i][j].color,
                         id: vertices[j].value + "-" + vertices[i].value,
-                        directed: true
+                        directed: true,
+                        weight: edges[i][j].weight
                     });
                 }
             }
@@ -78,7 +81,7 @@ const GraphControl = (props) => {
                 if (ret[markedNodes[0]][markedNodes[1]] !== null) {
                     ret[markedNodes[0]][markedNodes[1]] = null;
                 } else {
-                    ret[markedNodes[0]][markedNodes[1]] = {color: DEFAULT_LINE_COLOR};
+                    ret[markedNodes[0]][markedNodes[1]] = {color: DEFAULT_LINE_COLOR, weight: props.weightedEdges ? weight : null};
                 }
 
                 return ret;
@@ -291,6 +294,14 @@ const GraphControl = (props) => {
                 }]
             }
         />
+        {props.weightedEdges ? <MultidataInputWithSubmit
+            btnLabel={"Edge Weight"}
+            data={
+                [{
+                    type: "number", min: props.minWeight, onChange: (val) => setWeight(val.target.value), label: "Edge Weight", noLabel: true, defaultValue: 0
+                }]
+            }
+        /> : null}
         <div className={classes.algoNavigationContainer}>
             <button className={classes.prev} onClick={() => handleStartEnd(true)}>Start</button>
             <button className={classes.next} onClick={() => handleStartEnd(false)}>End</button>

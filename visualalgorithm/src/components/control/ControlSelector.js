@@ -20,7 +20,22 @@ const ControlSelector = props => {
             {props['type'] === "graph" && <GraphControl
                 setEdges={props.setEdges}
                 setVertices={props.setVertices}
-                type={props.url}/>
+                type={props.url}
+                weightedEdges={false}/>
+            }
+            {props['type'] === "weightedNonNegativeGraph" && <GraphControl
+                setEdges={props.setEdges}
+                setVertices={props.setVertices}
+                type={props.url}
+                weightedEdges={true}
+                minWeight={0}/>
+            }
+            {props['type'] === "weightedGraph" && <GraphControl
+                setEdges={props.setEdges}
+                setVertices={props.setVertices}
+                type={props.url}
+                weightedEdges={true}
+                minWeight={undefined}/>
             }
         </div>
     )

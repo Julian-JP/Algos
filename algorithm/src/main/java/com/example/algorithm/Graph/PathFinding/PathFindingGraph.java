@@ -1,14 +1,21 @@
 package com.example.algorithm.Graph.PathFinding;
 
 import com.example.algorithm.Graph.Graph;
+import com.example.algorithm.Graph.GraphEdge;
 import com.example.algorithm.Graph.GraphResponse;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.*;
 
 public class PathFindingGraph extends Graph {
+    protected int start, end;
+
     public PathFindingGraph(String graphJSON) throws JSONException {
         super(graphJSON);
+        JSONObject graph = new JSONObject(graphJSON);
+        start = graph.getInt("start");
+        end = graph.getInt("end");
     }
 
     public GraphResponse breadthFirstSearch() {
@@ -87,6 +94,59 @@ public class PathFindingGraph extends Graph {
             }
         }
         return false;
+    }
+
+    public GraphResponse dijkstraAlgorithm() {
+        ArrayDeque<Integer> pathToStart = new ArrayDeque<>();
+        pathToStart.add(start);
+        ArrayDeque<Integer>[] pathsAlreadyKnown = new ArrayDeque[adjacencyMatrix.length];
+        Arrays.fill(pathsAlreadyKnown, null);
+        pathsAlreadyKnown[start] = pathToStart;
+        Double[] initCosts = new Double[adjacencyMatrix.length];
+        Arrays.fill(initCosts, Double.POSITIVE_INFINITY);
+        initCosts[start] = 0.;
+        dijkstraAlgorithmRecursive(initCosts, pathsAlreadyKnown);
+        return new GraphResponse(adjacencyMatrix);
+    }
+
+    private void dijkstraAlgorithmRecursive(Double[] reachingCosts, ArrayDeque<Integer>[] pathToVertices) {
+        int indexCheapestNode = -1;
+        int indexVertexToCheapestNode = -1;
+        Double cheapestCosts = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            if (findCheapestEdge(i, reachingCosts) >= 0 && reachingCosts[i] + adjacencyMatrix[i][findCheapestEdge(i, reachingCosts)].getWeight() < cheapestCosts) {
+                cheapestCosts = reachingCosts[i] + adjacencyMatrix[i][findCheapestEdge(i, reachingCosts)].getWeight();
+                indexCheapestNode = findCheapestEdge(i, reachingCosts);
+                indexVertexToCheapestNode = i;
+            }
+        }
+
+        reachingCosts[indexCheapestNode] = reachingCosts[indexVertexToCheapestNode] + adjacencyMatrix[indexVertexToCheapestNode][indexCheapestNode].getWeight();
+
+        ArrayDeque<Integer> currentUpdated = pathToVertices[indexVertexToCheapestNode].clone();
+        currentUpdated.add(indexCheapestNode);
+        pathToVertices[indexCheapestNode] = currentUpdated;
+
+        if (indexCheapestNode == end) {
+            colorPath(pathToVertices[end]);
+            return;
+        }
+
+        if (adjacencyMatrix[indexVertexToCheapestNode][indexCheapestNode].isVisited()) {
+            dijkstraAlgorithmRecursive(reachingCosts, pathToVertices);
+        }
+    }
+
+    private int findCheapestEdge(int node, Double[] reachingCosts) {
+        int index = -1;
+        Double cheapest = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            if (i != node && adjacencyMatrix[node][i] != null && adjacencyMatrix[node][i].getWeight() < cheapest && reachingCosts[i] == Double.POSITIVE_INFINITY) {
+                index = i;
+                cheapest = adjacencyMatrix[node][i].getWeight();
+            }
+        }
+        return index;
     }
 
     private void colorPath(ArrayDeque<Integer> path) {

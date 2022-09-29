@@ -78,7 +78,7 @@ public class AlgorithmListController {
         List<Category> categories = new ArrayList<>();
         String[] searchTreeAlgos = {"/SearchTrees/BinarySearchTree", "/SearchTrees/AVLTree", "/SearchTrees/RedBlackTree"};
         String[] heapAlgos = {"/Heaps/BinaryHeap"};
-        String[] pathFindingAlgos = {"/PathFinding/BFS", "/PathFinding/DFS"};
+        String[] pathFindingAlgos = {"/PathFinding/BFS", "/PathFinding/DFS", "/PathFinding/Dijkstra"};
         Category searchTrees = new Category("Searchtrees", searchTreeAlgos, 0);
         Category minHeap = new Category("Heaps", heapAlgos, 1);
         Category pathFinding = new Category("PathFinding", pathFindingAlgos, 2);
@@ -128,6 +128,13 @@ public class AlgorithmListController {
     public ResponseEntity<Algorithm> getDFS() {
         logger.info("Requested information to: Depth-First Search");
         Algorithm dfs = new Algorithm("Depth-First Search", "PathFinding/DFS", "graph", 1);
+        return new ResponseEntity<>(dfs, HttpStatus.OK);
+    }
+
+    @GetMapping("/PathFinding/Dijkstra")
+    public ResponseEntity<Algorithm> getDijkstra() {
+        logger.info("Requested information to: Dijkstra");
+        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "PathFinding/Dijkstra", "weightedNonNegativeGraph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 }

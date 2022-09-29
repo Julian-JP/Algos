@@ -4,6 +4,7 @@ import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.GraphResponse;
 import com.example.algorithm.Graph.PathFinding.BreadthFirstSearch.BreadthFirstSearchService;
 import com.example.algorithm.Graph.PathFinding.DepthFirstSearch.DepthFirstSearchService;
+import com.example.algorithm.Graph.PathFinding.DijkstraAlgorithm.DijkstraService;
 import com.example.algorithm.Graph.PathFinding.PathFindingService;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -21,11 +22,13 @@ import java.io.IOException;
 public class PathFindingController {
     private final BreadthFirstSearchService bfService;
     private final DepthFirstSearchService dfService;
+    private final DijkstraService dijkstraService;
     private final Logger logger = LoggerFactory.getLogger(SearchTreeController.class);
 
-    public PathFindingController(BreadthFirstSearchService bfService, DepthFirstSearchService dfService) {
+    public PathFindingController(BreadthFirstSearchService bfService, DepthFirstSearchService dfService, DijkstraService dijkstraService) {
         this.bfService = bfService;
         this.dfService = dfService;
+        this.dijkstraService = dijkstraService;
     }
 
     @PostMapping(
@@ -66,6 +69,7 @@ public class PathFindingController {
         switch (service) {
             case "BFS": return bfService;
             case "DFS": return dfService;
+            case "Dijkstra": return dijkstraService;
             default: throw new ServiceNotFoundException("Service: " + service + " Not Found");
         }
     }
