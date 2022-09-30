@@ -10,32 +10,64 @@ const ControlSelector = props => {
             {props['type'] === "binarytree" && <SearchTreeControl
                 setEdges={props.setEdges}
                 setVertices={props.setVertices}
-                type={props.url}/>
+                type={props.url}
+                directed={false}
+                weightedEdges={false}
+            />
             }
             {props['type'] === "binaryheap" && <HeapControl
                 setEdges={props.setEdges}
                 setVertices={props.setVertices}
-                type={props.url}/>
+                type={props.url}
+                directed={true}
+                weightedEdges={false}
+            />
             }
-            {props['type'] === "graph" && <GraphControl
+            {props['type'] === "pathfindingGraph" && <GraphControl
                 setEdges={props.setEdges}
                 setVertices={props.setVertices}
                 type={props.url}
-                weightedEdges={false}/>
+                weightedEdges={false}
+                pathfindingGraph={true}
+                startButton={true}
+                endButton={true}
+                directed={true}
+            />
             }
-            {props['type'] === "weightedNonNegativeGraph" && <GraphControl
+            {props['type'] === "weightedNonNegativePathFindingGraph" && <GraphControl
                 setEdges={props.setEdges}
                 setVertices={props.setVertices}
                 type={props.url}
                 weightedEdges={true}
-                minWeight={0}/>
+                minWeight={0}
+                pathfindingGraph={true}
+                startButton={true}
+                endButton={true}
+                directed={true}
+            />
             }
-            {props['type'] === "weightedGraph" && <GraphControl
+            {props['type'] === "weightedPathFindingGraph" && <GraphControl
                 setEdges={props.setEdges}
                 setVertices={props.setVertices}
                 type={props.url}
                 weightedEdges={true}
-                minWeight={undefined}/>
+                minWeight={undefined}
+                pathfindingGraph={true}
+                startButton={true}
+                endButton={true}
+                directed={true}
+            />
+            }
+            {props['type'] === "minimalSpanningTree" && <GraphControl
+                setEdges={props.setEdges}
+                setVertices={props.setVertices}
+                type={props.url}
+                weightedEdges={true}
+                minWeight={undefined}
+                startButton={true}
+                endButton={false}
+                directed={false}
+            />
             }
         </div>
     )

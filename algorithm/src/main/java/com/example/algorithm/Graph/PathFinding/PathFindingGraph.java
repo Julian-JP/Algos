@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.util.*;
 
 public class PathFindingGraph extends Graph {
-    protected int start, end;
+    private int start, end;
 
     public PathFindingGraph(String graphJSON) throws JSONException {
         super(graphJSON);

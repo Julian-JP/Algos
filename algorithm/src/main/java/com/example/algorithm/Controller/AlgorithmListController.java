@@ -123,35 +123,35 @@ public class AlgorithmListController {
     @GetMapping("/PathFinding/BFS")
     public ResponseEntity<Algorithm> getBFS() {
         logger.info("Requested information to: Breadth-First Search");
-        Algorithm bfs = new Algorithm("Breadth-First Search", "PathFinding/BFS", "graph", 0);
+        Algorithm bfs = new Algorithm("Breadth-First Search", "PathFinding/BFS", "pathfindingGraph", 0);
         return new ResponseEntity<>(bfs, HttpStatus.OK);
     }
 
     @GetMapping("/PathFinding/DFS")
     public ResponseEntity<Algorithm> getDFS() {
         logger.info("Requested information to: Depth-First Search");
-        Algorithm dfs = new Algorithm("Depth-First Search", "PathFinding/DFS", "graph", 1);
+        Algorithm dfs = new Algorithm("Depth-First Search", "PathFinding/DFS", "pathfindingGraph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
     @GetMapping("/PathFinding/Dijkstra")
     public ResponseEntity<Algorithm> getDijkstra() {
         logger.info("Requested information to: Dijkstra");
-        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "PathFinding/Dijkstra", "weightedNonNegativeGraph", 1);
+        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "PathFinding/Dijkstra", "weightedNonNegativePathFindingGraph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
     @GetMapping("/MinimalSpanningTree/Kruskal")
     public ResponseEntity<Algorithm> getkruskal() {
         logger.info("Requested information to: Kruskal");
-        Algorithm dfs = new Algorithm("Kruskal's algorithm", "MinimalSpanningTree/Kruskal", "weightedGraph", 0);
+        Algorithm dfs = new Algorithm("Kruskal's algorithm", "MinimalSpanningTree/Kruskal", "weightedPathFindingGraph", 0);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
     @GetMapping("/MinimalSpanningTree/JarnikPrim")
     public ResponseEntity<Algorithm> getJarnikPrim() {
         logger.info("Requested information to: JarnikPrim");
-        Algorithm dfs = new Algorithm("Jarník-Prim algorithm", "MinimalSpanningTree/JarnikPrim", "weightedGraph", 0);
+        Algorithm dfs = new Algorithm("Jarník-Prim algorithm", "MinimalSpanningTree/JarnikPrim", "minimalSpanningTree", 0);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 }

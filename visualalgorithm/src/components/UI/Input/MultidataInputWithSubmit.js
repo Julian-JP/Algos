@@ -6,10 +6,6 @@ const MultidataInputWithSubmit = props => {
     const [inputValue, setInputValue] = useState(props.data.map(data => data.defaultValue));
 
     const changeInputData = (event, data, index) => {
-        console.log(data.min);
-        console.log(event.target.value >= data.min)
-        console.log(data.onChange == undefined)
-        console.log(data.min == undefined)
         let newValueInInputField = data.min;
         if (data.onChange == undefined || data.min == undefined || event.target.value >= data.min) {
             newValueInInputField = event.target.value;

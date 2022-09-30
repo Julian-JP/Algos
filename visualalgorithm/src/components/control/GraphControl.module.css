@@ -13,7 +13,7 @@
     width: 100%
 }
 
-.prev {
+.leftButton {
     width: 50%;
     border-radius: 15px 0 0 15px;
     border: none;
@@ -21,9 +21,17 @@
     font-size: min(1.2vw, 25px);
 }
 
-.next {
+.rightButton {
     width: 50%;
     border-radius: 0 15px 15px 0;
+    border: none;
+    height: min(2vw, 50px);
+    font-size: min(1.2vw, 25px);
+}
+
+.fullSizeButton {
+    width: 100%;
+    border-radius: 15px 15px 15px 15px;
     border: none;
     height: min(2vw, 50px);
     font-size: min(1.2vw, 25px);

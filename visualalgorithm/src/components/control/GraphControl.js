@@ -17,10 +17,10 @@ const GraphControl = (props) => {
     const [addVal, setAddVal] = useState(null);
     const [prev, setPrev] = useState([]);
 
-    const[start, setStart] = useState(undefined);
-    const[end, setEnd] = useState(undefined);
+    const [start, setStart] = useState(undefined);
+    const [end, setEnd] = useState(undefined);
 
-    const[weight, setWeight] = useState(0);
+    const [weight, setWeight] = useState(0);
 
     const {isLoading, error, sendRequest} = useFetch();
 
@@ -40,7 +40,7 @@ const GraphControl = (props) => {
                         y2: vertices[j].y,
                         stroke: edges[i][j].color,
                         id: vertices[j].value + "-" + vertices[i].value,
-                        directed: true,
+                        directed: props.directed,
                         weight: edges[i][j].weight
                     });
                 }
@@ -77,11 +77,29 @@ const GraphControl = (props) => {
                 for (let i = 0; i < oldEdges.length; i++) {
                     ret[i] = [...oldEdges[i]];
                 }
-
-                if (ret[markedNodes[0]][markedNodes[1]] !== null) {
-                    ret[markedNodes[0]][markedNodes[1]] = null;
+                if (props.directed) {
+                    if (ret[markedNodes[0]][markedNodes[1]] !== null) {
+                        ret[markedNodes[0]][markedNodes[1]] = null;
+                    } else {
+                        ret[markedNodes[0]][markedNodes[1]] = {
+                            color: DEFAULT_LINE_COLOR,
+                            weight: props.weightedEdges ? weight : null
+                        };
+                    }
                 } else {
-                    ret[markedNodes[0]][markedNodes[1]] = {color: DEFAULT_LINE_COLOR, weight: props.weightedEdges ? weight : null};
+                    if (ret[markedNodes[0]][markedNodes[1]] != null || ret[markedNodes[1]][markedNodes[0]] != null) {
+                        ret[markedNodes[0]][markedNodes[1]] = null;
+                        ret[markedNodes[1]][markedNodes[0]] = null;
+                    } else {
+                        ret[markedNodes[0]][markedNodes[1]] = {
+                            color: DEFAULT_LINE_COLOR,
+                            weight: props.weightedEdges ? weight : null
+                        };
+                        ret[markedNodes[1]][markedNodes[0]] = {
+                            color: DEFAULT_LINE_COLOR,
+                            weight: props.weightedEdges ? weight : null
+                        };
+                    }
                 }
 
                 return ret;
@@ -298,17 +316,29 @@ const GraphControl = (props) => {
             btnLabel={"Edge Weight"}
             data={
                 [{
-                    type: "number", min: props.minWeight, onChange: (val) => setWeight(val.target.value), label: "Edge Weight", noLabel: true, defaultValue: 0
+                    type: "number",
+                    min: props.minWeight,
+                    onChange: (val) => setWeight(val.target.value),
+                    label: "Edge Weight",
+                    noLabel: true,
+                    defaultValue: 0
                 }]
             }
         /> : null}
+        {props.startButton && props.endButton &&
+            <div className={classes.algoNavigationContainer}>
+                <button className={classes.leftButton} onClick={() => handleStartEnd(true)}>Start</button>
+                <button className={classes.rightButton} onClick={() => handleStartEnd(false)}>End</button>
+            </div>
+        }
+        {props.startButton && !props.endButton &&
+            <div className={classes.algoNavigationContainer}>
+                <button className={classes.fullSizeButton} onClick={() => handleStartEnd(true)}>Start</button>
+            </div>
+        }
         <div className={classes.algoNavigationContainer}>
-            <button className={classes.prev} onClick={() => handleStartEnd(true)}>Start</button>
-            <button className={classes.next} onClick={() => handleStartEnd(false)}>End</button>
-        </div>
-        <div className={classes.algoNavigationContainer}>
-            <button className={classes.prev} onClick={() => previous(1)}>◄</button>
-            <button className={classes.next} onClick={() => next(1)}>►</button>
+            <button className={classes.leftButton} onClick={() => previous(1)}>◄</button>
+            <button className={classes.rightButton} onClick={() => next(1)}>►</button>
         </div>
 
     </div>)

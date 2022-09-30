@@ -76,6 +76,7 @@ const GraphVisualisation = props => {
     const convertedEdges = () => {
         setDisplayedEdges(
             edges.map((item) => {
+                let textCoordinates
                 if (item.from === item.to && item.from != null) {
                     return <g key={"group" + item.id}>
                         <circle
@@ -89,12 +90,12 @@ const GraphVisualisation = props => {
                             strokeWidth={3}
                         />
                         {item.weight !== null ? <text
-                        alignmentBaseline={"middle"}
-                        dominantBaseline={"middle"}
-                        textAnchor={"middle"}
-                        x={getVertex(item.to).x}
-                        y={getVertex(item.to).y + 52}
-                    >{convertWeightToText(item.weight)}</text> : null}
+                            alignmentBaseline={"middle"}
+                            dominantBaseline={"middle"}
+                            textAnchor={"middle"}
+                            x={getVertex(item.to).x}
+                            y={getVertex(item.to).y + 52}
+                        >{convertWeightToText(item.weight)}</text> : null}
                     </g>
                 }
 
@@ -126,7 +127,7 @@ const GraphVisualisation = props => {
                         y1,
                         y2
                     } = calcOffsetCoordinate(vertexFromX, vertexToX, vertexFromY, vertexToY, OFFSETLINE);
-                    let textCoordinates = calcOffsetCoordinate(vertexFromX, vertexToX, vertexFromY, vertexToY, OFFSETTEXT);
+                    textCoordinates = calcOffsetCoordinate(vertexFromX, vertexToX, vertexFromY, vertexToY, OFFSETTEXT);
 
                     arrow = <g key={"group" + item.id}>
                         <marker id="arrowheadblue"
@@ -190,22 +191,46 @@ const GraphVisualisation = props => {
                             strokeWidth={3}
                             key={item.id}
                         />
-                        {item.weight !== null ? <text
-                            alignmentBaseline={"middle"}
-                            dominantBaseline={"middle"}
-                            textAnchor={"middle"}
-                            x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
-                            y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
-                        >{convertWeightToText(item.weight)}</text> : null}
                     </g>
+                    if (item.directed) {
+                        return <g>
+                            {arrow}
+                            {item.weight != null ? <text
+                                alignmentBaseline={"middle"}
+                                dominantBaseline={"middle"}
+                                textAnchor={"middle"}
+                                x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
+                                y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
+                            >{convertWeightToText(item.weight)}</text> : null}
+                        </g>
+                    } else {
+                        return <g>
+                            <line
+                                x1={vertexFromX}
+                                x2={vertexToX}
+                                y1={vertexFromY}
+                                y2={vertexToY}
+                                id={item.id}
+                                stroke={item.stroke}
+                                strokeWidth={3}
+                                key={item.id}
+                            />
+                            {item.weight != null && item.from > item.to ? <text
+                                alignmentBaseline={"middle"}
+                                dominantBaseline={"middle"}
+                                textAnchor={"middle"}
+                                x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
+                                y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
+                            >{convertWeightToText(item.weight)}</text> : null}
+                        </g>
+                    }
                 } else {
                     x1 = item.x1;
                     x2 = item.x2;
                     y1 = item.y1;
                     y2 = item.y2;
-                }
-                return <g>
-                    <line
+                    return <g>
+                        <line
                         x1={x1}
                         x2={x2}
                         y1={y1}
@@ -214,9 +239,9 @@ const GraphVisualisation = props => {
                         stroke={item.stroke}
                         strokeWidth={3}
                         key={item.id}
-                    />
-                    {item.directed ? arrow : null}
-                </g>
+                    /></g>
+                }
+
             })
         );
     }
