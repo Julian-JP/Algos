@@ -38,7 +38,7 @@ public class MinimalSpanningTreeGraph extends Graph {
         }
         connectedNodes[cheapestEdgeIndex] = true;
 
-        boolean isVisisted = adjacencyMatrix[cheapestEdgeIndexFrom][cheapestEdgeIndex].isVisited();
+        boolean isVisisted = adjacencyMatrix[cheapestEdgeIndexFrom][cheapestEdgeIndex].isVisited() || adjacencyMatrix[cheapestEdgeIndex][cheapestEdgeIndexFrom].isVisited();
         if (Arrays.stream(connectedNodes).filter((elem) -> !elem).count() == 0) {
             colorAllEdges();
             return;
