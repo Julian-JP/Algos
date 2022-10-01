@@ -144,7 +144,7 @@ public class AlgorithmListController {
     @GetMapping("/MinimalSpanningTree/Kruskal")
     public ResponseEntity<Algorithm> getkruskal() {
         logger.info("Requested information to: Kruskal");
-        Algorithm dfs = new Algorithm("Kruskal's algorithm", "MinimalSpanningTree/Kruskal", "weightedPathFindingGraph", 0);
+        Algorithm dfs = new Algorithm("Kruskal's algorithm", "MinimalSpanningTree/Kruskal", "minimalSpanningTree", 0);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 

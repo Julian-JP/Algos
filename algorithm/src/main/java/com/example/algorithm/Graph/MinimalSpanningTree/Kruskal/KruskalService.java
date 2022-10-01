@@ -1,4 +1,4 @@
-package com.example.algorithm.Graph.MinimalSpanningTree.JarnikPrim;
+package com.example.algorithm.Graph.MinimalSpanningTree.Kruskal;
 
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.GraphResponse;
@@ -10,17 +10,17 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
-
 @Service
-public class JarnikPrimService extends MinimalSpanningTreeService {
+public class KruskalService extends MinimalSpanningTreeService {
+    @Override
     public GraphResponse step(String graphString) throws JSONException {
         MinimalSpanningTreeGraph graph = new MinimalSpanningTreeGraph(graphString);
-        return graph.jarnikPrim();
+        return graph.kruskal();
     }
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/jarnikPrim.txt").toPath()));
+        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/kruskal.txt").toPath()));
         return new Explanation(explanation);
     }
 }

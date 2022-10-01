@@ -6,8 +6,10 @@ import com.example.algorithm.Graph.PathFinding.PathFindingGraph;
 import com.example.algorithm.Graph.PathFinding.PathFindingService;
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 public class BreadthFirstSearchService extends PathFindingService {
@@ -19,6 +21,7 @@ public class BreadthFirstSearchService extends PathFindingService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        return new Explanation("Test");
+        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/bfs.txt").toPath()));
+        return new Explanation(explanation);
     }
 }

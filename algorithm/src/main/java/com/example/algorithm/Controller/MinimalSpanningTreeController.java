@@ -3,8 +3,8 @@ package com.example.algorithm.Controller;
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.GraphResponse;
 import com.example.algorithm.Graph.MinimalSpanningTree.JarnikPrim.JarnikPrimService;
+import com.example.algorithm.Graph.MinimalSpanningTree.Kruskal.KruskalService;
 import com.example.algorithm.Graph.MinimalSpanningTree.MinimalSpanningTreeService;
-import com.example.algorithm.Graph.PathFinding.PathFindingService;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +21,12 @@ import java.io.IOException;
 @CrossOrigin("*")
 public class MinimalSpanningTreeController {
     private final JarnikPrimService jarnikPrimService;
+    private final KruskalService kruskalService;
     private final Logger logger = LoggerFactory.getLogger(MinimalSpanningTreeController.class);
 
-    public MinimalSpanningTreeController(JarnikPrimService jarnikPrimService) {
+    public MinimalSpanningTreeController(JarnikPrimService jarnikPrimService, KruskalService kruskalService) {
         this.jarnikPrimService = jarnikPrimService;
+        this.kruskalService = kruskalService;
     }
 
     @PostMapping(
@@ -64,6 +66,7 @@ public class MinimalSpanningTreeController {
     private MinimalSpanningTreeService stringToService(String service) throws ServiceNotFoundException {
         switch (service) {
             case "JarnikPrim": return jarnikPrimService;
+            case "Kruskal": return kruskalService;
             default: throw new ServiceNotFoundException("Service: " + service + " Not Found");
         }
     }
