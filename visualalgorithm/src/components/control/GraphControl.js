@@ -32,14 +32,14 @@ const GraphControl = (props) => {
                 if (edges[i][j] !== null) {
                     edgesLst.push({
                         type: "line",
-                        from: vertices[i].value,
-                        to: vertices[j].value,
+                        from: vertices[i].id,
+                        to: vertices[j].id,
                         x1: vertices[i].x,
                         x2: vertices[j].x,
                         y1: vertices[i].y,
                         y2: vertices[j].y,
                         stroke: edges[i][j].color,
-                        id: vertices[j].value + "-" + vertices[i].value,
+                        id: vertices[j].id + "-" + vertices[i].id,
                         directed: props.directed,
                         weight: edges[i][j].weight
                     });
@@ -59,7 +59,7 @@ const GraphControl = (props) => {
                 fill: vertices[i].color,
                 stroke: "black",
                 textFill: "black",
-                id: vertices[i].value,
+                id: vertices[i].id,
                 value: vertices[i].value,
                 opacity: vertices[i].opacity,
                 draggable: true,
@@ -130,7 +130,7 @@ const GraphControl = (props) => {
 
         setVertices(oldVertices => {
             return [...oldVertices, {
-                x: Math.floor(Math.random() * 1000), y: 100, color: DEFAULT_VERTEX_COLOR, value: addVal
+                x: Math.floor(Math.random() * 1000), y: 100, color: DEFAULT_VERTEX_COLOR, value: addVal, id: addVal
             }];
         })
         clearPreviousStack();
@@ -167,7 +167,7 @@ const GraphControl = (props) => {
     const handleRemoveNode = (event) => {
 
         setMarkedNode([]);
-        let index = vertices.findIndex(elem => event.id === elem.value);
+        let index = vertices.findIndex(elem => event.id === elem.id);
         if (index < 0) return;
 
         setEdges((old) => {
@@ -175,7 +175,7 @@ const GraphControl = (props) => {
         });
 
         setVertices(old => {
-            return vertices.filter(item => item.value !== event.id);
+            return vertices.filter(item => item.id !== event.id);
         })
 
         updateStartEndAfterRemovingIndex(index);
@@ -224,6 +224,14 @@ const GraphControl = (props) => {
 
         const createGraphFromJSON = (response) => {
             setEdges(response.edges);
+            if (props.verteciesRenaming === true) {
+                setVertices(old => {
+                    for (let i = 0; i < old.length; i++) {
+                        old[i].value = response.vertices[i].value
+                    }
+                    return [...old];
+                })
+            }
         }
 
         sendRequest({
@@ -254,10 +262,10 @@ const GraphControl = (props) => {
 
     const updateStartEndColor = (newEnd, newStart) => {
         setVertices((oldVertex) => {
-            if (end !== undefined) oldVertex[end].color = DEFAULT_VERTEX_COLOR;
-            if (start !== undefined) oldVertex[start].color = DEFAULT_VERTEX_COLOR;
-            if (newEnd !== undefined) oldVertex[newEnd].color = START_END_COLOR;
-            if (newStart !== undefined) oldVertex[newStart].color = START_END_COLOR;
+            if (end != undefined) oldVertex[end].color = DEFAULT_VERTEX_COLOR;
+            if (start != undefined) oldVertex[start].color = DEFAULT_VERTEX_COLOR;
+            if (newEnd != undefined) oldVertex[newEnd].color = START_END_COLOR;
+            if (newStart != undefined) oldVertex[newStart].color = START_END_COLOR;
             return [...oldVertex];
         });
     }
@@ -300,6 +308,12 @@ const GraphControl = (props) => {
             }
             return temp;
         });
+        setVertices(old => {
+            for (let i = 0; i < old.length; i++) {
+                old[i].value = old[i].id;
+            }
+            return [...old];
+        })
     }
 
     return (<div className={classes.container}>

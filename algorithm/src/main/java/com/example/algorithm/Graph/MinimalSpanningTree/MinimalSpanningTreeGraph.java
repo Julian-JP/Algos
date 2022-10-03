@@ -1,7 +1,6 @@
 package com.example.algorithm.Graph.MinimalSpanningTree;
 
 import com.example.algorithm.Graph.Graph;
-import com.example.algorithm.Graph.GraphEdge;
 import com.example.algorithm.Graph.GraphResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +43,7 @@ public class MinimalSpanningTreeGraph extends Graph {
         }
         connectedNodes[cheapestEdgeIndex] = true;
 
-        boolean isVisisted = adjacencyMatrix[cheapestEdgeIndexFrom][cheapestEdgeIndex].isVisited() || adjacencyMatrix[cheapestEdgeIndex][cheapestEdgeIndexFrom].isVisited();
+        boolean isVisisted = adjacencyMatrix[cheapestEdgeIndexFrom][cheapestEdgeIndex].tryToVisit() || adjacencyMatrix[cheapestEdgeIndex][cheapestEdgeIndexFrom].tryToVisit();
         if (Arrays.stream(connectedNodes).filter((elem) -> !elem).count() == 0) {
             colorAllEdges();
             return;
@@ -107,7 +106,7 @@ public class MinimalSpanningTreeGraph extends Graph {
 
         Integer[] edge = edges.poll();
         if (connectedComponents[edge[0]] != connectedComponents[edge[1]]) {
-            boolean isVisisted = adjacencyMatrix[edge[0]][edge[1]].isVisited() || adjacencyMatrix[edge[1]][edge[0]].isVisited();
+            boolean isVisisted = adjacencyMatrix[edge[0]][edge[1]].tryToVisit() || adjacencyMatrix[edge[1]][edge[0]].tryToVisit();
             mergeComponents(edge[0], edge[1], connectedComponents);
             if (isVisisted) {
                 kruskalRecurisve(edges, connectedComponents);

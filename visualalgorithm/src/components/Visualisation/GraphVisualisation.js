@@ -275,7 +275,7 @@ const GraphVisualisation = props => {
         setVerticesLocation(old => {
             let ret = [];
             for (let i = 0; i < old.length; i++) {
-                if (old[i].value === id) {
+                if (old[i].id === id) {
                     old[i].x = newX;
                     old[i].y = newY;
                     ret.push(old[i]);

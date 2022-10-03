@@ -69,6 +69,30 @@ const ControlSelector = props => {
                 directed={false}
             />
             }
+            {props['type'] === "weightedAllPathFindingGraph" && <GraphControl
+                setEdges={props.setEdges}
+                setVertices={props.setVertices}
+                type={props.url}
+                weightedEdges={true}
+                minWeight={undefined}
+                startButton={true}
+                endButton={false}
+                directed={true}
+                verteciesRenaming={true}
+            />
+            }
+            {props['type'] === "weightedNonNegativeAllPathFindingGraph" && <GraphControl
+                setEdges={props.setEdges}
+                setVertices={props.setVertices}
+                type={props.url}
+                weightedEdges={true}
+                minWeight={undefined}
+                startButton={true}
+                endButton={false}
+                directed={true}
+                verteciesRenaming={true}
+            />
+            }
         </div>
     )
 }

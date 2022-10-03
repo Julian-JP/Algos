@@ -147,7 +147,7 @@ public class AlgorithmListController {
     @GetMapping("/allShortestPath/Dijkstra")
     public ResponseEntity<Algorithm> getDijkstraAllShortestPath() {
         logger.info("Requested information to: Dijkstra ALl shortest path");
-        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "allShortestPath/Dijkstra", "weightedNonNegativeAllPathFindingGraph", 1);
+        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "allShortestPath/Dijkstra", "weightedAllPathFindingGraph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 

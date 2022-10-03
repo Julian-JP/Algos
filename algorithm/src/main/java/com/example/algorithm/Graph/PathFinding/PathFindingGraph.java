@@ -1,7 +1,6 @@
 package com.example.algorithm.Graph.PathFinding;
 
 import com.example.algorithm.Graph.Graph;
-import com.example.algorithm.Graph.GraphEdge;
 import com.example.algorithm.Graph.GraphResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +41,7 @@ public class PathFindingGraph extends Graph {
                     finishFoundedPath(currentUpdate);
                     return;
                 }
-                if (adjacencyMatrix[currentUpdate.getLast()][i].isVisited()) {
+                if (adjacencyMatrix[currentUpdate.getLast()][i].tryToVisit()) {
                     currentUpdate.add(i);
                     todo.add(currentUpdate);
                     status[i] = Status.inQueue;
@@ -82,7 +81,7 @@ public class PathFindingGraph extends Graph {
                     return true;
                 }
 
-                if (adjacencyMatrix[current.getLast()][i].isVisited() == false) {
+                if (adjacencyMatrix[current.getLast()][i].tryToVisit() == false) {
                     return true;
                 } else {
                     currentUpdated.add(i);
@@ -121,6 +120,10 @@ public class PathFindingGraph extends Graph {
             }
         }
 
+        if (indexCheapestNode == -1) {
+            return;
+        }
+
         reachingCosts[indexCheapestNode] = reachingCosts[indexVertexToCheapestNode] + adjacencyMatrix[indexVertexToCheapestNode][indexCheapestNode].getWeight();
 
         ArrayDeque<Integer> currentUpdated = pathToVertices[indexVertexToCheapestNode].clone();
@@ -132,7 +135,7 @@ public class PathFindingGraph extends Graph {
             return;
         }
 
-        if (adjacencyMatrix[indexVertexToCheapestNode][indexCheapestNode].isVisited()) {
+        if (adjacencyMatrix[indexVertexToCheapestNode][indexCheapestNode].tryToVisit()) {
             dijkstraAlgorithmRecursive(reachingCosts, pathToVertices);
         }
     }

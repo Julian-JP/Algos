@@ -25,7 +25,6 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggab
             cy={cy}
             key={cx}
             fill={fill}
-            id={cx + "" + cy + value}
             onContextMenu={handleRightClick}
             opacity={opacity}
         />
@@ -35,8 +34,7 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggab
             fill={textFill}
             textAnchor="middle"
             alignmentBaseline="central"
-            key={value}
-            id={cx + "" + cy + value}
+            key={cx + cy}
             onContextMenu={handleRightClick}
         >{value}</text>
     </g>);

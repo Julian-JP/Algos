@@ -16,7 +16,7 @@ public class GraphEdge {
         this.weight = weight;
     }
 
-    public boolean isVisited() {
+    public boolean tryToVisit() {
         if (color.equals(UNVISITED_COLOR) == false) {
             return true;
         } else {
@@ -35,5 +35,9 @@ public class GraphEdge {
 
     public Double getWeight() {
         return weight;
+    }
+
+    public boolean isVisited() {
+        return color.equals(VISITED_COLOR);
     }
 }
