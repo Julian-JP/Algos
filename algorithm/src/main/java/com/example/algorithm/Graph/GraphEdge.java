@@ -20,10 +20,18 @@ public class GraphEdge {
     public boolean tryToVisit() {
         if (!color.equals(VISITED_COLOR)) {
             color = VISITED_COLOR;
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
+    }
+
+    public boolean tryToProcess() {
+        if (color.equals(VISITED_COLOR)) {
+            color = PROCESSED_COLOR;
+            return true;
+        }
+            return false;
     }
     public void finish() {
         color = FINAL_COLOR;
@@ -47,5 +55,9 @@ public class GraphEdge {
 
     public void setProcessed() {
         color = PROCESSED_COLOR;
+    }
+
+    public void setUnvisited() {
+        color = UNVISITED_COLOR;
     }
 }

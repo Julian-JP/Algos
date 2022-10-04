@@ -89,38 +89,64 @@ public class AllShortestPathGraph extends Graph {
 
     public GraphResponse bellmanFord() {
         reachingCosts[start] = 0;
+        boolean finished = false;
+        boolean changes = true;
 
-        for (int k = 0; k < vertices.length - 1; k++) {
-            resetEdgeColoring();
+        for (int k = 0; k < vertices.length - 1 && changes; k++) {
+            changes = false;
             for (int i = 0; i < adjacencyMatrix.length; i++) {
                 for (int j = 0; j < adjacencyMatrix.length; j++) {
                     if (adjacencyMatrix[i][j] != null && reachingCosts[j] > reachingCosts[i] + adjacencyMatrix[i][j].getWeight()) {
                         reachingCosts[j] = reachingCosts[i] + adjacencyMatrix[i][j].getWeight();
-                        if (!adjacencyMatrix[i][j].tryToVisit() || reachingCosts[j] < oldReachingCosts[j])  {
-                            return updateVerticesValues();
+                        colorEddgesFromNode(i);
+                        if (reachingCosts[j] < oldReachingCosts[j])  {
+                            finished = true;
                         }
+                        changes = true;
                     }
+                }
+                if (finished) {
+                    return updateVerticesValues();
                 }
 
             }
         }
-        for (int k = 0; k < vertices.length - 1; k++) {
-            resetEdgeColoring();
+
+        changes = true;
+        resetEdgeColoring();
+        for (int k = 0; k < vertices.length - 1 && changes; k++) {
+            changes = false;
             for (int i = 0; i < adjacencyMatrix.length; i++) {
                 for (int j = 0; j < adjacencyMatrix.length; j++) {
                     if (adjacencyMatrix[i][j] != null && reachingCosts[j] > reachingCosts[i] + adjacencyMatrix[i][j].getWeight()) {
                         reachingCosts[j] = Double.NEGATIVE_INFINITY;
-                        if (!adjacencyMatrix[i][j].tryToVisit() || oldReachingCosts[j] > Double.NEGATIVE_INFINITY) {
-                            return updateVerticesValues();
+                        colorEddgesFromNode(i);
+                        if (oldReachingCosts[j] > Double.NEGATIVE_INFINITY) {
+                            finished = true;
                         }
+                        changes = true;
                     }
                 }
-
+                if (finished) {
+                    return updateVerticesValues();
+                }
             }
         }
 
+        colorEddgesFromNode(vertices.length);
         return updateVerticesValues();
     }
+
+    private void colorEddgesFromNode(int nodeIndex) {
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            for (int j = 0; j < adjacencyMatrix.length; j++) {
+                if (i == nodeIndex && adjacencyMatrix[i][j] != null) adjacencyMatrix[i][j].tryToVisit();
+                else if (adjacencyMatrix[i][j] != null) adjacencyMatrix[i][j].tryToProcess();
+            }
+        }
+    }
+
+
 
     @NotNull
     private GraphResponse updateVerticesValues() {
@@ -150,8 +176,8 @@ public class AllShortestPathGraph extends Graph {
     private void resetEdgeColoring() {
         for (int i = 0; i < adjacencyMatrix.length; i++) {
             for (int j = 0; j < adjacencyMatrix.length; j++) {
-                if (adjacencyMatrix[i][j] != null  && adjacencyMatrix[i][j].isVisited()) {
-                    adjacencyMatrix[i][j].setProcessed();
+                if (adjacencyMatrix[i][j] != null) {
+                    adjacencyMatrix[i][j].setUnvisited();
                 }
             }
         }
