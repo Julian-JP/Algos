@@ -158,6 +158,20 @@ const GraphVisualisation = props => {
                                 key={"polygon" + item.id}
                             />
                         </marker>
+                        <marker id="arrowheadgray"
+                                markerWidth={10}
+                                markerHeight={3}
+                                refX="0"
+                                refY="1.5"
+                                orient="auto"
+                                key={"marker-gray" + item.id}
+                                fill={"gray"}
+                        >
+                            <polygon
+                                points="0 0, 10 1.5, 0 3"
+                                key={"polygon" + item.id}
+                            />
+                        </marker>
                         <marker id="arrowheadblack"
                                 markerWidth={10}
                                 markerHeight={3}
@@ -178,7 +192,7 @@ const GraphVisualisation = props => {
                               y2={y1 - (y1 - y2) / 3}
                               stroke={item.stroke}
                               strokeWidth={3}
-                              markerEnd={item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke === "blue" ? "url(#arrowheadblue)" : "url(#arrowheadred)")}
+                              markerEnd={item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke === "blue" ? "url(#arrowheadblue)" : (item.stroke === "red" ? "url(#arrowheadred)" : "url(#arrowheadgray)"))}
                               key={"markerline" + item.id}
                         />
                         <line

@@ -3,6 +3,7 @@ package com.example.algorithm.Graph.AllShortestPath;
 import com.example.algorithm.Graph.Graph;
 import com.example.algorithm.Graph.GraphNode;
 import com.example.algorithm.Graph.GraphResponse;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +16,7 @@ public class AllShortestPathGraph extends Graph {
     GraphNode[] vertices;
     int start;
     double[] reachingCosts;
+    double[] oldReachingCosts;
 
     public AllShortestPathGraph(String graphJSON) throws JSONException {
         super(graphJSON);
@@ -27,12 +29,20 @@ public class AllShortestPathGraph extends Graph {
         JSONArray vertices = graphJSON.getJSONArray("vertices");
         this.vertices = new GraphNode[vertices.length()];
         this.reachingCosts = new double[vertices.length()];
+        this.oldReachingCosts = new double[vertices.length()];
 
         for (int i = 0; i < vertices.length(); i++) {
             String vertex = vertices.getJSONObject(i).getString("value");
             String[] vertexValue = vertex.split(Pattern.quote("|"));
             this.vertices[i] = new GraphNode(vertexValue[0]);
             this.reachingCosts[i] = Double.POSITIVE_INFINITY;
+            if (vertexValue.length > 1 && vertexValue[1].equals("-∞")) {
+                oldReachingCosts[i] = Double.NEGATIVE_INFINITY;
+            } else if (vertexValue.length > 1 && !vertexValue[1].equals("∞")) {
+                oldReachingCosts[i] = Double.valueOf(vertexValue[1]);
+            } else {
+                oldReachingCosts[i] = Double.POSITIVE_INFINITY;
+            }
         }
     }
 
@@ -45,16 +55,7 @@ public class AllShortestPathGraph extends Graph {
         pathsAlreadyKnown[start] = pathToStart;
         dijkstraRecursive(pathsAlreadyKnown);
 
-        for (int i = 0; i < vertices.length; i++) {
-            if (reachingCosts[i] == Double.POSITIVE_INFINITY) {
-                vertices[i].setValue(vertices[i].getValue() + "|∞");
-            } else if (reachingCosts[i] == Double.NEGATIVE_INFINITY) {
-                vertices[i].setValue(vertices[i].getValue() + "|-∞");
-            } else {
-                vertices[i].setValue(vertices[i].getValue() + "|" + reachingCosts[i]);
-            }
-        }
-        return new GraphResponse(adjacencyMatrix, vertices);
+        return updateVerticesValues();
     }
 
     private void dijkstraRecursive(ArrayDeque<Integer>[] pathToVertices) {
@@ -86,6 +87,54 @@ public class AllShortestPathGraph extends Graph {
         }
     }
 
+    public GraphResponse bellmanFord() {
+        reachingCosts[start] = 0;
+
+        for (int k = 0; k < vertices.length - 1; k++) {
+            resetEdgeColoring();
+            for (int i = 0; i < adjacencyMatrix.length; i++) {
+                for (int j = 0; j < adjacencyMatrix.length; j++) {
+                    if (adjacencyMatrix[i][j] != null && reachingCosts[j] > reachingCosts[i] + adjacencyMatrix[i][j].getWeight()) {
+                        reachingCosts[j] = reachingCosts[i] + adjacencyMatrix[i][j].getWeight();
+                        if (!adjacencyMatrix[i][j].tryToVisit() || reachingCosts[j] < oldReachingCosts[j])  {
+                            return updateVerticesValues();
+                        }
+                    }
+                }
+
+            }
+        }
+        for (int k = 0; k < vertices.length - 1; k++) {
+            resetEdgeColoring();
+            for (int i = 0; i < adjacencyMatrix.length; i++) {
+                for (int j = 0; j < adjacencyMatrix.length; j++) {
+                    if (adjacencyMatrix[i][j] != null && reachingCosts[j] > reachingCosts[i] + adjacencyMatrix[i][j].getWeight()) {
+                        reachingCosts[j] = Double.NEGATIVE_INFINITY;
+                        if (!adjacencyMatrix[i][j].tryToVisit() || oldReachingCosts[j] > Double.NEGATIVE_INFINITY) {
+                            return updateVerticesValues();
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return updateVerticesValues();
+    }
+
+    @NotNull
+    private GraphResponse updateVerticesValues() {
+        for (int i = 0; i < vertices.length; i++) {
+            if (reachingCosts[i] == Double.POSITIVE_INFINITY) {
+                vertices[i].setValue(vertices[i].getValue() + "|∞");
+            } else if (reachingCosts[i] == Double.NEGATIVE_INFINITY) {
+                vertices[i].setValue(vertices[i].getValue() + "|-∞");
+            } else {
+                vertices[i].setValue(vertices[i].getValue() + "|" + reachingCosts[i]);
+            }
+        }
+        return new GraphResponse(adjacencyMatrix, vertices);
+    }
     private int findCheapestEdge(int node) {
         int index = -1;
         Double cheapest = Double.POSITIVE_INFINITY;
@@ -98,11 +147,21 @@ public class AllShortestPathGraph extends Graph {
         return index;
     }
 
-    private void colorAllVisitedEdges() {
+    private void resetEdgeColoring() {
         for (int i = 0; i < adjacencyMatrix.length; i++) {
             for (int j = 0; j < adjacencyMatrix.length; j++) {
-                if (adjacencyMatrix[i][j] != null && adjacencyMatrix[i][j].isVisited()) {
-                    adjacencyMatrix[i][j].finish();
+                if (adjacencyMatrix[i][j] != null  && adjacencyMatrix[i][j].isVisited()) {
+                    adjacencyMatrix[i][j].setProcessed();
+                }
+            }
+        }
+    }
+
+    private void colorAllVisitedEdges() {
+        for (com.example.algorithm.Graph.GraphEdge[] matrix : adjacencyMatrix) {
+            for (int j = 0; j < adjacencyMatrix.length; j++) {
+                if (matrix[j] != null && matrix[j].isVisited()) {
+                    matrix[j].finish();
                 }
             }
         }

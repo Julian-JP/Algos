@@ -140,21 +140,21 @@ public class AlgorithmListController {
     @GetMapping("/PathFinding/Dijkstra")
     public ResponseEntity<Algorithm> getDijkstra() {
         logger.info("Requested information to: Dijkstra single Path");
-        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "PathFinding/Dijkstra", "weightedNonNegativePathFindingGraph", 1);
+        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "PathFinding/Dijkstra", "weightedNonNegativePathFindingGraph", 2);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
     @GetMapping("/allShortestPath/Dijkstra")
     public ResponseEntity<Algorithm> getDijkstraAllShortestPath() {
         logger.info("Requested information to: Dijkstra ALl shortest path");
-        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "allShortestPath/Dijkstra", "weightedAllPathFindingGraph", 1);
+        Algorithm dfs = new Algorithm("Dijkstra's algorithm", "allShortestPath/Dijkstra", "weightedNonNegativeAllPathFindingGraph", 0);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
     @GetMapping("/allShortestPath/BellmanFord")
     public ResponseEntity<Algorithm> getBellmanford() {
-        logger.info("Requested information to: BellmanFord");
-        Algorithm dfs = new Algorithm("Bellman-Ford algorithm", "allShortestPath/Dijkstra", "weightedNonNegativeAllPathFindingGraph", 1);
+        logger.info("Requested information to: bellmanFord");
+        Algorithm dfs = new Algorithm("Bellman-Ford algorithm", "allShortestPath/BellmanFord", "weightedAllPathFindingGraph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }
 
