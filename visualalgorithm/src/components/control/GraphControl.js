@@ -105,9 +105,8 @@ const GraphControl = (props) => {
                 return ret;
             });
             setMarkedNode([]);
-            clearPreviousStack();
         }
-    }, [markedNodes])
+    }, [markedNodes]);
 
     const handleAddNode = (event) => {
         event.preventDefault();
@@ -133,10 +132,9 @@ const GraphControl = (props) => {
                 x: Math.floor(Math.random() * 1000), y: 100, color: DEFAULT_VERTEX_COLOR, value: addVal, id: addVal
             }];
         })
-        clearPreviousStack();
     }
 
-    const handleOnClick = (id, event) => {
+    const handleOnClick = (id) => {
         markNode(id);
     }
 
@@ -175,11 +173,11 @@ const GraphControl = (props) => {
         });
 
         setVertices(old => {
-            return vertices.filter(item => item.id !== event.id);
+            let temp = [...old];
+            return temp.filter(item => item.id !== event.id);
         })
 
         updateStartEndAfterRemovingIndex(index);
-        clearPreviousStack();
     }
 
     const removeIndex = (index, matrix) => {
@@ -214,22 +212,33 @@ const GraphControl = (props) => {
         }
     }
 
-    const next = () => {
-
+    async function updatePreviousStack() {
         setPrev(old => {
             let temp = [...old];
-            temp.push({edges: edges, vertices: vertices, start: start, end: end});
+            let newPrevObj = {
+                vertices: JSON.parse(JSON.stringify(vertices)),
+                edges: JSON.parse(JSON.stringify(edges)),
+                start: start,
+                end: end
+            }
+            temp.push(newPrevObj);
             return temp;
-        })
+        });
+    }
 
-        const createGraphFromJSON = (response) => {
-            setEdges(response.edges);
+    const next = () => {
+
+        function createGraphFromJSON(response) {
+            setEdges(old => {
+                return response.edges
+            });
             if (props.verteciesRenaming === true) {
                 setVertices(old => {
-                    for (let i = 0; i < old.length; i++) {
-                        old[i].value = response.vertices[i].value
+                    let temp = [...old]
+                    for (let i = 0; i < temp.length; i++) {
+                        temp[i].value = response.vertices[i].value
                     }
-                    return [...old];
+                    return temp;
                 })
             }
         }
@@ -241,11 +250,13 @@ const GraphControl = (props) => {
                 'Content-Type': 'application/json'
             },
             body: {edges: edges, start: start, vertices: vertices, end: end}
-        }, createGraphFromJSON);
+        }, (response => {
+            updatePreviousStack().then(() => createGraphFromJSON(response));
+        }));
     }
 
     const previous = () => {
-        if (prev.length <= 0) return;
+        if (prev.length < 1) return;
 
         let previousState = prev[prev.length - 1];
         setEdges(previousState.edges);
@@ -294,11 +305,10 @@ const GraphControl = (props) => {
             setEnd(markedNodes[0]);
             setMarkedNode([]);
         }
-        clearPreviousStack();
     }
 
     const clearPreviousStack = () => {
-        setPrev([]);
+        setPrev([{edges: edges, vertices: vertices, start: start, end: end}]);
         setEdges(old => {
             let temp = [...old];
             for (let i = 0; i < temp.length; i++) {
