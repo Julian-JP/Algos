@@ -89,7 +89,7 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
                 setRedoStack([]);
             }
             sendRequest({
-                url: 'http://localhost:8080/algos/' + type + '/new/' + addval,
+                url: 'https://julian-laux.de:8080/algos/' + type + '/new/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
             }
 
             sendRequest({
-                url: 'http://localhost:8080/algos/' + type + '/insert/' + addval,
+                url: 'https://julian-laux.de:8080/algos/' + type + '/insert/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
             }
         }
         sendRequest({
-            url: 'http://localhost:8080/algos/' + type + '/remove/' + removeval,
+            url: 'https://julian-laux.de:8080/algos/' + type + '/remove/' + removeval,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

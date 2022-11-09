@@ -19,7 +19,7 @@ const GraphVisualisation = props => {
             setExplanation(response.explanation);
         };
         sendRequest({
-            url: `http://localhost:8080/algos/${props.url}/explanation`, method: 'GET'
+            url: `https://julian-laux.de:8080/algos/${props.url}/explanation`, method: 'GET'
         }, applyResponse);
 
     }, [sendRequest]);

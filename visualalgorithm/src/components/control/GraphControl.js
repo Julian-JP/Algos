@@ -244,7 +244,7 @@ const GraphControl = (props) => {
         }
 
         sendRequest({
-            url: 'http://localhost:8080/algos/' + props.type + '/step',
+            url: 'https://julian-laux.de:8080/algos/' + props.type + '/step',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,17 +1,20 @@
 import './App.css';
-import Navbar from "./components/UI/Navbar";
 import React from "react";
-import MainContent from "./components/UI/MainContent";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Algorithms from './Algorithms';
+import AboutMe from "./AboutMe";
+import ErrorPage from "./ErrorPage";
 
 function App() {
 
     return (
-        <div className="App">
-            <Navbar/>
-            <main className="maincontent">
-                <MainContent/>
-            </main>
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/algorithms" element={<Algorithms />} />
+                <Route path="/aboutme" element={<AboutMe />} />
+                <Route path="*" element={<ErrorPage />} />
+            </Routes>
+        </Router>
     );
 }
 
