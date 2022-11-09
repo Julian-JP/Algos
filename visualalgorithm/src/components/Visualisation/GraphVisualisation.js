@@ -3,6 +3,7 @@ import classes from "./GraphVisualisation.module.css"
 import useFetch from "../../hooks/useFetch";
 import ControlSelector from "../control/ControlSelector";
 import Circle from "../UI/SVG-Components/Circle";
+import Modal from "../UI/Modal";
 
 const GraphVisualisation = props => {
 
@@ -319,7 +320,7 @@ const GraphVisualisation = props => {
     }
 
     const explanationDiv = isLoading ? <div className={classes.explanation}>Loading...</div> : error ?
-        <div className={classes.explanation}>Fehler beim Laden</div> :
+        null :
         <div className={classes.explanation} dangerouslySetInnerHTML={{__html: explanation}}></div>
 
     return (<div className={classes.background}>

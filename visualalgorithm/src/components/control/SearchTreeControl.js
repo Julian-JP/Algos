@@ -171,6 +171,7 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
                 setCurrent={setTree}
             />
         </div>
+
     );
 };
 

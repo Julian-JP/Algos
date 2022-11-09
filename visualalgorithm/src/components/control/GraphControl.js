@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import classes from "./GraphControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
+import Modal from "../UI/Modal";
 
 const GraphControl = (props) => {
 
@@ -21,6 +22,8 @@ const GraphControl = (props) => {
     const [end, setEnd] = useState(undefined);
 
     const [weight, setWeight] = useState(0);
+
+    const [modalIsOpen, setModalIsOpen] = useState(true);
 
     const {isLoading, error, sendRequest} = useFetch();
 
@@ -327,45 +330,55 @@ const GraphControl = (props) => {
     }
 
     return (<div className={classes.container}>
-        <MultidataInputWithSubmit
-            onSubmit={handleAddNode}
-            btnLabel={"Add"}
-            data={
-                [{
-                    type: "text", onChange: (val) => setAddVal(val.target.value), label: "add", noLabel: true
-                }]
+            <MultidataInputWithSubmit
+                onSubmit={handleAddNode}
+                btnLabel={"Add"}
+                data={
+                    [{
+                        type: "text", onChange: (val) => setAddVal(val.target.value), label: "add", noLabel: true
+                    }]
+                }
+            />
+            {props.weightedEdges ? <MultidataInputWithSubmit
+                btnLabel={"Edge Weight"}
+                data={
+                    [{
+                        type: "number",
+                        min: props.minWeight,
+                        onChange: (val) => setWeight(val.target.value),
+                        label: "Edge Weight",
+                        noLabel: true,
+                        defaultValue: 0
+                    }]
+                }
+            /> : null}
+            {props.startButton && props.endButton &&
+                <div className={classes.algoNavigationContainer}>
+                    <button className={classes.leftButton} onClick={() => handleStartEnd(true)}>Start</button>
+                    <button className={classes.rightButton} onClick={() => handleStartEnd(false)}>End</button>
+                </div>
             }
-        />
-        {props.weightedEdges ? <MultidataInputWithSubmit
-            btnLabel={"Edge Weight"}
-            data={
-                [{
-                    type: "number",
-                    min: props.minWeight,
-                    onChange: (val) => setWeight(val.target.value),
-                    label: "Edge Weight",
-                    noLabel: true,
-                    defaultValue: 0
-                }]
+            {props.startButton && !props.endButton &&
+                <div className={classes.algoNavigationContainer}>
+                    <button className={classes.fullSizeButton} onClick={() => handleStartEnd(true)}>Start</button>
+                </div>
             }
-        /> : null}
-        {props.startButton && props.endButton &&
             <div className={classes.algoNavigationContainer}>
-                <button className={classes.leftButton} onClick={() => handleStartEnd(true)}>Start</button>
-                <button className={classes.rightButton} onClick={() => handleStartEnd(false)}>End</button>
+                <button className={classes.leftButton} onClick={() => previous(1)}>◄</button>
+                <button className={classes.rightButton} onClick={() => next(1)}>►</button>
             </div>
-        }
-        {props.startButton && !props.endButton &&
-            <div className={classes.algoNavigationContainer}>
-                <button className={classes.fullSizeButton} onClick={() => handleStartEnd(true)}>Start</button>
-            </div>
-        }
-        <div className={classes.algoNavigationContainer}>
-            <button className={classes.leftButton} onClick={() => previous(1)}>◄</button>
-            <button className={classes.rightButton} onClick={() => next(1)}>►</button>
-        </div>
 
-    </div>)
+            <Modal open={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+                <ul>
+                    <li>{"Nodes can be moved via drag and drop"} </li>
+                    <li>{"Adding edge from node A to B by first clicking on Node A than clicking on Node B remove the edge the same way"}</li>
+                    <li>{"Select the Starting- (or Ending-) node of the algorithm by clicking on the Node and then hit the button Start/End"}</li>
+                    <li>{"Start with the first step of the algorithm by pressing the ► button"}</li>
+                    <li>{"You can go one step back with the ◄ button"}</li>
+                </ul>
+            </Modal>
+        </div>
+    )
 }
 
 export default GraphControl;

@@ -4,9 +4,9 @@ import classes from './Navbar.module.css'
 const Navbar = () => {
     return (
         <nav className={classes.topnavbar}>
-            <a href= "visualalgorithm/src/components/UI/Navbar#home">Home</a>
+            {/* <a href= "visualalgorithm/src/components/UI/Navbar#home">Home</a> */}
             <a href="algorithms" className={classes.active}>Algorithms</a>
-            <a href= "/aboutme">About me</a>
+            {/* <a href= "/aboutme">About me</a> */}
         </nav>
     );
 };
