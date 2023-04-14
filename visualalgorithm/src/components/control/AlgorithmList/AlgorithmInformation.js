@@ -25,11 +25,9 @@ const AlgorithmInformation = props => {
         props.changeDisplayedContent({displayed: "graph", graphType: algorithmInformation.type, url: algorithmInformation.url});
     }
 
-    const information = isLoading ? <div className={classes.card}>{"Loading..."}</div> :
+    return isLoading ? <div className={classes.card}>{"Loading..."}</div> :
         error ? <div className={classes.card}>{error}</div> :
-            <div className={classes.card} onClick={handleDisplayedContentChange}>{algorithmInformation.name}</div>
-
-    return information;
+            <button className={classes.card} onClick={handleDisplayedContentChange}>{algorithmInformation.name}</button>;
 }
 
 export default AlgorithmInformation;

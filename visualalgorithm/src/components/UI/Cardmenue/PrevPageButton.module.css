@@ -1,0 +1,52 @@
+.prevButton {
+    margin-left: calc((50% - 50px) / 2);
+    margin-right: calc((50% - 50px) / 2);
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: solid 3px #999;
+    font-size: 30px;
+    text-align: center;
+    transition: all .2s linear;
+    cursor: pointer;
+    position:relative;
+    background: none;
+}
+
+.active:hover {
+    border: solid 4px #777;
+}
+
+.prevButton:before,
+.prevButton:after {
+    content:"";
+    position: absolute;
+    width:35%;
+    height: 10%;
+    top:41%;
+    left:45%;
+    background: #999;
+    z-index: 2;
+    transform: translate(-50%, -50%) rotate(135deg);
+    transition: all .2s linear;
+}
+
+.prevButton:after {
+    z-index: 3;
+    top:59%;
+    transform: translate(-50%, -50%) rotate(-135deg);
+}
+
+.active:hover:after,
+.active:hover:before {
+    background: #777;
+}
+
+.active:active {
+    border: solid 4px #333333;
+}
+
+.active:active:after,
+.active:active:before {
+    background: #333333;
+}

@@ -1,8 +1,14 @@
 .card {
- padding: 50px;
+    padding: 50px;
 }
 
 .list {
-  list-style-type: none;
- padding: 0;
+    justify-content: center;
+    width: 100%;
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 400px);
+    grid-gap: 50px;
+
 }

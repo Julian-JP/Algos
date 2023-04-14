@@ -3,8 +3,8 @@ import MainContent from "./components/UI/MainContent";
 import React from "react";
 
 const ALGORITHM_STYLES = {
-    backgroundColor: "#a3a3a3",
-    height: "100vh"
+    height: "100%",
+    backgroundColor: "#a3a3a3"
 }
 
 const Algorithms = () => {

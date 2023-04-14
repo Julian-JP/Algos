@@ -1,0 +1,52 @@
+.nextButton {
+    margin-left: calc((50% - 50px) / 2);
+    margin-right: calc((50% - 50px) / 2);
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: solid 3px #999;
+    font-size: 30px;
+    text-align: center;
+    transition: all .2s linear;
+    cursor: pointer;
+    position:relative;
+    background: none;
+}
+
+.active:hover {
+    border: solid 4px #777;
+}
+
+.nextButton:before,
+.nextButton:after {
+    content:"";
+    position: absolute;
+    width:35%;
+    height: 10%;
+    top:41%;
+    left:55%;
+    background: #999;
+    z-index: 2;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: all .2s linear;
+}
+
+.nextButton:after {
+    z-index: 3;
+    top:59%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.active:hover:after,
+.active:hover:before {
+    background: #777;
+}
+
+.active:active {
+    border: solid 4px #333333;
+}
+
+.active:active:after,
+.active:active:before {
+    background: #333333;
+}
