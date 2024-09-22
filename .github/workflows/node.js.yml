@@ -28,11 +28,11 @@ jobs:
         cache: 'npm'
         cache-dependency-path: './visualalgorithm/package-lock.json'
     - run: npm ci
-      working-directory: ./visualsalgorithms
+      working-directory: ./visualalgorithm
     - run: npm run build --if-present
-      working-directory: ./visualsalgorithms
+      working-directory: ./visualalgorithm
     - run: npm test
-      working-directory: ./visualsalgorithms
+      working-directory: ./visualalgorithm
 
     - name: Deploy with gh-pages
       run: |
