@@ -1,0 +1,21 @@
+.button {
+    border-radius: 35px;
+    background: none;
+    border: 1px solid #fff;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 0 0 11px;
+
+    font-size: 20px;
+    transition: all 500ms ease-out 100ms;
+
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0);
+    color: inherit;
+}

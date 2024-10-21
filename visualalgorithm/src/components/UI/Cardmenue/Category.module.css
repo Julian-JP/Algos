@@ -1,0 +1,8 @@
+.console_item {
+    background-color: #1b1b1b; /* Item background color */
+    border: 1px solid #444; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding inside items */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    color: #00ff00;
+}

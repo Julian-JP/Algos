@@ -1,10 +1,3 @@
-.flippableCardContainer {
-    /* Sizing */
-    height: 400px;
-    width: 400px;
-    perspective: 1000px;
-}
-
 .card {
     /* Sizing */
     width: 100%;
@@ -24,23 +17,21 @@
     /* Sizing */
     height: 100%;
     width: 100%;
+    perspective: 1000px;
+
+
+    position: absolute;
 
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-
-    /* Alignment */
-    position: absolute;
 }
 
 .cardfront {
-    font-size: 20px;
-    background: #c2c2c2;
     transition: 0.3s;
 }
 
 .cardback {
     transform: rotateY(180deg);
-    background: #c2c2c2;
     transition: 0.3s;
 }
 
@@ -67,37 +58,4 @@
 }
 .flipEnterDone {
     transform: rotateY(0deg);
-}
-
-
-.card:hover {
-    box-shadow: 0 0 15px rgba(0,0,0,0.8);
-}
-
-.textField {
-    float: right;
-    background: rgba(255, 255, 255, 0.8);
-    width: 90%;
-    height: 25%;
-    clip-path: polygon(70px 0, 100% 0%, 100% 100%, 0% 100%);
-    display: table;
-}
-
-.textContent {
-    height: 100%;
-
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-
-
-    padding-left: 50px;
-    color:  #333;
-    font-weight: bold;
-    font-size: 40px;
-}
-
-.img {
-    width: 100%;
-    height: 75%;
 }

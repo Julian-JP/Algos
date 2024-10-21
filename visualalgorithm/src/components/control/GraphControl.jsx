@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import classes from "./GraphControl.module.css";
 import useFetch from "../../hooks/useFetch";
-import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
-import Modal from "../UI/Modal";
+import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
+import Modal from "../UI/Modal.jsx";
 
 const GraphControl = (props) => {
 

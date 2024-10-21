@@ -2,7 +2,9 @@ import React, {useState} from "react";
 import Draggable from "react-draggable";
 
 const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggable, onRightClick, onLeftClick}) => {
-    const [info, setInfo] = useState({dx: 0, dy: 0, cx: cx, cy: cy, dragging: false});
+    const [isDragging, setIsDragging] = useState(false);
+    const baseX = cx;
+    const baseY = cy;
 
     const handleMouseDown = (event) => {
         if (onLeftClick) {
@@ -16,6 +18,29 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggab
             event.preventDefault();
             onRightClick({...event, id});
         }
+    }
+
+    const handleOnStop = (event, data) => {
+        if (! isDragging) {
+            handleMouseDown(event)
+            return;
+        }
+
+        const newX = baseX + data.x;
+        const newY = baseY + data.y;
+
+        setIsDragging(false)
+        handleDrag(id, newX, newY);
+    }
+
+    const handleOnStart = (event, data) => {
+    }
+
+    const handleOnDrag = (event, data) => {
+        const newX = baseX + data.x;
+        const newY = baseY + data.y;
+        setIsDragging(true)
+        handleDrag(id, newX, newY);
     }
 
     const group = (<g>
@@ -43,26 +68,9 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggab
         return group;
     } else {
         return <Draggable
-            onStart={event => {
-                setInfo(old => {
-                    return {...old, dx: event.clientX - info.cx, dy: event.clientY - info.cy}
-                });
-            }}
-            onDrag={event => {
-                setInfo(old => {
-                    return {...old, dragging: true}
-                });
-                handleDrag(id, event.clientX - info.dx, event.clientY - info.dy)
-            }}
-            onStop={event => {
-                if (!info.dragging) {
-                    handleMouseDown(event)
-                    return;
-                }
-                setInfo(old => {
-                    return {dx: 0, dy: 0, cx: event.clientX - old.dx, cy: event.clientY - old.dy, dragging: false}
-                });
-            }}
+            onStart={handleOnStart}
+            onDrag={handleOnDrag}
+            onStop={handleOnStop}
         >
             {group}
         </Draggable>

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch.js";
 import classes from "./AlgorithmInformation.module.css";
+import Button from "../UI/Cardmenue/Button.jsx";
 
 const AlgorithmInformation = props => {
     const [algorithmInformation, setAlgorithmInformation] = useState([]);
@@ -25,9 +26,14 @@ const AlgorithmInformation = props => {
         props.changeDisplayedContent({displayed: "graph", graphType: algorithmInformation.type, url: algorithmInformation.url});
     }
 
-    return isLoading ? <div className={classes.card}>{"Loading..."}</div> :
-        error ? <div className={classes.card}>{error}</div> :
-            <button className={classes.card} onClick={handleDisplayedContentChange}>{algorithmInformation.name}</button>;
+    return isLoading ? <div className={classes.info}>{"Loading..."}</div> :
+        error ? <div className={classes.info}>{error}</div> :
+            <div>
+                <Button
+                    onClick={handleDisplayedContentChange}
+                    className={classes.info}
+                    content={algorithmInformation.name} />
+            </div>;
 }
 
 export default AlgorithmInformation;

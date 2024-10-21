@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import classes from "./HeapControl.module.css";
 import useFetch from "../../hooks/useFetch";
-import UndRedoFields from "../UI/UndRedoFields";
-import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
+import UndoRedoFields from "../UI/UndoRedoFields.jsx";
+import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
 
 const HeapControl = ({setEdges, setVertices, type}) => {
 
@@ -155,7 +155,7 @@ const HeapControl = ({setEdges, setVertices, type}) => {
             <form onSubmit={onRemove}>
                 <button type="submit" className={classes.remove}>Remove</button>
             </form>
-            <UndRedoFields
+            <UndoRedoFields
                 currentDrawing={heap}
                 undoStackState={[undoStack, setUndoStack]}
                 redoStackState={[redoStack, setRedoStack]}

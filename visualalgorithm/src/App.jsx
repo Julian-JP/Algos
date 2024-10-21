@@ -1,20 +1,20 @@
 import './App.css';
 import React from "react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import Algorithms from './Algorithms';
-import AboutMe from "./AboutMe";
-import ErrorPage from "./ErrorPage";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Algorithms from './Algorithms.jsx';
+import AboutMe from "./AboutMe.jsx";
+import ErrorPage from "./ErrorPage.jsx";
 
 function App() {
 
     return (
-        <Router>
+        <BrowserRouter>
             <Routes>
                 <Route path="/algorithms" element={<Algorithms />} />
                 <Route path="/aboutme" element={<AboutMe />} />
                 <Route path="*" element={<ErrorPage />} />
             </Routes>
-        </Router>
+        </BrowserRouter>
     );
 }
 

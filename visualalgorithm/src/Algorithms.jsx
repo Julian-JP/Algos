@@ -1,19 +1,17 @@
-import Navbar from "./components/UI/Navbar";
-import MainContent from "./components/UI/MainContent";
+import Navbar from "./components/UI/Navbar.jsx";
+import MainContent from "./components/UI/MainContent.jsx";
 import React from "react";
 
 const ALGORITHM_STYLES = {
     height: "100%",
-    backgroundColor: "#a3a3a3"
+    backgroundColor: "#0e0e0e"
 }
 
 const Algorithms = () => {
     return (
         <div className="App" style={ALGORITHM_STYLES}>
             <Navbar/>
-            <main className="maincontent">
-                <MainContent/>
-            </main>
+            <MainContent/>
         </div>
     );
 }

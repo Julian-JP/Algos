@@ -1,17 +1,16 @@
-import React, {useState} from "react";
+import React, { useState, useRef } from "react";
 import classes from "./Card.module.css";
-import {CSSTransition} from "react-transition-group";
-import CardBack from "./CardBack";
+import { CSSTransition } from "react-transition-group";
 
-const Card = ({frontName, backItemList}) => {
+const Card = ({ cardFront, cardBack }) => {
     const [showFront, setShowFront] = useState(true);
+    const nodeRef = useRef(null);
 
     const flipCard = () => {
         setShowFront((value) => !value);
-    }
+    };
 
-
-    return <div className={classes.flippableCardContainer}>
+    return (
         <CSSTransition
             in={showFront}
             timeout={300}
@@ -23,23 +22,18 @@ const Card = ({frontName, backItemList}) => {
                 exitActive: classes.flipExitActive,
                 exitDone: classes.flipExitDone
             }}
+            nodeRef={nodeRef}
         >
-            < div className={classes.card} onClick={flipCard}>
+            <div className={classes.card} onClick={flipCard} ref={nodeRef}>
                 <div className={classes.cardfront}>
-                    <div className={classes.img}/>
-                    <div className={classes.textField}>
-                        <div className={classes.textContent}>
-                            { frontName }
-                        </div>
-                    </div>
+                    {cardFront}
                 </div>
-
                 <div className={classes.cardback}>
-                    <CardBack elementList={backItemList}/>
+                    {cardBack}
                 </div>
             </div>
         </CSSTransition>
-    </div>
-}
+    );
+};
 
 export default Card;

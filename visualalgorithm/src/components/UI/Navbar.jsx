@@ -5,7 +5,9 @@ const Navbar = () => {
     return (
         <nav className={classes.topnavbar}>
             {/* <a href= "visualalgorithm/src/components/UI/Navbar#home">Home</a> */}
-            <a href="algorithms" className={classes.active}>Algorithms</a>
+            <div className={classes.algo}>
+                <a href="algorithms">Algorithms</a>
+            </div>
             {/* <a href= "/aboutme">About me</a> */}
         </nav>
     );

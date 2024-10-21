@@ -1,8 +1,8 @@
-import SearchTreeControl from "./SearchTreeControl";
-import GraphControl from "./GraphControl";
+import SearchTreeControl from "./SearchTreeControl.jsx";
+import GraphControl from "./GraphControl.jsx";
 import React from "react";
 import classes from "./ControlSelector.module.css";
-import HeapControl from "./HeapControl";
+import HeapControl from "./HeapControl.jsx";
 
 const ControlSelector = props => {
     return (

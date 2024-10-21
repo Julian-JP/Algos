@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./UndoRedoFields.module.css";
 
-const UndRedoFields = props => {
+const UndoRedoFields = props => {
 
     const [undoStack, setUndoStack] = props.undoStackState;
     const [redoStack, setRedoStack] = props.redoStackState;
@@ -35,4 +35,4 @@ const UndRedoFields = props => {
     </div>
 }
 
-export default UndRedoFields;
+export default UndoRedoFields;

@@ -1,8 +1,9 @@
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch.js";
 import React, {useEffect, useState} from "react";
-import CardMenue from "../../UI/Cardmenue/CardMenue";
+import CardMenue from "../UI/Cardmenue/CardMenue.jsx";
 import classes from "./AlgorithmList.module.css";
-import AlgorithmInformation from "./AlgorithmInformation";
+import AlgorithmInformation from "./AlgorithmInformation.jsx";
+import Category from "../UI/Cardmenue/Category.jsx";
 
 const AlgorithmList = props => {
     const [categoryList, setCategoryList] = useState([]);
@@ -26,9 +27,16 @@ const AlgorithmList = props => {
     const convertedAlgorithmList =
         <ul className={classes.list}>
             {categoryList.map(elem =>
-                <CardMenue key={elem.id} dropdownElements={
-                    elem.algorithmUrls.map(algo => <AlgorithmInformation url={algo} key={algo} changeDisplayedContent={props.changeDisplayedContent} />)
-                }>{elem.name}</CardMenue>)}
+                <CardMenue
+                    key={elem.id}
+                    dropdownElements={
+                        elem.algorithmUrls.map(algo =>
+                         <AlgorithmInformation url={algo} key={algo} changeDisplayedContent={props.changeDisplayedContent} />
+                        )
+                    }
+                    id={elem.id}
+                    name={elem.name}
+                />)}
         </ul>;
 
     return <React.Fragment>

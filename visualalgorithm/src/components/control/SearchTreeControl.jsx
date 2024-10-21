@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import classes from "./SearchTreeControl.module.css";
 import useFetch from "../../hooks/useFetch";
-import UndRedoFields from "../UI/UndRedoFields";
-import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit";
+import UndoRedoFields from "../UI/UndoRedoFields.jsx";
+import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
 
 const SearchTreeControl = ({setEdges, setVertices, type}) => {
 
@@ -161,7 +161,7 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
                     }]
                 }
             />
-            <UndRedoFields
+            <UndoRedoFields
                 className={classes.undoRedo}
                 currentDrawing={tree}
                 undoStackState={[undoStack, setUndoStack]}
