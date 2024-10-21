@@ -6,7 +6,7 @@
 .card {
     height: auto;
     display: flex;
-    gap: 5px;
+    gap: 25px;
 }
 
 .control {
@@ -14,15 +14,14 @@
 }
 
 .canvas {
-    background-color: lightgray;
-    width: calc(100% - 300px);
+    background: rgba(255, 255, 255, 4%);
     height: auto;
-    border-radius: 15px 0 0 15px;
+    border-radius: 15px;
 }
 
 .explanation  {
     box-sizing: border-box;
-    background-color: lightgray;
+    background: #ffffff;
     width: 100%;
     margin-top: 20px;
     padding: 50px;

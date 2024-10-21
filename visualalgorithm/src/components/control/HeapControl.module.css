@@ -10,13 +10,40 @@
 }
 
 .buttonAddRemove:active {
-    background-color: #a2a2a2;
+    background: #ffffff;
 }
 
 .remove {
     width: 100%;
-    border-radius: 15px 15px 15px 15px;
-    border: none;
     height: min(50%, 50px);
+
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+
+    background: rgba(255, 255, 255, 4%);
+    color: white;
+
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+
     font-size: min(1.2vw, 25px);
+}
+
+.remove:hover:enabled {
+    border-color: #408343;
+    background: rgba(0, 255, 0, 4%);
+
+    border-style: solid;
+    border-width: 1px;
+
+    cursor: pointer;
+}
+
+.remove:hover:disabled {
+    border-color: #834043;
+    background: rgba(255, 0, 0, 4%);
+
+    border-style: solid;
+    border-width: 1px;
 }

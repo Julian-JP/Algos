@@ -353,17 +353,17 @@ const GraphControl = (props) => {
                 }
             /> : null}
             {props.startButton && props.endButton &&
-                <div className={classes.algoNavigationContainer}>
+                <div className={`${classes.algoNavigationContainer} ${classes.valid}`}>
                     <button className={classes.leftButton} onClick={() => handleStartEnd(true)}>Start</button>
                     <button className={classes.rightButton} onClick={() => handleStartEnd(false)}>End</button>
                 </div>
             }
             {props.startButton && !props.endButton &&
-                <div className={classes.algoNavigationContainer}>
+                <div className={`${classes.algoNavigationContainer} ${classes.valid}`}>
                     <button className={classes.fullSizeButton} onClick={() => handleStartEnd(true)}>Start</button>
                 </div>
             }
-            <div className={classes.algoNavigationContainer}>
+            <div className={`${classes.algoNavigationContainer} ${classes.valid}`}>
                 <button className={classes.leftButton} onClick={() => previous(1)}>◄</button>
                 <button className={classes.rightButton} onClick={() => next(1)}>►</button>
             </div>

@@ -20,6 +20,16 @@ const MultidataInputWithSubmit = props => {
         })
     }
 
+    const validInput = () => {
+        if (inputValue == null) return false;
+
+        return inputValue.map(val => {
+            return val != null && val !== "" && val !== undefined;
+        }).reduce((val1, val2) => {
+            return val1 && val2;
+        });
+    }
+
     const input = props.data.map((data, index) => {
         if (data.isArray && index === 0) {
             const ret = data.map((dataElement, index) => {
@@ -96,15 +106,14 @@ const MultidataInputWithSubmit = props => {
         }
     })
 
-
     return (
-        <React.Fragment>
-            <form onSubmit={props.onSubmit} className={`${classes.form} ${props.className}`}>
+        <div className={`${classes.formDiv} ${validInput() ? classes.formValid : classes.formInvalid}`}>
+            <form onSubmit={props.onSubmit} className={classes.form}>
                 {input}
                 <button type="submit" className={classes.button}
-                        disabled={props.onSubmit == null}>{props.btnLabel}</button>
+                        disabled={props.onSubmit == null || !validInput()}>{props.btnLabel}</button>
             </form>
-        </React.Fragment>
+        </div>
     )
 }
 

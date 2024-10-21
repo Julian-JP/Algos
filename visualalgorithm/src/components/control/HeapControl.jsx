@@ -148,7 +148,10 @@ const HeapControl = ({setEdges, setVertices, type}) => {
                 btnLabel={"Add"}
                 data={
                     [{
-                        type: "number", onChange: (val) => setAddval(val.target.value), label: "add", noLabel: true
+                        type: "number",
+                        onChange: (val) => setAddval(val.target.value),
+                        label: "add",
+                        noLabel: true
                     }]
                 }
             />
