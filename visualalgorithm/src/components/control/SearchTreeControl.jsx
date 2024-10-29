@@ -4,7 +4,7 @@ import useFetch from "../../hooks/useFetch";
 import UndoRedoFields from "../UI/UndoRedoFields.jsx";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
 
-const SearchTreeControl = ({setEdges, setVertices, type}) => {
+const SearchTreeControl = ({setEdges, setVertices, type, svgWidth, svgHeight}) => {
 
     const [tree, setTree] = useState(null);
     const [addval, setAddval] = useState('');
@@ -29,13 +29,12 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
         if (tree === null) {
             return;
         }
+
         if (tree.left) {
             edges.push({
                 type: "line",
-                x1: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
-                y1: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
-                x2: ((100 / (2 ** (curDepth + 1) + 1)) * ((numElemInLine * 2) - 1)) + "%",
-                y2: ((100 / (depth + 1)) * (curDepth + 2)) + "%",
+                from: "CircleAt" + numElemInLine + ":" + curDepth,
+                to: "CircleAt" +  ((numElemInLine * 2) - 1) + ":" + (curDepth + 1),
                 stroke: lcolor
             })
             drawSubtree(tree.left, (numElemInLine * 2) - 1, edges, vertices, color, lcolor, depth, curDepth + 1);
@@ -43,10 +42,8 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
         if (tree.right) {
             edges.push({
                 type: "line",
-                x1: ((100 / (2**curDepth + 1)) * numElemInLine) + "%",
-                y1: ((100 / (depth + 1)) * (curDepth+1)) + "%",
-                x2: ((100 / (2**(curDepth+1) + 1)) * (numElemInLine * 2)) + "%",
-                y2: ((100 / (depth + 1)) * (curDepth+2)) + "%",
+                from: "CircleAt" + numElemInLine + ":" + curDepth,
+                to: "CircleAt" +  (numElemInLine * 2) + ":" + (curDepth + 1),
                 stroke: lcolor
             })
             drawSubtree(tree.right, (numElemInLine * 2), edges, vertices, color, lcolor, depth, curDepth + 1);
@@ -54,13 +51,14 @@ const SearchTreeControl = ({setEdges, setVertices, type}) => {
 
         vertices.push({
             type: "circle",
-            x: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
-            y: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
+            x: (((100 / (2 ** curDepth + 1)) * numElemInLine)) / 100 * svgWidth,
+            y: ((100 / (depth + 1)) * (curDepth + 1)) / 100 * svgHeight,
             fill: tree.color != null ? tree.color : color,
             stroke: "black",
             textFill: tree.color !== "black" ? "black" : "white",
             value: tree.value === null ? "NIL" : tree.value,
-            draggable: false
+            draggable: false,
+            id: "CircleAt" + numElemInLine + ":" + curDepth
         });
     }
 

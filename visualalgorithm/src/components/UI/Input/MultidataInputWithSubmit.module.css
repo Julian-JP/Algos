@@ -20,6 +20,8 @@
 
     border-style: solid;
     border-width: 1px;
+
+    transition: all 500ms ease-out 100ms;
 }
 
 .formInvalid:hover,
@@ -29,6 +31,8 @@
 
     border-style: solid;
     border-width: 1px;
+
+    transition: all 500ms ease-out 100ms;
 }
 
 .form {

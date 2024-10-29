@@ -1,0 +1,51 @@
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFF;
+    padding: 50px;
+    z-index: 1000;
+
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+
+    align-content: center;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0, .6);
+    z-index: 1000;
+}
+
+.button {
+    width: 80px;
+    left: calc(50% - 40px);
+    position: fixed;
+
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+
+    background: #ffffff;
+    border: 1px solid #000000;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 20px;
+    transition: all 500ms ease-out 100ms;
+
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #000000;
+    border: 1px solid rgba(0, 0, 0, 0);
+    color: #ffffff;
+}

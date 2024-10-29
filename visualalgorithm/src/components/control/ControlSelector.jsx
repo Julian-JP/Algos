@@ -8,35 +8,41 @@ const ControlSelector = props => {
     return (
         <div className={classes.control}>
             {props['type'] === "binarytree" && <SearchTreeControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 directed={false}
                 weightedEdges={false}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
             {props['type'] === "binaryheap" && <HeapControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 directed={true}
                 weightedEdges={false}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
             {props['type'] === "pathfindingGraph" && <GraphControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 weightedEdges={false}
                 pathfindingGraph={true}
                 startButton={true}
                 endButton={true}
                 directed={true}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
             {props['type'] === "weightedNonNegativePathFindingGraph" && <GraphControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 weightedEdges={true}
                 minWeight={0}
@@ -44,11 +50,13 @@ const ControlSelector = props => {
                 startButton={true}
                 endButton={true}
                 directed={true}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
             {props['type'] === "weightedPathFindingGraph" && <GraphControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 weightedEdges={true}
                 minWeight={undefined}
@@ -56,22 +64,26 @@ const ControlSelector = props => {
                 startButton={true}
                 endButton={true}
                 directed={true}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
             {props['type'] === "minimalSpanningTree" && <GraphControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 weightedEdges={true}
                 minWeight={undefined}
                 startButton={true}
                 endButton={false}
                 directed={false}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
             {props['type'] === "weightedAllPathFindingGraph" && <GraphControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 weightedEdges={true}
                 minWeight={undefined}
@@ -79,11 +91,13 @@ const ControlSelector = props => {
                 endButton={false}
                 directed={true}
                 verteciesRenaming={true}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
             {props['type'] === "weightedNonNegativeAllPathFindingGraph" && <GraphControl
-                setEdges={props.setEdges}
-                setVertices={props.setVertices}
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
                 type={props.url}
                 weightedEdges={true}
                 minWeight={undefined}
@@ -91,6 +105,8 @@ const ControlSelector = props => {
                 endButton={false}
                 directed={true}
                 verteciesRenaming={true}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
             />
             }
         </div>

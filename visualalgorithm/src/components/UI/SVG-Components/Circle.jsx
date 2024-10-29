@@ -1,10 +1,9 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import Draggable from "react-draggable";
 
-const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggable, onRightClick, onLeftClick}) => {
-    const [isDragging, setIsDragging] = useState(false);
-    const baseX = cx;
-    const baseY = cy;
+const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDragStart, handleDrag, handleDragStop, draggable, onRightClick, onLeftClick}) => {
+    const isDragging = useRef(false);
+    const nodeRef = React.useRef(null);
 
     const handleMouseDown = (event) => {
         if (onLeftClick) {
@@ -21,41 +20,42 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggab
     }
 
     const handleOnStop = (event, data) => {
-        if (! isDragging) {
+        if (! isDragging.current) {
             handleMouseDown(event)
-            return;
+            return
         }
 
-        const newX = baseX + data.x;
-        const newY = baseY + data.y;
+        const newX = data.x;
+        const newY = data.y;
 
-        setIsDragging(false)
-        handleDrag(id, newX, newY);
+        isDragging.current = false;
+        handleDragStop(id, newX, newY);
     }
 
     const handleOnStart = (event, data) => {
+        handleDragStart()
     }
 
     const handleOnDrag = (event, data) => {
-        const newX = baseX + data.x;
-        const newY = baseY + data.y;
-        setIsDragging(true)
+        const newX = data.x;
+        const newY = data.y;
+        isDragging.current = true;
         handleDrag(id, newX, newY);
     }
 
-    const group = (<g>
+    const group = (<g ref={nodeRef}>
         <circle
             r={20}
-            cx={cx}
-            cy={cy}
+            cx={0}
+            cy={0}
             key={cx}
             fill={fill}
             onContextMenu={handleRightClick}
             opacity={opacity}
         />
         <text
-            x={cx}
-            y={cy}
+            x={0}
+            y={0}
             fill={textFill}
             textAnchor="middle"
             alignmentBaseline="central"
@@ -68,9 +68,11 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDrag, draggab
         return group;
     } else {
         return <Draggable
+            position={{ x: cx, y: cy}}
             onStart={handleOnStart}
             onDrag={handleOnDrag}
             onStop={handleOnStop}
+            nodeRef={nodeRef}
         >
             {group}
         </Draggable>

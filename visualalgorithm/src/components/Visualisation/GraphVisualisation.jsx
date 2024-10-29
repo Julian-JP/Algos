@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import classes from "./GraphVisualisation.module.css"
 import useFetch from "../../hooks/useFetch";
 import ControlSelector from "../control/ControlSelector.jsx";
@@ -7,12 +7,57 @@ import Circle from "../UI/SVG-Components/Circle.jsx";
 const GraphVisualisation = props => {
 
     const [explanation, setExplanation] = useState(null);
-    const [edges, setEdges] = useState([]);
-    const [displayedEdges, setDisplayedEdges] = useState([]);
-    const [vertices, setVertices] = useState([]);
-    const [verticesLocation, setVerticesLocation] = useState([]);
-    const [displayedVertices, setDisplayedVertices] = useState([]);
+    const [graph, graphDispatch] = useReducer(graphReducer, {
+        vertices: [],
+        edges: []
+    });
+    const [svgDimension, setSvgDimension] = useState({ width: 0, height: 0});
+
     const {isLoading, error, sendRequest} = useFetch();
+
+    const svgRef = useRef();
+
+    const lastMovement = useRef(Date.now());
+
+    function graphReducer(graph, graphAction) {
+        console.log(graphAction)
+        switch(graphAction.type) {
+            case 'addVertex': {
+                if (graphAction.vertex !== undefined && ! graph.vertices.find(vertex => vertex.id === graphAction.vertex.id)) {
+                    graph.vertices.push(graphAction.vertex)
+                }
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
+            case 'removeVertex': {
+                graph.vertices = graph.vertices.filter(vertex => vertex.id !== graphAction.vertexId);
+                graph.edges = graph.edges.filter(edge => edge.from !== graphAction.vertexId && edge.to !== graphAction.vertexId);
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
+            case 'addEdge': {
+                if (graphAction.edge !== undefined && ! graph.edges.find(edge => edge.from === graphAction.edge.from && edge.to === graphAction.edge.to)) {
+                    graph.edges.push(graphAction.edge)
+                }
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
+            case 'removeEdge': {
+                graph.edges = graph.edges.filter(edge => edge.from !== graphAction.from || edge.to !== graphAction.to);
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
+            case 'moveVertex': {
+                let vertexIndex = graph.vertices.findIndex(item => item.id === graphAction.vertexId)
+                graph.vertices[vertexIndex].x = graphAction.newX;
+                graph.vertices[vertexIndex].y = graphAction.newY;
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
+            case 'changeVertexProperties': {
+                let vertexIndex = graph.vertices.findIndex(item => item.id === graphAction.vertexId)
+                if (vertexIndex >= 0) {
+                    graphAction.updateVertex(graph.vertices[vertexIndex]);
+                }
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
+        }
+    }
 
     useEffect(() => {
         const applyResponse = (response) => {
@@ -25,70 +70,51 @@ const GraphVisualisation = props => {
     }, [sendRequest]);
 
     useEffect(() => {
-        convertedEdges();
-    }, [edges]);
+        if (svgRef.current) {
+            const width = svgRef.current.clientWidth;
+            const height = svgRef.current.clientHeight;
+            setSvgDimension({ width, height });
+        }
+    }, []);
 
-    useEffect(() => {
-        convertVertices();
-    }, [vertices]);
-
-    const convertVertices = () => {
-        setVerticesLocation((old) => {
-            return vertices.map((item) => {
-                let index = old.findIndex(vertex => vertex.id === item.id)
-                if (index >= 0) {
-                    item.x = old[index].x;
-                    item.y = old[index].y
-                }
-                return item;
-            });
-        });
-        setDisplayedVertices(
-            vertices.map((item) => {
-                return <Circle
-                    handleDrag={handleDrag}
-                    r={20}
-                    cx={item.x}
-                    cy={item.y}
-                    key={item.id}
-                    id={item.id}
-                    fill={item.fill}
-                    opacity={item.opacity}
-                    textFill={item.textFill}
-                    stroke={item.stroke}
-                    value={item.value}
-                    draggable={item.draggable}
-                    onLeftClick={item.onClick}
-                    onRightClick={item.onRightClick}
-                />
-            })
-        );
+    const convertVertex = (item) => {
+        return <Circle
+            handleDragStart={handleDragStart}
+            handleDrag={handleDrag}
+            handleDragStop={handleDragStop}
+            r={20}
+            cx={item.x}
+            cy={item.y}
+            key={item.id}
+            id={item.id}
+            fill={item.fill}
+            opacity={item.opacity}
+            textFill={item.textFill}
+            stroke={item.stroke}
+            value={item.value}
+            draggable={item.draggable}
+            onLeftClick={item.onClick}
+            onRightClick={item.onRightClick}
+        />
     }
 
     const getVertex = (id) => {
-        return verticesLocation.find(item => item.id === id);
+        return  graph.vertices.find(item => item.id === id);
     }
 
-    const convertedEdges = () => {
-        setDisplayedEdges(
-            edges.map((item) => {
-                if (item.from === item.to && item.from != null) {
-                    return convertSelfEdge(item);
-                }
+    const convertEdge = (item) => {
+        if (item.from === item.to && item.from != null) {
+            return convertSelfEdge(item);
+        }
 
-                let vertexFrom, vertexTo;
+        let vertexFrom = getVertex(item.from);
+        let vertexTo = getVertex(item.to);
 
-                if (getVertex(item.from) && getVertex(item.to)) {
-                    vertexFrom = getVertex(item.from);
-                    vertexTo = getVertex(item.to);
-                }
-                if (item.directed) {
-                    return convertDirectedEdge(item, vertexFrom, vertexTo)
-                } else {
-                    return convertEdge(item, vertexFrom, vertexTo);
-                }
-            })
-        );
+        if (item.directed) {
+            return convertDirectedEdge(item, vertexFrom, vertexTo)
+        } else {
+            return convertUndirectedEdge(item, vertexFrom, vertexTo);
+        }
     }
 
     const convertArrow = (item, lineCoordinates) => {
@@ -149,13 +175,27 @@ const GraphVisualisation = props => {
                     key={"polygon" + item.id}
                 />
             </marker>
+            <marker id="arrowheadwhite"
+                    markerWidth={10}
+                    markerHeight={3}
+                    refX="0"
+                    refY="1.5"
+                    orient="auto"
+                    key={"marker-white" + item.id}
+                    fill={"white"}
+            >
+                <polygon
+                    points="0 0, 10 1.5, 0 3"
+                    key={"polygon" + item.id}
+                />
+            </marker>
             <line x1={lineCoordinates.x1}
                   y1={lineCoordinates.y1}
                   x2={lineCoordinates.x1 - (lineCoordinates.x1 - lineCoordinates.x2) / 3}
                   y2={lineCoordinates.y1 - (lineCoordinates.y1 - lineCoordinates.y2) / 3}
                   stroke={item.stroke}
                   strokeWidth={3}
-                  markerEnd={item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke === "blue" ? "url(#arrowheadblue)" : (item.stroke === "red" ? "url(#arrowheadred)" : "url(#arrowheadgray)"))}
+                  markerEnd={item.stroke === "white" ? "url(#arrowheadwhite)" : item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke === "blue" ? "url(#arrowheadblue)" : (item.stroke === "red" ? "url(#arrowheadred)" : "url(#arrowheadgray)"))}
                   key={"markerline" + item.id}
             />
             <line
@@ -172,9 +212,14 @@ const GraphVisualisation = props => {
     }
 
     const convertDirectedEdge = (item, vertexFrom, vertexTo) => {
-        const OFFSETTEXT = 15
+        const OFFSETLINE = 5;
+        const OFFSETTEXT = 20;
 
-        let lineCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, 0);
+        console.log(graph)
+        console.log(vertexFrom)
+        console.log(vertexTo)
+
+        let lineCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETLINE);
         let textCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETTEXT);
 
         return <g key={"directedEdgeGroup" + item.id}>
@@ -185,16 +230,19 @@ const GraphVisualisation = props => {
                 textAnchor={"middle"}
                 x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
                 y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
+                stroke={item.stroke}
+                key={"Text" + item.id}
             >{convertWeightToText(item.weight)}</text> : null}
         </g>
     }
 
-    const convertEdge = (item, vertexFrom, vertexTo) => {
+    const convertUndirectedEdge = (item, vertexFrom, vertexTo) => {
         const OFFSETLINE = 0;
         const OFFSETTEXT = 15
 
         let lineCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETLINE);
         let textCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETTEXT);
+
 
 
         return <g key={"edgeGroup" + item.id}>
@@ -206,7 +254,7 @@ const GraphVisualisation = props => {
                 id={item.id}
                 stroke={item.stroke}
                 strokeWidth={3}
-                key={item.id}
+                key={"line" + item.id}
             />
             {item.weight != null && item.from > item.to ? <text
                 alignmentBaseline={"middle"}
@@ -214,6 +262,8 @@ const GraphVisualisation = props => {
                 textAnchor={"middle"}
                 x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
                 y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
+                stroke={item.stroke}
+                key={"Text" + item.id}
             >{convertWeightToText(item.weight)}</text> : null}
         </g>
     }
@@ -236,12 +286,12 @@ const GraphVisualisation = props => {
                 textAnchor={"middle"}
                 x={getVertex(item.to).x}
                 y={getVertex(item.to).y + 52}
+                stroke={item.stroke}
             >{convertWeightToText(item.weight)}</text> : null}
         </g>
     }
 
     const calculateEdge = (cx1, cy1, cx2, cy2, distance) => {
-
         // Berechne den Vektor zwischen den beiden Kreisen
         let dx = cx2 - cx1;
         let dy = cy2 - cy1;
@@ -276,25 +326,18 @@ const GraphVisualisation = props => {
     }
 
     const handleDrag = (id, newX, newY) => {
-        setVerticesLocation(verticesOld => verticesOld.map(v => (v.id === id ? {...v, x: newX, y: newY} : v)));
-        setEdges(edgesOld => edgesOld.map(e => {
-            if (e.from === id) {
-                return {
-                    ...e,
-                    x1: newX,
-                    y1: newY
-                }
-            } else if (e.to === id) {
-                return {
-                    ...e,
-                    x2: newX,
-                    y2: newY
-                }
-            } else {
-                return e;
-            }
-        }));
+        if (Date.now() - lastMovement.current > 40) {
+            graphDispatch({type: 'moveVertex', newX, newY, vertexId: id});
+            lastMovement.current = Date.now();
+        }
     }
+
+    const handleDragStart = (id) => {
+    }
+    const handleDragStop = (id, newX, newY) => {
+        graphDispatch({type: 'moveVertex', newX, newY, vertexId: id});
+    }
+
 
     const explanationDiv = isLoading ? <div className={classes.explanation}>Loading...</div> : error ?
         null :
@@ -302,15 +345,17 @@ const GraphVisualisation = props => {
 
     return (<div className={classes.background}>
         <div className={classes.card}>
-            <svg key={"drawingBoard"} className={classes.canvas} width={"100%"} height={"100%"}>
-                {displayedEdges}
-                {displayedVertices}
+            <svg ref={svgRef} key={"drawingBoard"} className={classes.canvas} width={"100%"} height={"100%"}>
+                {graph.edges.map(item => convertEdge(item))}
+                {graph.vertices.map(item => convertVertex(item))}
             </svg>
             <ControlSelector
+                svgWidth={svgDimension.width}
+                svgHeight={svgDimension.height}
                 class={classes.control}
                 type={props.displayedType}
-                setVertices={setVertices}
-                setEdges={setEdges}
+                graph={graph}
+                graphDispatch={graphDispatch}
                 url={props.url}
             />
         </div>
