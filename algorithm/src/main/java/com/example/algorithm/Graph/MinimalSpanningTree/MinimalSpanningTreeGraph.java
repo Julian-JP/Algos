@@ -1,6 +1,7 @@
 package com.example.algorithm.Graph.MinimalSpanningTree;
 
 import com.example.algorithm.Graph.Graph;
+import com.example.algorithm.Graph.GraphEdge;
 import com.example.algorithm.Graph.GraphResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +73,7 @@ public class MinimalSpanningTreeGraph extends Graph {
     private void colorAllEdges() {
         for (int i = 0; i < adjacencyMatrix.length; i++) {
             for (int j = 0; j < adjacencyMatrix.length; j++) {
-                if (adjacencyMatrix[i][j] != null && adjacencyMatrix[i][j].getColor().equals("blue")) {
+                if (adjacencyMatrix[i][j] != null && adjacencyMatrix[i][j].getMarking() == GraphEdge.VISITED) {
                     adjacencyMatrix[i][j].finish();
                 }
             }

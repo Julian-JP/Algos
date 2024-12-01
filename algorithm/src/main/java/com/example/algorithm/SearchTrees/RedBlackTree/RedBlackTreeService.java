@@ -45,7 +45,6 @@ public class RedBlackTreeService extends SearchTreeService {
         return tree;
     }
 
-    @org.jetbrains.annotations.NotNull
     private RedBlackTreeNode convNodeJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
         RedBlackTreeNode left = null;

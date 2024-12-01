@@ -81,7 +81,7 @@ public class PathFindingGraph extends Graph {
                     return true;
                 }
 
-                if (adjacencyMatrix[current.getLast()][i].tryToVisit() == false) {
+                if (!adjacencyMatrix[current.getLast()][i].tryToVisit()) {
                     return true;
                 } else {
                     currentUpdated.add(i);

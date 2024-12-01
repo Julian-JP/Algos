@@ -39,7 +39,6 @@ public class BinarySearchTreeService extends SearchTreeService {
         return new BinarySearchTree(convNodeJSON(root.getString("root")));
     }
 
-    @org.jetbrains.annotations.NotNull
     private BSTNode convNodeJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
         BSTNode left = null;

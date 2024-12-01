@@ -48,7 +48,7 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDragStart, ha
             r={20}
             cx={0}
             cy={0}
-            key={cx}
+            key={cx + "C" + cy}
             fill={fill}
             onContextMenu={handleRightClick}
             opacity={opacity}
@@ -59,13 +59,17 @@ const Circle = ({cx, cy, opacity, fill, value, textFill, id, handleDragStart, ha
             fill={textFill}
             textAnchor="middle"
             alignmentBaseline="central"
-            key={cx + cy}
+            key={cx + "T" + cy}
             onContextMenu={handleRightClick}
         >{value}</text>
     </g>);
 
     if (draggable === false) {
-        return group;
+        return <g
+            transform={"translate(" + cx + "," + cy + ")"}
+        >
+            {group}
+        </g>
     } else {
         return <Draggable
             position={{ x: cx, y: cy}}

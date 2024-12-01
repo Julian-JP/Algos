@@ -20,8 +20,12 @@ const GraphVisualisation = props => {
     const lastMovement = useRef(Date.now());
 
     function graphReducer(graph, graphAction) {
-        console.log(graphAction)
         switch(graphAction.type) {
+            case 'redraw': {
+                graph.vertices = graphAction.vertices;
+                graph.edges = graphAction.edges
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
             case 'addVertex': {
                 if (graphAction.vertex !== undefined && ! graph.vertices.find(vertex => vertex.id === graphAction.vertex.id)) {
                     graph.vertices.push(graphAction.vertex)
@@ -50,10 +54,11 @@ const GraphVisualisation = props => {
                 return {vertices: graph.vertices, edges: graph.edges};
             }
             case 'changeVertexProperties': {
-                let vertexIndex = graph.vertices.findIndex(item => item.id === graphAction.vertexId)
-                if (vertexIndex >= 0) {
-                    graphAction.updateVertex(graph.vertices[vertexIndex]);
-                }
+                graphAction.updateVertices(graph.vertices);
+                return {vertices: graph.vertices, edges: graph.edges};
+            }
+            case 'changeEdgeProperties': {
+                graph.edges.map(edge => graphAction.updateEdge(edge));
                 return {vertices: graph.vertices, edges: graph.edges};
             }
         }
@@ -78,6 +83,7 @@ const GraphVisualisation = props => {
     }, []);
 
     const convertVertex = (item) => {
+        let text = item.weight !== undefined ? item.value + "|" + item.weight : item.value;
         return <Circle
             handleDragStart={handleDragStart}
             handleDrag={handleDrag}
@@ -91,7 +97,7 @@ const GraphVisualisation = props => {
             opacity={item.opacity}
             textFill={item.textFill}
             stroke={item.stroke}
-            value={item.value}
+            value={text}
             draggable={item.draggable}
             onLeftClick={item.onClick}
             onRightClick={item.onRightClick}
@@ -214,10 +220,6 @@ const GraphVisualisation = props => {
     const convertDirectedEdge = (item, vertexFrom, vertexTo) => {
         const OFFSETLINE = 5;
         const OFFSETTEXT = 20;
-
-        console.log(graph)
-        console.log(vertexFrom)
-        console.log(vertexTo)
 
         let lineCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETLINE);
         let textCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETTEXT);

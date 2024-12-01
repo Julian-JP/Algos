@@ -18,9 +18,9 @@ public class Graph {
             for (int j = 0; j < adjMatrixJSON.getJSONArray(i).length(); j++) {
                 try {
                     if (adjMatrixJSON.getJSONArray(i).getJSONObject(j).getString("weight").equals("null")) {
-                        adjacencyMatrix[i][j] = new GraphEdge(adjMatrixJSON.getJSONArray(i).getJSONObject(j).getString("color"));
+                        adjacencyMatrix[i][j] = new GraphEdge(adjMatrixJSON.getJSONArray(i).getJSONObject(j).getInt("marking"));
                     } else {
-                        adjacencyMatrix[i][j] = new GraphEdge(adjMatrixJSON.getJSONArray(i).getJSONObject(j).getString("color"), adjMatrixJSON.getJSONArray(i).getJSONObject(j).getDouble("weight"));
+                        adjacencyMatrix[i][j] = new GraphEdge(adjMatrixJSON.getJSONArray(i).getJSONObject(j).getInt("marking"), adjMatrixJSON.getJSONArray(i).getJSONObject(j).getDouble("weight"));
                     }
                 } catch (JSONException e) {
                     adjacencyMatrix[i][j] = null;

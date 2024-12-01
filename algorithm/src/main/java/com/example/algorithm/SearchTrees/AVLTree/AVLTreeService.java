@@ -43,7 +43,6 @@ public class AVLTreeService extends SearchTreeService {
         return new AVLTree(convNodeJSON(root.getString("root")));
     }
 
-    @org.jetbrains.annotations.NotNull
     private AVLTreeNode convNodeJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
         AVLTreeNode left = null;

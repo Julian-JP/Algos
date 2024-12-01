@@ -6,13 +6,20 @@ import Modal from "../UI/Modal.jsx";
 import {node} from "globals";
 
 const GraphControl = (props) => {
+    const SERVER_URL = "http://localhost:8080/algos/"
 
     const DEFAULT_VERTEX_COLOR = "white";
-    const START_END_COLOR = "blue";
-    const DEFAULT_LINE_COLOR = "black"
+    const START_COLOR = "Aqua";
+    const END_COLOR = "Chartreuse";
 
-    const DEFAULT_VERTEX_TEXT_COLOR = "black";
-    const START_END_TEXT_COLOR = "white";
+    const MARKED_EDGE_LINE_COLOR = "blue";
+    const FINAL_EDGE_LINE_COLOR = "red";
+    const PROCESSED_EDGE_LINE_COLOR = "gray";
+
+    const DEFAULT_LINE_COLOR = "white"
+    const DEFAULT_TEXT_COLOR = "black";
+
+    const START_END_TEXT_COLOR = "black";
 
     const markedNodes = useRef([]);
     const addVal = useRef(null);
@@ -28,6 +35,8 @@ const GraphControl = (props) => {
     const {isLoading, error, sendRequest} = useFetch();
 
     const handleAddNode = (event) => {
+        resetEdgeColor();
+        resetVertexWeight();
         event.preventDefault();
         if (addVal.current === '' || props.graph.vertices.filter(item => (item.value !== addVal.current)).length !== props.graph.vertices.length) {
             return;
@@ -57,15 +66,15 @@ const GraphControl = (props) => {
     const markVertex = (nodeIndex, marked) => {
         props.graphDispatch({
             type: 'changeVertexProperties',
-            vertexId: nodeIndex,
-            updateVertex: vertex => {
-                    vertex.opacity = marked ? 0.5 : 1;
-                }
-        })
+            updateVertices: vertices => {
+                return vertices.map(v => {
+                    if (v.id === nodeIndex) v.opacity = marked ? 0.5 : 1
+                });
+            }
+        });
     }
 
     const markNode = (nodeIndex) => {
-        console.log(markedNodes)
         if (markedNodes.current.length === 0) {
             markVertex(nodeIndex, true);
             markedNodes.current = [nodeIndex];
@@ -82,16 +91,18 @@ const GraphControl = (props) => {
     }
 
     const addRemoveEdge = (from, to) => {
+        resetEdgeColor();
+        resetVertexWeight();
         let edge = props.graph.edges.find((val) => val.from === from && val.to === to);
         if (edge === undefined) {
             props.graphDispatch({
                 type: 'addEdge',
                 edge: {
-                    color: DEFAULT_LINE_COLOR,
+                    color: DEFAULT_TEXT_COLOR,
                     weight: props.weightedEdges ? weight.current : null,
                     from: from,
                     to: to,
-                    stroke: "white",
+                    stroke: DEFAULT_LINE_COLOR,
                     id: from + "-" + to,
                     directed: true
                 }
@@ -132,12 +143,23 @@ const GraphControl = (props) => {
 
     async function updatePreviousStack() {
         let newPrevObj = {
-            vertices: JSON.parse(JSON.stringify(props.graph.vertices)),
-            edges: JSON.parse(JSON.stringify(props.graph.edges)),
+            vertices: props.graph.vertices,
+            edges: props.graph.edges,
             start: start,
             end: end
         }
+        console.log(newPrevObj)
         prev.current.push(newPrevObj);
+        console.log(prev.current)
+    }
+
+    const getEdgeStateDependingOnColor = (edge) => {
+        switch (edge.stroke) {
+            case DEFAULT_LINE_COLOR: return 0;
+            case MARKED_EDGE_LINE_COLOR: return 1;
+            case FINAL_EDGE_LINE_COLOR: return 2;
+            case PROCESSED_EDGE_LINE_COLOR: return 3;
+        }
     }
 
     const getAdjacencyMatrix = () => {
@@ -147,25 +169,125 @@ const GraphControl = (props) => {
             const fromIndex = props.graph.vertices.findIndex(v => v.id === edge.from)
             const toIndex = props.graph.vertices.findIndex(v => v.id === edge.to)
             adj[fromIndex][toIndex] = {
-                color: edge.color,
+                marking: getEdgeStateDependingOnColor(edge),
                 weight: edge.weight
             };
         });
         return adj;
     }
 
+    const getVertexList = () => {
+        return props.graph.vertices.map(v => {
+            return {
+                value: v.value,
+                weight: v.weight === "∞" ? "Infinity" : (v.weight === "-∞" ? "-Infinity" : v.weight)
+            }
+        })
+    }
+
+    const updateEdge = (from, to, updatedEdge) => {
+        let newEdgeColor = DEFAULT_LINE_COLOR;
+
+        switch(updatedEdge.marking) {
+            case 0: newEdgeColor = DEFAULT_LINE_COLOR;
+            break;
+            case 1: newEdgeColor = MARKED_EDGE_LINE_COLOR;
+            break;
+            case 2: newEdgeColor = FINAL_EDGE_LINE_COLOR;
+            break;
+            case 3: newEdgeColor = PROCESSED_EDGE_LINE_COLOR;
+
+        }
+
+        const edgeId = props.graph.edges.find(e => e.from === from && e.to === to).id;
+
+        props.graphDispatch({
+            type: 'changeEdgeProperties',
+            updateEdge: (e => {
+                if (e.id === edgeId) e.stroke = newEdgeColor;
+                return e;
+            })
+        });
+    }
+
+    const updateVertices = (updatedVertices) => {
+        props.graphDispatch({
+            type: 'changeVertexProperties',
+            updateVertices: (vertices => {
+                for (let vertexId = 0; vertexId < updatedVertices.length; ++vertexId) {
+                    if (updatedVertices[vertexId].value !== vertices[vertexId].value) {
+                        vertices[vertexId].value = updatedVertices[vertexId].value;
+                    }
+                    if (updatedVertices[vertexId].weight !== vertices[vertexId].weight) {
+                        if (updatedVertices[vertexId].weight === "Infinity") {
+                            vertices[vertexId].weight = "∞";
+                        } else if (updatedVertices[vertexId].weight === "-Infinity") {
+                            vertices[vertexId].weight = "-∞";
+                        } else {
+                            vertices[vertexId].weight = updatedVertices[vertexId].weight;
+                        }
+                    }
+                }
+                return vertices;
+            })
+        });
+    }
+
+    const resetEdgeColor = () => {
+        prev.current = [];
+        props.graphDispatch({
+            type: 'changeEdgeProperties',
+            updateEdge: (e => {
+                e.stroke = DEFAULT_LINE_COLOR;
+                return e;
+            })
+        })
+    }
+
+    const resetVertexWeight = () => {
+        props.graphDispatch({
+            type: 'changeVertexProperties',
+            updateVertices: (vertices => {
+                for (let vertexId = 0; vertexId < vertices.length; ++vertexId) {
+                    vertices[vertexId].weight = undefined;
+                }
+                return vertices;
+            })
+        })
+    }
+
     const next = () => {
 
+        const adjMatrix = getAdjacencyMatrix();
+        const vertexList = getVertexList();
+
         function createGraphFromJSON(response) {
+            if (response.edges != null) {
+                for (let from = 0; from < response.edges.length; from++) {
+                    for (let to = 0; to < response.edges.length; to++) {
+                        if (response.edges[from][to] !== adjMatrix[from][to]) {
+                            updateEdge(vertexList[from].value, vertexList[to].value, response.edges[from][to])
+                        }
+                    }
+                }
+            }
+            if (response.vertices != null) {
+                updateVertices(response.vertices)
+            }
         }
 
         sendRequest({
-            url: 'https://julian-laux.de:8080/algos/' + props.type + '/step',
+            url: SERVER_URL + props.type + '/step',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: {edges: getAdjacencyMatrix(), start: start.current, vertices: props.graph.vertices, end: end.current}
+            body: {
+                edges: adjMatrix,
+                start: props.graph.vertices.findIndex(v => v.value === start.current),
+                vertices: vertexList,
+                end: props.graph.vertices.findIndex(v => v.value === end.current)
+            }
         }, (response => {
             updatePreviousStack().then(() => createGraphFromJSON(response));
         }));
@@ -174,9 +296,16 @@ const GraphControl = (props) => {
     const previous = () => {
         if (prev.current.length < 1) return;
 
-        let previousState = prev[prev.current.length - 1];
-        edges.current = previousState.edges;
-        vertices.current = previousState.vertices;
+        let previousState = prev.current[prev.current.length - 1];
+        console.log(prev)
+        console.log(prev.current.length - 1)
+        console.log(previousState)
+        props.graphDispatch({
+            type: 'redraw',
+            vertices: previousState.vertices,
+            edges: previousState.edges
+        })
+        console.log(props.graph)
         start.current = previousState.start;
         end.current = previousState.end;
 
@@ -187,37 +316,44 @@ const GraphControl = (props) => {
     const updateVertexFill = (vertexId, fillColor, textColor) => {
         props.graphDispatch({
             type: 'changeVertexProperties',
-            vertexId: vertexId,
-            updateVertex: vertex =>  {
-                vertex.fill = fillColor;
-                vertex.opacity = 1;
-                vertex.textFill = textColor;
+            updateVertices: vertices =>  {
+                for (let i = 0; i < vertices.length; i++) {
+                    if (vertices[i].id === vertexId) {
+                        vertices[i].fill = fillColor;
+                        vertices[i].opacity = 1;
+                        vertices[i].textFill = textColor;
+                    }
+                }
+                console.log(vertices)
+                return vertices;
             }
         })
     }
 
     const updateStart = (newStart) => {
         if (start.current !== undefined && end.current !== start.current) {
-            updateVertexFill(start.current, DEFAULT_VERTEX_COLOR, DEFAULT_VERTEX_TEXT_COLOR);
+            updateVertexFill(start.current, DEFAULT_VERTEX_COLOR, DEFAULT_TEXT_COLOR);
         }
         if (newStart !== undefined) {
-            updateVertexFill(newStart, START_END_COLOR, START_END_TEXT_COLOR);
+            updateVertexFill(newStart, START_COLOR, START_END_TEXT_COLOR);
         }
         start.current = newStart;
     }
 
     const updateEnd = (newEnd) => {
         if (end.current !== undefined && end.current !== start.current) {
-            updateVertexFill(end.current, DEFAULT_VERTEX_COLOR, DEFAULT_VERTEX_TEXT_COLOR);
+            updateVertexFill(end.current, DEFAULT_VERTEX_COLOR, DEFAULT_TEXT_COLOR);
         }
         if (newEnd !== undefined) {
-            updateVertexFill(newEnd, START_END_COLOR, START_END_TEXT_COLOR);
+            updateVertexFill(newEnd, END_COLOR, START_END_TEXT_COLOR);
         }
 
         end.current = newEnd;
     }
 
     const handleStartEnd = (isStart) => {
+        resetEdgeColor();
+        resetVertexWeight();
         if (markedNodes.current.length === 0) {
             return;
         } else if (start.current === markedNodes.current[0] && isStart) {
@@ -230,18 +366,6 @@ const GraphControl = (props) => {
             updateEnd(markedNodes.current[0]);
         }
         markedNodes.current = [];
-    }
-
-    const clearPreviousStack = () => {
-        prev.current = [{edges: edges, vertices: vertices, start: start, end: end}];
-        for (let i = 0; i < edges.current.length; i++) {
-            for (let j = 0; j < edges.current.length; j++) {
-                if (edges.current[i][j] !== null) edges.current[i][j].color = DEFAULT_LINE_COLOR;
-            }
-        }
-        for (let i = 0; i < vertices.current.length; i++) {
-            vertices.current[i].value = vertices.current[i].id;
-        }
     }
 
     return (<div className={classes.container}>

@@ -4,7 +4,7 @@ import useFetch from "../../hooks/useFetch";
 import UndoRedoFields from "../UI/UndoRedoFields.jsx";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
 
-const HeapControl = ({setEdges, setVertices, type}) => {
+const HeapControl = ({svgWidth, svgHeight, graphDispatch, type}) => {
 
     const [heap, setHeap] = useState(null);
     const [addval, setAddval] = useState('');
@@ -20,8 +20,7 @@ const HeapControl = ({setEdges, setVertices, type}) => {
         let edges = [];
         let vertices = [];
         drawSubtree(heap, 1, edges, vertices, nodecolor, linecolor, getDepth(heap), 0);
-        setVertices(vertices);
-        setEdges(edges);
+        graphDispatch({type: 'redraw', vertices: vertices, edges: edges});
     }, [heap]);
 
 
@@ -29,42 +28,43 @@ const HeapControl = ({setEdges, setVertices, type}) => {
         if (tree === null) {
             return;
         }
-        let x1 = ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%";
-        let y1 = ((100 / (depth + 1)) * (curDepth + 1)) + "%";
 
         if (tree.left) {
+            let newNumElemInLine = (numElemInLine * 2) - 1;
+            let newCurDepth = curDepth + 1;
             edges.push({
                 type: "line",
-                x1: x1,
-                y1: y1,
-                x2: ((100 / (2 ** (curDepth + 1) + 1)) * ((numElemInLine * 2) - 1)) + "%",
-                y2: ((100 / (depth + 1)) * (curDepth + 2)) + "%",
+                from: curDepth + "," + numElemInLine,
+                to: newCurDepth + "," + newNumElemInLine,
+                id: "L2" + curDepth + "," + numElemInLine,
                 stroke: lcolor,
                 directed: false
             })
-            drawSubtree(tree.left, (numElemInLine * 2) - 1, edges, vertices, color, lcolor, depth, curDepth + 1);
+            drawSubtree(tree.left, newNumElemInLine, edges, vertices, color, lcolor, depth, newCurDepth);
         }
         if (tree.right) {
+            let newNumElemInLine = (numElemInLine * 2);
+            let newCurDepth = curDepth + 1;
             edges.push({
                 type: "line",
-                x1: x1,
-                y1: y1,
-                x2: ((100 / (2**(curDepth+1) + 1)) * (numElemInLine * 2)) + "%",
-                y2: ((100 / (depth + 1)) * (curDepth+2)) + "%",
+                from: curDepth + "," + numElemInLine,
+                to: newCurDepth + "," + newNumElemInLine,
+                id: "L1" + curDepth + "," + numElemInLine,
                 stroke: lcolor,
                 directed: false
             })
-            drawSubtree(tree.right, (numElemInLine * 2), edges, vertices, color, lcolor, depth, curDepth + 1);
+            drawSubtree(tree.right, newNumElemInLine, edges, vertices, color, lcolor, depth, newCurDepth);
         }
 
         vertices.push({
             type: "circle",
-            x: ((100 / (2 ** curDepth + 1)) * numElemInLine) + "%",
-            y: ((100 / (depth + 1)) * (curDepth + 1)) + "%",
+            x: (((svgWidth - 20) / (2 ** curDepth + 1)) * numElemInLine) + 10,
+            y: (((svgHeight - 20) / (depth + 1)) * (curDepth + 1))  + 10,
             fill: color,
             stroke: "black",
             textFill: "black",
             value: tree.value,
+            id: curDepth + "," + numElemInLine,
             draggable: false
         });
     }

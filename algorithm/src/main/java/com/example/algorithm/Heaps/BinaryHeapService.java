@@ -41,7 +41,6 @@ public class BinaryHeapService {
         return new BinaryHeap(convNodeJSON(root.getString("root")));
     }
 
-    @org.jetbrains.annotations.NotNull
     private BinaryHeapNode convNodeJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
         BinaryHeapNode left = null;

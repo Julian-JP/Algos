@@ -1,25 +1,30 @@
 package com.example.algorithm.Graph;
 
+import lombok.Setter;
+
 public class GraphEdge {
-    private static final String VISITED_COLOR = "blue";
-    private static final String FINAL_COLOR = "red";
-    private static final String UNVISITED_COLOR = "black";
-    private static final String PROCESSED_COLOR = "gray";
-    private String color;
+    public static final int UNVISITED = 0;
+    public static final int VISITED = 1;
+    public static final int ON_FINAL_PATH = 2;
+    public static final int PROCESSED = 3;
+
+    @Setter
+    private int marking;
     private Double weight;
 
-    public GraphEdge(String color) {
-        this.color = color;
+    public GraphEdge(int marking) {
+        this.marking = marking;
         this.weight = null;
     }
-    public GraphEdge(String color, Double weight) {
-        this.color = color;
-        this.weight = weight;
+
+    public GraphEdge(int marking, double weight) {
+        this.marking = marking;
+        this.weight = Double.valueOf(weight);
     }
 
     public boolean tryToVisit() {
-        if (!color.equals(VISITED_COLOR)) {
-            color = VISITED_COLOR;
+        if (marking != VISITED) {
+            marking = VISITED;
             return false;
         } else {
             return true;
@@ -27,37 +32,21 @@ public class GraphEdge {
     }
 
     public boolean tryToProcess() {
-        if (color.equals(VISITED_COLOR)) {
-            color = PROCESSED_COLOR;
+        if (marking == VISITED) {
+            marking = PROCESSED;
             return true;
         }
             return false;
     }
     public void finish() {
-        color = FINAL_COLOR;
+        marking = ON_FINAL_PATH;
     }
 
-    public String getColor() {
-        return color;
+    public int getMarking() {
+        return marking;
     }
 
     public Double getWeight() {
         return weight;
-    }
-
-    public boolean isVisited() {
-        return color.equals(VISITED_COLOR);
-    }
-
-    public boolean isProcessed() {
-        return color.equals(PROCESSED_COLOR);
-    }
-
-    public void setProcessed() {
-        color = PROCESSED_COLOR;
-    }
-
-    public void setUnvisited() {
-        color = UNVISITED_COLOR;
     }
 }
