@@ -15,7 +15,7 @@ public class KruskalService extends MinimalSpanningTreeService {
     @Override
     public GraphResponse step(String graphString) throws JSONException {
         MinimalSpanningTreeGraph graph = new MinimalSpanningTreeGraph(graphString);
-        return graph.kruskal();
+        return new GraphResponse(graph);
     }
 
     @Override

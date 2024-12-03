@@ -15,7 +15,7 @@ import java.nio.file.Files;
 public class JarnikPrimService extends MinimalSpanningTreeService {
     public GraphResponse step(String graphString) throws JSONException {
         MinimalSpanningTreeGraph graph = new MinimalSpanningTreeGraph(graphString);
-        return graph.jarnikPrim();
+        return new GraphResponse(graph);
     }
 
     @Override

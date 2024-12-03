@@ -12,10 +12,6 @@ const GraphControl = (props) => {
     const START_COLOR = "Aqua";
     const END_COLOR = "Chartreuse";
 
-    const MARKED_EDGE_LINE_COLOR = "blue";
-    const FINAL_EDGE_LINE_COLOR = "red";
-    const PROCESSED_EDGE_LINE_COLOR = "gray";
-
     const DEFAULT_LINE_COLOR = "white"
     const DEFAULT_TEXT_COLOR = "black";
 
@@ -23,10 +19,13 @@ const GraphControl = (props) => {
 
     const markedNodes = useRef([]);
     const addVal = useRef(null);
-    const prev = useRef([]);
+
+    const graphSteps = useRef([]);
+    const currentStep = useRef(undefined);
 
     const start = useRef(undefined);
     const end = useRef(undefined);
+
 
     const weight = useRef(0);
 
@@ -103,8 +102,7 @@ const GraphControl = (props) => {
                     from: from,
                     to: to,
                     stroke: DEFAULT_LINE_COLOR,
-                    id: from + "-" + to,
-                    directed: true
+                    id: from + "-" + to
                 }
             })
         } else {
@@ -141,100 +139,8 @@ const GraphControl = (props) => {
         }
     }
 
-    async function updatePreviousStack() {
-        let newPrevObj = {
-            vertices: props.graph.vertices,
-            edges: props.graph.edges,
-            start: start,
-            end: end
-        }
-        console.log(newPrevObj)
-        prev.current.push(newPrevObj);
-        console.log(prev.current)
-    }
-
-    const getEdgeStateDependingOnColor = (edge) => {
-        switch (edge.stroke) {
-            case DEFAULT_LINE_COLOR: return 0;
-            case MARKED_EDGE_LINE_COLOR: return 1;
-            case FINAL_EDGE_LINE_COLOR: return 2;
-            case PROCESSED_EDGE_LINE_COLOR: return 3;
-        }
-    }
-
-    const getAdjacencyMatrix = () => {
-        let n = props.graph.vertices.length;
-        let adj = Array.from({ length: n }, () => Array(n).fill(null));
-        props.graph.edges.forEach(edge => {
-            const fromIndex = props.graph.vertices.findIndex(v => v.id === edge.from)
-            const toIndex = props.graph.vertices.findIndex(v => v.id === edge.to)
-            adj[fromIndex][toIndex] = {
-                marking: getEdgeStateDependingOnColor(edge),
-                weight: edge.weight
-            };
-        });
-        return adj;
-    }
-
-    const getVertexList = () => {
-        return props.graph.vertices.map(v => {
-            return {
-                value: v.value,
-                weight: v.weight === "∞" ? "Infinity" : (v.weight === "-∞" ? "-Infinity" : v.weight)
-            }
-        })
-    }
-
-    const updateEdge = (from, to, updatedEdge) => {
-        let newEdgeColor = DEFAULT_LINE_COLOR;
-
-        switch(updatedEdge.marking) {
-            case 0: newEdgeColor = DEFAULT_LINE_COLOR;
-            break;
-            case 1: newEdgeColor = MARKED_EDGE_LINE_COLOR;
-            break;
-            case 2: newEdgeColor = FINAL_EDGE_LINE_COLOR;
-            break;
-            case 3: newEdgeColor = PROCESSED_EDGE_LINE_COLOR;
-
-        }
-
-        const edgeId = props.graph.edges.find(e => e.from === from && e.to === to).id;
-
-        props.graphDispatch({
-            type: 'changeEdgeProperties',
-            updateEdge: (e => {
-                if (e.id === edgeId) e.stroke = newEdgeColor;
-                return e;
-            })
-        });
-    }
-
-    const updateVertices = (updatedVertices) => {
-        props.graphDispatch({
-            type: 'changeVertexProperties',
-            updateVertices: (vertices => {
-                for (let vertexId = 0; vertexId < updatedVertices.length; ++vertexId) {
-                    if (updatedVertices[vertexId].value !== vertices[vertexId].value) {
-                        vertices[vertexId].value = updatedVertices[vertexId].value;
-                    }
-                    if (updatedVertices[vertexId].weight !== vertices[vertexId].weight) {
-                        if (updatedVertices[vertexId].weight === "Infinity") {
-                            vertices[vertexId].weight = "∞";
-                        } else if (updatedVertices[vertexId].weight === "-Infinity") {
-                            vertices[vertexId].weight = "-∞";
-                        } else {
-                            vertices[vertexId].weight = updatedVertices[vertexId].weight;
-                        }
-                    }
-                }
-                return vertices;
-            })
-        });
-    }
-
     const resetEdgeColor = () => {
-        prev.current = [];
+        currentStep.current = undefined;
         props.graphDispatch({
             type: 'changeEdgeProperties',
             updateEdge: (e => {
@@ -257,23 +163,38 @@ const GraphControl = (props) => {
     }
 
     const next = () => {
+        if (currentStep.current !== undefined) {
+            if (currentStep.current >= graphSteps.current.length) {
+                return;
+            }
 
-        const adjMatrix = getAdjacencyMatrix();
-        const vertexList = getVertexList();
+            currentStep.current++;
+            console.log(graphSteps)
+
+            let nextState = graphSteps.current[currentStep.current];
+            props.graphDispatch({
+                type: 'redraw',
+                vertices: nextState.vertices,
+                edges: nextState.edges
+            })
+            start.current = nextState.start;
+            end.current = nextState.end;
+            return;
+        }
 
         function createGraphFromJSON(response) {
-            if (response.edges != null) {
-                for (let from = 0; from < response.edges.length; from++) {
-                    for (let to = 0; to < response.edges.length; to++) {
-                        if (response.edges[from][to] !== adjMatrix[from][to]) {
-                            updateEdge(vertexList[from].value, vertexList[to].value, response.edges[from][to])
-                        }
-                    }
-                }
-            }
-            if (response.vertices != null) {
-                updateVertices(response.vertices)
-            }
+           graphSteps.current = response;
+
+            currentStep.current = 1;
+
+            let nextState = graphSteps.current[currentStep.current];
+            props.graphDispatch({
+                type: 'redraw',
+                vertices: nextState.vertices,
+                edges: nextState.edges
+            })
+            start.current = nextState.start;
+            end.current = nextState.end;
         }
 
         sendRequest({
@@ -283,33 +204,29 @@ const GraphControl = (props) => {
                 'Content-Type': 'application/json'
             },
             body: {
-                edges: adjMatrix,
-                start: props.graph.vertices.findIndex(v => v.value === start.current),
-                vertices: vertexList,
-                end: props.graph.vertices.findIndex(v => v.value === end.current)
+                edges: props.graph.edges,
+                start: start.current,
+                vertices: props.graph.vertices,
+                end: end.current
             }
         }, (response => {
-            updatePreviousStack().then(() => createGraphFromJSON(response));
+            createGraphFromJSON(response);
         }));
     }
 
     const previous = () => {
-        if (prev.current.length < 1) return;
+        if (currentStep.current <= 0) return;
 
-        let previousState = prev.current[prev.current.length - 1];
-        console.log(prev)
-        console.log(prev.current.length - 1)
-        console.log(previousState)
+        currentStep.current--;
+
+        let previousState = graphSteps.current[currentStep.current];
         props.graphDispatch({
             type: 'redraw',
             vertices: previousState.vertices,
             edges: previousState.edges
         })
-        console.log(props.graph)
         start.current = previousState.start;
         end.current = previousState.end;
-
-        prev.current.pop();
     }
 
 
@@ -324,7 +241,6 @@ const GraphControl = (props) => {
                         vertices[i].textFill = textColor;
                     }
                 }
-                console.log(vertices)
                 return vertices;
             }
         })

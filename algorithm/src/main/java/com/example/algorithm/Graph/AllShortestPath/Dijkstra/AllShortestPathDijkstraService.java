@@ -16,7 +16,7 @@ public class AllShortestPathDijkstraService extends AllShortestPathService {
     @Override
     public GraphResponse step(String graphString) throws JSONException {
         AllShortestPathGraph graph = new AllShortestPathGraph(graphString);
-        return graph.dijkstra();
+        return new GraphResponse(graph);
     }
 
     @Override

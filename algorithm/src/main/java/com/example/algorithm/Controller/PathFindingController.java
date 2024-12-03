@@ -2,9 +2,9 @@ package com.example.algorithm.Controller;
 
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.GraphResponse;
-import com.example.algorithm.Graph.PathFinding.BreadthFirstSearch.BreadthFirstSearchService;
-import com.example.algorithm.Graph.PathFinding.DepthFirstSearch.DepthFirstSearchService;
-import com.example.algorithm.Graph.PathFinding.DijkstraAlgorithm.DijkstraService;
+import com.example.algorithm.Graph.PathFinding.BreadthFirstSearchService;
+import com.example.algorithm.Graph.PathFinding.DepthFirstSearchService;
+import com.example.algorithm.Graph.PathFinding.DijkstraService;
 import com.example.algorithm.Graph.PathFinding.PathFindingService;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -34,12 +34,12 @@ public class PathFindingController {
     @PostMapping(
             path = "/{searchType}/step"
     )
-    public ResponseEntity<GraphResponse> step(@PathVariable("searchType") String searchType, RequestEntity<String> graph) {
+    public ResponseEntity<GraphResponse[]> step(@PathVariable("searchType") String searchType, RequestEntity<String> graph) {
         try {
             PathFindingService service = stringToService(searchType);
 
             logger.info("New PathFinding nextstep-request: " + graph.getBody());
-            GraphResponse temp = service.step(graph.getBody());
+            GraphResponse[] temp = service.execute(graph.getBody());
             return new ResponseEntity<>(temp, HttpStatus.OK);
         } catch (JSONException e) {
             logger.error("PathFinding step JSON failed: " + graph);

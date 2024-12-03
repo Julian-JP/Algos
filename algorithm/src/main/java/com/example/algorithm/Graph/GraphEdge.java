@@ -1,5 +1,6 @@
 package com.example.algorithm.Graph;
 
+import lombok.Getter;
 import lombok.Setter;
 
 public class GraphEdge {
@@ -8,45 +9,27 @@ public class GraphEdge {
     public static final int ON_FINAL_PATH = 2;
     public static final int PROCESSED = 3;
 
-    @Setter
+    @Getter
     private int marking;
+    @Getter
     private Double weight;
+    @Getter
+    private String id;
 
-    public GraphEdge(int marking) {
+    public GraphEdge(int marking, Double weight, String id) {
         this.marking = marking;
-        this.weight = null;
+        this.weight = weight;
     }
 
-    public GraphEdge(int marking, double weight) {
-        this.marking = marking;
-        this.weight = Double.valueOf(weight);
+    public void visit() {
+        marking = VISITED;
     }
 
-    public boolean tryToVisit() {
-        if (marking != VISITED) {
-            marking = VISITED;
-            return false;
-        } else {
-            return true;
-        }
+    public void process() {
+        marking = PROCESSED;
     }
 
-    public boolean tryToProcess() {
-        if (marking == VISITED) {
-            marking = PROCESSED;
-            return true;
-        }
-            return false;
-    }
     public void finish() {
         marking = ON_FINAL_PATH;
-    }
-
-    public int getMarking() {
-        return marking;
-    }
-
-    public Double getWeight() {
-        return weight;
     }
 }

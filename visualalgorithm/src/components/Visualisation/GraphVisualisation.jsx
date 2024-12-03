@@ -9,7 +9,8 @@ const GraphVisualisation = props => {
     const [explanation, setExplanation] = useState(null);
     const [graph, graphDispatch] = useReducer(graphReducer, {
         vertices: [],
-        edges: []
+        edges: [],
+        directed: true
     });
     const [svgDimension, setSvgDimension] = useState({ width: 0, height: 0});
 
@@ -19,11 +20,22 @@ const GraphVisualisation = props => {
 
     const lastMovement = useRef(Date.now());
 
+    function processVertices(newVertices, oldVertices) {
+        return newVertices.map(vertex => {
+            return {
+                ...vertex,
+                ...oldVertices.find(v => v.id === vertex.id)
+            }
+        })
+    }
+
     function graphReducer(graph, graphAction) {
         switch(graphAction.type) {
             case 'redraw': {
-                graph.vertices = graphAction.vertices;
+                graph.vertices = processVertices(graphAction.vertices, graph.vertices);
                 graph.edges = graphAction.edges
+                console.log(graph.vertices);
+                console.log(graph.edges);
                 return {vertices: graph.vertices, edges: graph.edges};
             }
             case 'addVertex': {
@@ -82,6 +94,23 @@ const GraphVisualisation = props => {
         }
     }, []);
 
+    const processMarking = (marking) => {
+        switch (marking) {
+            case 0: return {
+                color: "black",
+                stroke: "white",
+            }
+            case 1: return {
+                color: "blue",
+                stroke: "black",
+            }
+            case 2: return {
+                color: "red",
+                stroke: "black",
+            }
+        }
+    }
+
     const convertVertex = (item) => {
         let text = item.weight !== undefined ? item.value + "|" + item.weight : item.value;
         return <Circle
@@ -109,17 +138,24 @@ const GraphVisualisation = props => {
     }
 
     const convertEdge = (item) => {
-        if (item.from === item.to && item.from != null) {
-            return convertSelfEdge(item);
+        let colors = processMarking(item.marking);
+
+        let edge = {
+            ...colors,
+            ...item,
         }
 
-        let vertexFrom = getVertex(item.from);
-        let vertexTo = getVertex(item.to);
+        if (edge.from === edge.to && edge.from != null) {
+            return convertSelfEdge(edge);
+        }
 
-        if (item.directed) {
-            return convertDirectedEdge(item, vertexFrom, vertexTo)
+        let vertexFrom = getVertex(edge.from);
+        let vertexTo = getVertex(edge.to);
+
+        if (edge.directed) {
+            return convertDirectedEdge(edge, vertexFrom, vertexTo)
         } else {
-            return convertUndirectedEdge(item, vertexFrom, vertexTo);
+            return convertUndirectedEdge(edge, vertexFrom, vertexTo);
         }
     }
 
