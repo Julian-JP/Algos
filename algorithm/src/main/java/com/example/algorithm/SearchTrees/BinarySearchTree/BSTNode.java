@@ -14,35 +14,34 @@ public class BSTNode extends SearchTreeNode {
     @Override
     public BSTNode add(Integer newValue) {
         if (newValue < getValue()) {
-            return addInLeftSubTree(newValue);
+            if (getLeft() == null) {
+                setLeft(new BSTNode(newValue));
+            } else {
+                setLeft(getLeft().add(newValue));
+            }
         } else if (newValue > getValue()) {
-            return addInRightSubTree(newValue);
-        }
-        return null;
-    }
-
-    @Override
-    public SearchTreeNode remove(Integer deleteValue) {
-        if (deleteValue < getValue()) {
-            return removeInLeftSubTree(deleteValue);
-        } else if (deleteValue > getValue()) {
-            return removeInRightSubTree(deleteValue);
-            //Remove node
-        } else {
-            return removeThisNode();
-        }
-    }
-
-    private BSTNode removeInLeftSubTree(int deleteValue) {
-        if (getLeft() != null) {
-            setLeft(getLeft().remove(deleteValue));
+            if (getRight() == null) {
+                setRight(new BSTNode(newValue));
+            } else {
+                setRight(getRight().add(newValue));
+            }
         }
         return this;
     }
 
-    private BSTNode removeInRightSubTree(int deleteValue) {
-        if (getRight() != null) {
+    @Override
+    public SearchTreeNode remove(Integer deleteValue) {
+        if (deleteValue.equals(getValue())) {
+            return removeThisNode();
+        }
+
+        if (deleteValue < getValue() && getLeft() != null) {
+            setLeft(getLeft().remove(deleteValue));
+            return this;
+        }
+        if (deleteValue > getValue() && getRight() != null) {
             setRight(getRight().remove(deleteValue));
+            return this;
         }
         return this;
     }
@@ -53,38 +52,21 @@ public class BSTNode extends SearchTreeNode {
         } else if (getRight() == null) {
             return getLeft();
         } else {
-            setLeft(getLeft().changeWithPredecessor(this));
+            BSTNode successor = getRight().getSmallestNode();
+            setValue(successor.getValue());
+            setRight(getRight().remove(successor.getValue()));
             return this;
         }
     }
 
-    private BSTNode addInLeftSubTree(int newValue) {
+    private BSTNode getSmallestNode() {
         if (getLeft() != null) {
-            getLeft().add(newValue);
+            return getLeft().getSmallestNode();
         } else {
-            setLeft(new BSTNode(newValue));
+            return this;
         }
-        return this;
     }
 
-    private BSTNode addInRightSubTree(int newValue) {
-        if (getRight() != null) {
-            getRight().add(newValue);
-        } else {
-            setRight(new BSTNode(newValue));
-        }
-        return this;
-    }
-
-    private BSTNode changeWithPredecessor(BSTNode root) {
-        if (this.getRight() != null) {
-            setRight(getRight().changeWithPredecessor(root));
-        } else {
-            root.setValue(this.getValue());
-            return getLeft();
-        }
-        return this;
-    }
     @Override
     public BSTNode getLeft() {
         return (BSTNode) super.getLeft();
