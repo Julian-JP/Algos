@@ -4,6 +4,7 @@ import CardMenue from "../UI/Cardmenue/CardMenue.jsx";
 import classes from "./AlgorithmList.module.css";
 import AlgorithmInformation from "./AlgorithmInformation.jsx";
 import Category from "../UI/Cardmenue/Category.jsx";
+import configData from "@/configs/config.json"
 
 const AlgorithmList = props => {
     const [categoryList, setCategoryList] = useState([]);
@@ -19,7 +20,7 @@ const AlgorithmList = props => {
         }
 
         sendRequest({
-            url: 'https://julian-laux.de:8080/algos/all/AlgorithmCateogories',
+            url: configData.BACKEND_URL + 'all/AlgorithmCateogories',
             method: 'GET'
         }, applyResponse);
     }

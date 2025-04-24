@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import useFetch from "../../hooks/useFetch.js";
 import classes from "./AlgorithmInformation.module.css";
 import Button from "../UI/Cardmenue/Button.jsx";
+import configData from "@/configs/config.json";
 
 const AlgorithmInformation = props => {
     const [algorithmInformation, setAlgorithmInformation] = useState([]);
@@ -17,7 +18,7 @@ const AlgorithmInformation = props => {
         }
 
         sendRequest({
-            url: `https://julian-laux.de:8080/algos/all${props.url}`,
+            url: configData.BACKEND_URL + `all${props.url}`,
             method: 'GET'
         }, applyResponse);
     }

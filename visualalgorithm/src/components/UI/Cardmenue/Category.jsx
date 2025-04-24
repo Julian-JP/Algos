@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import classes from "./Category.module.css";
+import configData from "@/configs/config.json"
 
 const CardMenue = (props) => {
     const [expand, setExpand] = useState(false);
@@ -20,7 +21,7 @@ const CardMenue = (props) => {
         }
 
         sendRequest({
-            url: `https://julian-laux.de:8080/algos/all${props.url}`,
+            url: configData.BACKEND_URL + `all${props.url}`,
             method: 'GET'
         }, applyResponse);
     }

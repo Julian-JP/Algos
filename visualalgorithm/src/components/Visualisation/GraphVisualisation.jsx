@@ -3,6 +3,7 @@ import classes from "./GraphVisualisation.module.css"
 import useFetch from "../../hooks/useFetch";
 import ControlSelector from "../control/ControlSelector.jsx";
 import Circle from "../UI/SVG-Components/Circle.jsx";
+import configData from "@/configs/config.json"
 
 const GraphVisualisation = props => {
 
@@ -81,7 +82,7 @@ const GraphVisualisation = props => {
             setExplanation(response.explanation);
         };
         sendRequest({
-            url: `https://julian-laux.de:8080/algos/${props.url}/explanation`, method: 'GET'
+            url: configData.BACKEND_URL + `${props.url}/explanation`, method: 'GET'
         }, applyResponse);
 
     }, [sendRequest]);

@@ -3,6 +3,7 @@ import classes from "./HeapControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import UndoRedoFields from "../UI/UndoRedoFields.jsx";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
+import configData from "@/configs/config.json"
 
 const HeapControl = ({svgWidth, svgHeight, graphDispatch, type}) => {
 
@@ -94,7 +95,7 @@ const HeapControl = ({svgWidth, svgHeight, graphDispatch, type}) => {
                 setRedoStack([]);
             }
             sendRequest({
-                url: 'https://julian-laux.de:8080/algos/' + type + '/new/' + addval,
+                url: configData.BACKEND_URL + type + '/new/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -110,7 +111,7 @@ const HeapControl = ({svgWidth, svgHeight, graphDispatch, type}) => {
             }
 
             sendRequest({
-                url: 'https://julian-laux.de:8080/algos/' + type + '/insert/' + addval,
+                url: configData.BACKEND_URL + type + '/insert/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,7 +132,7 @@ const HeapControl = ({svgWidth, svgHeight, graphDispatch, type}) => {
             }
         }
         sendRequest({
-            url: 'https://julian-laux.de:8080/algos/' + type + '/remove',
+            url: configData.BACKEND_URL + type + '/remove',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

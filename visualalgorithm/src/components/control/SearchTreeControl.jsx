@@ -3,6 +3,7 @@ import classes from "./SearchTreeControl.module.css";
 import useFetch from "../../hooks/useFetch";
 import UndoRedoFields from "../UI/UndoRedoFields.jsx";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
+import configData from "@/configs/config.json"
 
 const SearchTreeControl = ({svgWidth, svgHeight, type, graphDispatch}) => {
 
@@ -99,7 +100,7 @@ const SearchTreeControl = ({svgWidth, svgHeight, type, graphDispatch}) => {
                 setRedoStack([]);
             }
             sendRequest({
-                url: 'https://julian-laux.de:8080/algos/' + type + '/new/' + addval,
+                url: configData.BACKEND_URL + type + '/new/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,7 +116,7 @@ const SearchTreeControl = ({svgWidth, svgHeight, type, graphDispatch}) => {
             }
 
             sendRequest({
-                url: 'https://julian-laux.de:8080/algos/' + type + '/insert/' + addval,
+                url: configData.BACKEND_URL + type + '/insert/' + addval,
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -137,7 +138,7 @@ const SearchTreeControl = ({svgWidth, svgHeight, type, graphDispatch}) => {
             }
         }
         sendRequest({
-            url: 'https://julian-laux.de:8080/algos/' + type + '/remove/' + removeval,
+            url: configData.BACKEND_URL + type + '/remove/' + removeval,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
