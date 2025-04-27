@@ -1,9 +1,7 @@
 package com.example.algorithm.searchTrees;
 
 import com.example.algorithm.SearchTrees.AVLTree.AVLTree;
-import com.example.algorithm.SearchTrees.AVLTree.AVLTreeNode;
 import com.example.algorithm.SearchTrees.AVLTree.AVLTreeService;
-import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 import org.junit.jupiter.api.Test;
 
