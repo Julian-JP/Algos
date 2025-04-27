@@ -4,16 +4,16 @@ import com.example.algorithm.SearchTrees.SearchTreeNode;
 
 public class AVLTreeNode extends SearchTreeNode {
 
-    private int heightDifference;
+    private int height;
 
     public AVLTreeNode(int value) {
         super(value);
-        heightDifference = 0;
+        height = 1;
     }
 
     public AVLTreeNode(int value, AVLTreeNode left, AVLTreeNode right) {
         super(value, left, right);
-        heightDifference = updateHeightDifferenze();
+        updateHeight();
     }
 
     @Override
@@ -33,55 +33,80 @@ public class AVLTreeNode extends SearchTreeNode {
                 setRight(new AVLTreeNode(newValue));
             }
         }
-        return balance();
+        return balanceInsertion();
     }
 
     @Override
     public SearchTreeNode remove(Integer deleteValue) {
-        if (deleteValue < getValue()) {
-            if (getLeft() != null) {
-                setLeft(getLeft().remove(deleteValue));
+        if (deleteValue.equals(getValue())) {
+            AVLTreeNode unbalancedRemovedSubtree = removeThisNode();
+            if (unbalancedRemovedSubtree != null) {
+                return unbalancedRemovedSubtree.balanceRemoval();
             } else {
-                return this;
+                return null;
             }
-        } else if (deleteValue > getValue()) {
-            if (getRight() != null) {
-                setRight(getRight().remove(deleteValue));
-            } else {
-                return this;
-            }
-            //Remove node
-        } else if (getLeft() == null) {
+        }
+
+        if (deleteValue < getValue() && getLeft() != null) {
+            setLeft(getLeft().remove(deleteValue));
+        } else if (deleteValue > getValue() && getRight() != null) {
+            setRight(getRight().remove(deleteValue));
+        }
+        return balanceRemoval();
+    }
+
+    private AVLTreeNode removeThisNode() {
+        if (getLeft() == null) {
             return getRight();
         } else if (getRight() == null) {
             return getLeft();
         } else {
-            setLeft(getLeft().changeWithPredecessor(this));
+            AVLTreeNode successor = getRight().getSmallestNode();
+            setValue(successor.getValue());
+            setRight(getRight().remove(successor.getValue()));
+            return this;
         }
-        return balance();
     }
 
-    private AVLTreeNode changeWithPredecessor(AVLTreeNode root) {
-        if (this.getRight() != null) {
-            setRight(getRight().changeWithPredecessor(root));
-            return balance();
+    private AVLTreeNode getSmallestNode() {
+        if (getLeft() != null) {
+            return getLeft().getSmallestNode();
         } else {
-            root.setValue(this.getValue());
-            return this.getLeft();
+            return this;
         }
     }
 
-    private AVLTreeNode balance() {
-        heightDifference = updateHeightDifferenze();
-        if (heightDifference == 2 && getRight().heightDifference >= 0) {
-            return rotateLeft();
-        } else if (heightDifference == -2 && getLeft().heightDifference <= 0) {
+    private AVLTreeNode balanceInsertion() {
+        int heightDifference = getHeightDifference();
+
+        if (heightDifference == 2 && getLeft().getHeightDifference() > 0) {
             return rotateRight();
-        } else if (heightDifference == 2 && getRight().heightDifference < 0) {
-            return rotateRightLeft();
-        } else if (heightDifference == -2 && getLeft().heightDifference > 0) {
+        } else if (heightDifference == -2 && getRight().getHeightDifference() < 0) {
+            return rotateLeft();
+        } else if (heightDifference == 2 && getLeft().getHeightDifference() < 0) {
             return rotateLeftRight();
+        } else if (heightDifference == -2 && getRight().getHeightDifference() > 0) {
+            return rotateRightLeft();
         }
+
+        updateHeight();
+        return this;
+    }
+
+    private AVLTreeNode balanceRemoval() {
+        int heightDifference = getHeightDifference();
+
+        if (heightDifference == 2 && getLeft().getHeightDifference() >= 0) {
+            return rotateRight();
+        } else if (heightDifference == -2 && getRight().getHeightDifference() <= 0) {
+            return rotateLeft();
+        } else if (heightDifference == 2 && getLeft().getHeightDifference() < 0) {
+            return rotateLeftRight();
+        } else if (heightDifference == -2 && getRight().getHeightDifference() > 0) {
+            return rotateRightLeft();
+        }
+
+        updateHeight();
         return this;
     }
 
@@ -91,6 +116,9 @@ public class AVLTreeNode extends SearchTreeNode {
 
         root.setLeft(left.getRight());
         left.setRight(root);
+
+        root.updateHeight();
+        left.updateHeight();
         return left;
     }
 
@@ -100,6 +128,9 @@ public class AVLTreeNode extends SearchTreeNode {
 
         root.setRight(right.getLeft());
         right.setLeft(root);
+
+        root.updateHeight();
+        right.updateHeight();
         return right;
     }
 
@@ -112,6 +143,10 @@ public class AVLTreeNode extends SearchTreeNode {
         right.setLeft(rightLeft.getRight());
         rightLeft.setLeft(root);
         rightLeft.setRight(right);
+
+        root.updateHeight();
+        right.updateHeight();
+        rightLeft.updateHeight();
 
         return rightLeft;
     }
@@ -126,6 +161,10 @@ public class AVLTreeNode extends SearchTreeNode {
         leftRight.setRight(root);
         leftRight.setLeft(left);
 
+        root.updateHeight();
+        left.updateHeight();
+        leftRight.updateHeight();
+
         return leftRight;
     }
 
@@ -139,34 +178,16 @@ public class AVLTreeNode extends SearchTreeNode {
         return (AVLTreeNode) super.getLeft();
     }
 
-    private int getHeight() {
-        int heightLeft;
-        int heightRight;
+    private void updateHeight() {
+        int leftHeight = getLeft() == null ? 0 : getLeft().height;
+        int rightHeight = getRight() == null ? 0 : getRight().height;
 
-        if (getLeft() != null) {
-            heightLeft = getLeft().getHeight();
-        } else {
-            heightLeft = 0;
-        }
-
-        if (getRight() != null) {
-            heightRight = getRight().getHeight();
-        } else {
-            heightRight = 0;
-        }
-
-        return Math.max(heightRight, heightLeft) + 1;
+        height = Math.max(leftHeight, rightHeight) + 1;
     }
 
-    private int updateHeightDifferenze() {
-        if (getLeft() != null && getRight() != null) {
-            return getRight().getHeight() - getLeft().getHeight();
-        } else if (getLeft() != null) {
-            return -getLeft().getHeight();
-        } else if (getRight() != null) {
-            return getRight().getHeight();
-        } else {
-            return 0;
-        }
+    private int getHeightDifference() {
+        int leftHeight = getLeft() == null ? 0 : getLeft().height;
+        int rightHeight = getRight() == null ? 0 : getRight().height;
+        return leftHeight - rightHeight;
     }
 }

@@ -28,7 +28,7 @@ public class AVLTreeService extends SearchTreeService {
     }
 
     @Override
-    public SearchTree create(int value) {
+    public AVLTree create(int value) {
         return new AVLTree(new AVLTreeNode(value));
     }
 

@@ -50,4 +50,15 @@ public abstract class SearchTreeNode {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public int getHeight() {
+        int maxHeight = 1;
+        if (left != null) {
+            maxHeight = Math.max(left.getHeight() + 1, maxHeight);
+        }
+        if (right != null) {
+            maxHeight = Math.max(right.getHeight() + 1, maxHeight);
+        }
+        return maxHeight;
+    }
 }
