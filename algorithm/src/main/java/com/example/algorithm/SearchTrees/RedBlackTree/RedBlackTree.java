@@ -14,7 +14,9 @@ public class RedBlackTree extends SearchTree {
         if (getRoot().isNil()) {
             setRoot(new RedBlackTreeNode(value, false, null));
         }
-        getRoot().add(value);
+        setRoot(getRoot().add(value));
+
+        getRoot().setColor("black");
     }
 
     @Override
@@ -43,6 +45,10 @@ public class RedBlackTree extends SearchTree {
 
         spliceOut(nodeToDelete, replacement);
 
+        if (nodeToDelete == getRoot()) {
+            setRoot(replacement);
+        }
+
 
         if (nodeToDelete.getColor().equals("red") && (replacement.isNil() || replacement.getColor().equals("red"))) {
             return;
@@ -51,7 +57,7 @@ public class RedBlackTree extends SearchTree {
         } else if (nodeToDelete.getColor().equals("black") && replacement.getColor().equals("red")) {
             replacement.setColor("black");
             return;
-        } else if (nodeToDelete.getColor().equals("black") && isBlack(replacement) && x == getRoot()) {
+        } else if (nodeToDelete.getColor().equals("black") && replacement.isBlack() && x == getRoot()) {
             return;
         }
 
@@ -62,16 +68,17 @@ public class RedBlackTree extends SearchTree {
     }
 
     private void deleteFix(RedBlackTreeNode x, RedBlackTreeNode w) {
-        if (isRed(x)) {
+        if (!x.isBlack()) {
             deleteCase0(x);
-        } else if (isBlack(x) && isRed(w)) {
+        } else if (x.isBlack() && !w.isBlack()) {
             deleteCase1(x, w);
-        } else if (isBlack(x) && isBlack(w) && w != null) {
-            if (isBlack(w.getLeft()) && isBlack(w.getRight())) {
+        } else if (x.isBlack() && w != null && w.isBlack()) {
+            if (w.getLeft().isBlack() && w.getRight().isBlack()) {
                 deleteCase2(x, w);
-            } else if ((isBlack(w.getLeft()) && isRed(w.getRight())) || (isRed(w.getLeft()) && isBlack(w.getRight()))) {
+            } else if ((x.isLeftChild() && !w.getLeft().isBlack() && w.getRight().isBlack()) ||
+                    (x.isRightChild() && w.getLeft().isBlack() && !w.getRight().isBlack())) {
                 deleteCase3(x, w);
-            } else if (isRed(w.getLeft()) && isRed(w.getRight())) {
+            } else if (!w.getLeft().isBlack() || !w.getRight().isBlack()) {
                 deleteCase4(x, w);
             }
         }
@@ -85,13 +92,20 @@ public class RedBlackTree extends SearchTree {
         w.setColor("black");
         x.getParent().setColor("red");
 
+        RedBlackTreeNode new_subtree_root;
+
         if (x.getParent().getLeft() == x) {
-            x.getParent().rotateLeft();
+            new_subtree_root = x.getParent().rotateLeft();
             w = x.getParent().getRight();
         } else {
-            x.getParent().rotateRight();
+            new_subtree_root = x.getParent().rotateRight();
             w = x.getParent().getLeft();
         }
+
+        if (x.getParent() == getRoot()) {
+            setRoot(new_subtree_root);
+        }
+
         deleteFix(x, w);
     }
 
@@ -104,6 +118,7 @@ public class RedBlackTree extends SearchTree {
         } else if (x == getRoot()) {
             return;
         } else {
+            w = x.getParent().getLeft() == x ? x.getParent().getRight() : x.getParent().getLeft();
             deleteFix(x, w);
         }
     }
@@ -126,13 +141,18 @@ public class RedBlackTree extends SearchTree {
     private void deleteCase4(RedBlackTreeNode x, RedBlackTreeNode w) {
         w.setColor(x.getParent().getColor());
         x.getParent().setColor("black");
+        RedBlackTreeNode new_subtree_root;
 
         if (x.getParent().getLeft() == x) {
             w.getRight().setColor("black");
-            x.getParent().rotateLeft();
+            new_subtree_root = x.getParent().rotateLeft();
         } else {
             w.getLeft().setColor("black");
-            x.getParent().rotateRight();
+            new_subtree_root = x.getParent().rotateRight();
+        }
+
+        if (x.getParent() == getRoot()) {
+            setRoot(new_subtree_root);
         }
     }
 
@@ -143,14 +163,6 @@ public class RedBlackTree extends SearchTree {
     @Override
     public RedBlackTreeNode getRoot() {
         return (RedBlackTreeNode) super.getRoot();
-    }
-
-    private boolean isBlack(RedBlackTreeNode node) {
-        return node == null || node.getColor().equals("black");
-    }
-
-    private boolean isRed(RedBlackTreeNode node) {
-        return node != null && node.getColor().equals("red");
     }
 
     private void spliceOut(@NotNull RedBlackTreeNode nodeToDelete, RedBlackTreeNode replacementNode) {

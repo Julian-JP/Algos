@@ -43,7 +43,7 @@ public class RedBlackTreeNode extends SearchTreeNode {
     }
 
     @Override
-    public SearchTreeNode add(Integer newValue) {
+    public RedBlackTreeNode add(Integer newValue) {
          if (getValue() > newValue) {
              if (getLeft().isNil()) {
                  setLeft(new RedBlackTreeNode(newValue, true, this));
@@ -64,24 +64,34 @@ public class RedBlackTreeNode extends SearchTreeNode {
 
     private RedBlackTreeNode balanceInsert() {
         if (parent != null && parent.getColor().equals("black")) {
-            return this;
+            return getRoot();
         }
         if (isReadUncle()) {
             insertRedUncleCase();
-            return this;
-        } else {
+            return parent.getParent().balanceInsert();
+        } else if (parent != null && parent.parent != null){
             boolean thisIsLeftChild = parent.getLeft() == this;
             boolean parentIsLeftChild = parent.parent.getLeft() == parent;
 
             if (thisIsLeftChild && parentIsLeftChild) {
-                return insertLeftLeft();
+                return insertLeftLeft().getRoot();
             } else if (!thisIsLeftChild && !parentIsLeftChild) {
-                return insertRightRight();
+                return insertRightRight().getRoot();
             } else if (!thisIsLeftChild) {
-                return insertLeftRight();
+                return insertLeftRight().getRoot();
             } else {
-                return insertRightLeft();
+                return insertRightLeft().getRoot();
             }
+        }
+
+        return this;
+    }
+
+    private RedBlackTreeNode getRoot() {
+        if (parent == null) {
+            return this;
+        } else {
+            return parent.getRoot();
         }
     }
 
@@ -303,5 +313,17 @@ public class RedBlackTreeNode extends SearchTreeNode {
         if (getRight() != null) {
             getRight().traverseInorder(tabs + "\t");
         }
+    }
+
+    boolean isBlack() {
+        return isNil || getColor().equals("black");
+    }
+
+    boolean isRightChild() {
+        return parent != null && parent.getRight() == this;
+    }
+
+    boolean isLeftChild() {
+        return parent != null && parent.getLeft() == this;
     }
 }

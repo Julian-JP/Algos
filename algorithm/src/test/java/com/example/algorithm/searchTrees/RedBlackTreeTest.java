@@ -235,7 +235,7 @@ public class RedBlackTreeTest {
     void addAndRemove1000Nodes() {
         RedBlackTree tree = redBlackTreeService.create(0);
         List<Integer> numbers = new ArrayList<>();
-        for (int i = 1; i < 1000; i++) {
+        for (int i = 1; i < 10000; i++) {
             numbers.add(i);
         }
 
@@ -295,8 +295,8 @@ public class RedBlackTreeTest {
 
     boolean redNodeNoChildInvariant(@NotNull RedBlackTreeNode root) {
         if (root.getColor().equals("red")) {
-            return !(root.getRight() != null && root.getRight().getColor().equals("red") &&
-                    root.getLeft() != null && root.getLeft().getColor().equals("red"));
+            return !((root.getRight() != null && root.getRight().getColor().equals("red")) ||
+                    (root.getLeft() != null && root.getLeft().getColor().equals("red")));
         }
 
         return true;
