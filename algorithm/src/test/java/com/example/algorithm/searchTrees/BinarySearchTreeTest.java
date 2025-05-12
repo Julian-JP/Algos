@@ -108,4 +108,13 @@ public class BinarySearchTreeTest {
         assertNull(tree.getRoot().getRight());
         assertEquals(0, tree.getRoot().getValue());
     }
+
+    @Test
+    void addInEmptyTree() {
+        BinarySearchTree tree = binarySearchTreeService.create(0);
+        tree.remove(0);
+        assertNull(tree.getRoot());
+        tree.add(0);
+        assertEquals(0, tree.getRoot().getValue());
+    }
 }

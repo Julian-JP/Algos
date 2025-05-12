@@ -2,6 +2,7 @@ package com.example.algorithm.searchTrees;
 
 import com.example.algorithm.SearchTrees.AVLTree.AVLTree;
 import com.example.algorithm.SearchTrees.AVLTree.AVLTreeService;
+import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 import org.junit.jupiter.api.Test;
 
@@ -279,6 +280,15 @@ public class AVLTreeTest {
 
         assertNull(tree.getRoot().getLeft());
         assertNull(tree.getRoot().getRight());
+        assertEquals(0, tree.getRoot().getValue());
+    }
+
+    @Test
+    void addInEmptyTree() {
+        AVLTree tree = avlTreeService.create(0);
+        tree.remove(0);
+        assertNull(tree.getRoot());
+        tree.add(0);
         assertEquals(0, tree.getRoot().getValue());
     }
 
