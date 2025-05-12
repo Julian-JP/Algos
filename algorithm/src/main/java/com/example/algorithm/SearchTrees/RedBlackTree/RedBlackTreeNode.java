@@ -1,11 +1,12 @@
 package com.example.algorithm.SearchTrees.RedBlackTree;
 
+import com.example.algorithm.SearchTrees.BinarySearchTree.BSTNode;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class RedBlackTreeNode extends SearchTreeNode {
+public class RedBlackTreeNode extends BSTNode {
 
     public static RedBlackTreeNode getNilNode(RedBlackTreeNode parent) {
         return new RedBlackTreeNode(parent);

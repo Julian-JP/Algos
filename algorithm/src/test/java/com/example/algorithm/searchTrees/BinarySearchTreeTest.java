@@ -9,8 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BinarySearchTreeTest {
     BinarySearchTreeService binarySearchTreeService = new BinarySearchTreeService();
@@ -101,6 +100,7 @@ public class BinarySearchTreeTest {
 
         Collections.shuffle(numbers, random);
         for (int number : numbers) {
+            assertTrue(tree.contains(number));
             tree.remove(number);
         }
 

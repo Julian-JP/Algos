@@ -3,11 +3,11 @@ package com.example.algorithm.SearchTrees.BinarySearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 
 public class BSTNode extends SearchTreeNode {
-    public BSTNode(int value) {
+    public BSTNode(Integer value) {
         super(value);
     }
 
-    public BSTNode(int value, BSTNode left, BSTNode right) {
+    public BSTNode(Integer value, BSTNode left, BSTNode right) {
         super(value, left, right);
     }
 
@@ -46,7 +46,20 @@ public class BSTNode extends SearchTreeNode {
         return this;
     }
 
-    private BSTNode removeThisNode() {
+    @Override
+    public boolean contains(Integer value) {
+        if (getValue().equals(value)) {
+            return true;
+        } else if (getValue() < value && getRight() != null) {
+            return getRight().contains(value);
+        } else if (getValue() > value && getLeft() != null) {
+            return getLeft().contains(value);
+        } else {
+            return false;
+        }
+    }
+
+    protected BSTNode removeThisNode() {
         if (getLeft() == null) {
             return getRight();
         } else if (getRight() == null) {

@@ -1,8 +1,11 @@
 package com.example.algorithm.SearchTrees.AVLTree;
 
+import com.example.algorithm.SearchTrees.BinarySearchTree.BSTNode;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 
-public class AVLTreeNode extends SearchTreeNode {
+import java.util.Objects;
+
+public class AVLTreeNode extends BSTNode {
 
     private int height;
 
@@ -18,7 +21,7 @@ public class AVLTreeNode extends SearchTreeNode {
 
     @Override
     public AVLTreeNode add(Integer newValue) {
-        if (getValue() == newValue) {
+        if (Objects.equals(getValue(), newValue)) {
             return this;
         } else if (newValue < getValue()) {
             if (getLeft() != null) {
@@ -55,17 +58,9 @@ public class AVLTreeNode extends SearchTreeNode {
         return balanceRemoval();
     }
 
-    private AVLTreeNode removeThisNode() {
-        if (getLeft() == null) {
-            return getRight();
-        } else if (getRight() == null) {
-            return getLeft();
-        } else {
-            AVLTreeNode successor = getRight().getSmallestNode();
-            setValue(successor.getValue());
-            setRight(getRight().remove(successor.getValue()));
-            return this;
-        }
+    @Override
+    protected AVLTreeNode removeThisNode() {
+        return (AVLTreeNode) super.removeThisNode();
     }
 
     private AVLTreeNode getSmallestNode() {

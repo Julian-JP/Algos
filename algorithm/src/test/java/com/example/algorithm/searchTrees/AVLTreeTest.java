@@ -274,6 +274,7 @@ public class AVLTreeTest {
 
         Collections.shuffle(numbers, random);
         for (int number : numbers) {
+            assertTrue(tree.contains(number));
             tree.remove(number);
             assertTrue(satisfiesAVLInvariant(tree.getRoot()));
         }

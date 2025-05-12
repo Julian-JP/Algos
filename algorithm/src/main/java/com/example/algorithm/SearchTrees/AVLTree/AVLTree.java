@@ -23,4 +23,13 @@ public class AVLTree extends SearchTree {
             setRoot(getRoot().remove(value));
         }
     }
+
+    @Override
+    public boolean contains(int value) {
+        if (getRoot() != null) {
+            return getRoot().contains(value);
+        } else {
+            return false;
+        }
+    }
 }

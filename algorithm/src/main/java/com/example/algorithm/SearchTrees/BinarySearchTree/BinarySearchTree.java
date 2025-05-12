@@ -9,6 +9,7 @@ public class BinarySearchTree extends SearchTree {
         super(root);
     }
 
+    @Override
     public void add(int value) {
         if (getRoot() != null) {
             getRoot().add(value);
@@ -17,9 +18,19 @@ public class BinarySearchTree extends SearchTree {
         }
     }
 
+    @Override
     public void remove(int value) {
         if (getRoot() != null) {
             setRoot(getRoot().remove(value));
+        }
+    }
+
+    @Override
+    public boolean contains(int value) {
+        if (getRoot() != null) {
+            return getRoot().contains(value);
+        } else {
+            return false;
         }
     }
 }

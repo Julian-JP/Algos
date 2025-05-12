@@ -1,10 +1,11 @@
 package com.example.algorithm.SearchTrees.RedBlackTree;
 
+import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
 import com.example.algorithm.SearchTrees.SearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 import org.jetbrains.annotations.NotNull;
 
-public class RedBlackTree extends SearchTree {
+public class RedBlackTree extends BinarySearchTree {
     public RedBlackTree(SearchTreeNode root) {
         super(root);
     }

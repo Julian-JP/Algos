@@ -1,5 +1,10 @@
 package com.example.algorithm.SearchTrees;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public abstract class SearchTreeNode {
     private Integer value;
     private SearchTreeNode left;
@@ -19,37 +24,7 @@ public abstract class SearchTreeNode {
 
     public abstract SearchTreeNode remove(Integer newValue);
 
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public SearchTreeNode getLeft() {
-        return left;
-    }
-
-    public void setLeft(SearchTreeNode left) {
-        this.left = left;
-    }
-
-    public SearchTreeNode getRight() {
-        return right;
-    }
-
-    public void setRight(SearchTreeNode right) {
-        this.right = right;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
+    public abstract boolean contains(Integer value);
 
     public int getHeight() {
         int maxHeight = 1;

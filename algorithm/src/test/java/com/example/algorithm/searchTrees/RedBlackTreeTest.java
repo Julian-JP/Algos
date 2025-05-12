@@ -136,7 +136,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree();
 
         tree.remove(6);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -146,7 +145,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree();
 
         tree.remove(1);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -156,7 +154,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree();
 
         tree.remove(17);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -166,7 +163,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree();
 
         tree.remove(25);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -176,7 +172,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree2();
 
         tree.remove(18);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -186,7 +181,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree3();
 
         tree.remove(2);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -196,7 +190,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree();
 
         tree.remove(13);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -206,7 +199,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree();
 
         tree.remove(8);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -216,7 +208,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree2();
 
         tree.remove(3);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -226,7 +217,6 @@ public class RedBlackTreeTest {
         RedBlackTree tree = getExampleTree();
 
         tree.remove(11);
-        tree.getRoot().traverseInorder("");
 
         assertTrue(redBlackTreeInvariant(tree.getRoot()));
     }
@@ -235,7 +225,7 @@ public class RedBlackTreeTest {
     void addAndRemove1000Nodes() {
         RedBlackTree tree = redBlackTreeService.create(0);
         List<Integer> numbers = new ArrayList<>();
-        for (int i = 1; i < 10000; i++) {
+        for (int i = 1; i < 1000; i++) {
             numbers.add(i);
         }
 
@@ -252,6 +242,7 @@ public class RedBlackTreeTest {
 
         Collections.shuffle(numbers, random);
         for (int number : numbers) {
+            assertTrue(tree.contains(number));
             tree.remove(number);
             assertTrue(redBlackTreeInvariant(tree.getRoot()));
         }
