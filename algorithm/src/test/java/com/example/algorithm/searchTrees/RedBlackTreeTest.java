@@ -246,14 +246,14 @@ public class RedBlackTreeTest {
 
         for (int number : numbers) {
             tree.add(number);
-            assertTrue(redNodeNoChildInvariant(tree.getRoot()));
+            assertTrue(redBlackTreeInvariant(tree.getRoot()));
         }
 
 
         Collections.shuffle(numbers, random);
         for (int number : numbers) {
             tree.remove(number);
-            assertTrue(redNodeNoChildInvariant(tree.getRoot()));
+            assertTrue(redBlackTreeInvariant(tree.getRoot()));
         }
 
         assertTrue(tree.getRoot().getLeft().isNil());
