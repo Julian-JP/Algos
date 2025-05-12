@@ -28,7 +28,7 @@ public class RedBlackTreeService extends SearchTreeService {
     }
 
     @Override
-    public SearchTree create(int value) {
+    public RedBlackTree create(int value) {
         return new RedBlackTree(new RedBlackTreeNode(value, false, null));
     }
 
@@ -56,10 +56,6 @@ public class RedBlackTreeService extends SearchTreeService {
         if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
         color = root.getString("color");
 
-        if (root.getString("value").equals("null")) {
-            return new RedBlackTreeNode(null);
-        } else {
-            return new RedBlackTreeNode(root.getInt("value"), left, right, color, null);
-        }
+        return new RedBlackTreeNode(root.getInt("value"), left, right, color, null);
     }
 }
