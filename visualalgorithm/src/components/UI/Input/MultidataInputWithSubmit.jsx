@@ -3,11 +3,11 @@ import classes from "./MultidataInputWithSubmit.module.css";
 
 const MultidataInputWithSubmit = props => {
 
-    const [inputValue, setInputValue] = useState(props.data.map(data => data.defaultValue));
+    const [inputValue, setInputValue] = useState(props.data.map(data => data.defaultValue === undefined ? "" : data.defaultValue));
 
     const changeInputData = (event, data, index) => {
         let newValueInInputField = data.min;
-        if (data.onChange == undefined || data.min == undefined || event.target.value >= data.min) {
+        if (data.onChange === undefined || data.min === undefined || event.target.value >= data.min) {
             newValueInInputField = event.target.value;
         }
         event.target.value = newValueInInputField;
@@ -31,30 +31,6 @@ const MultidataInputWithSubmit = props => {
     }
 
     const input = props.data.map((data, index) => {
-        if (data.isArray && index === 0) {
-            const ret = data.map((dataElement, index) => {
-                if (index === 0) {
-                    return (
-                        <React.Fragment key={dataElement.label}>
-                            <label htmlFor={dataElement.label}
-                                   className={`${classes.label} ${classes.labelTop}`}>{dataElement.label}</label>
-                            <input id={dataElement.label}
-                                   type={dataElement.type}
-                                   min={dataElement.min}
-                                   className={`${classes.inputBox} ${classes.inputBoxTopWithLabel}`}
-                                   onChange={event => {
-                                       changeInputData(event, dataElement, index)
-                                   }}
-                                   value={inputValue[index]}/>
-                        </React.Fragment>
-                    )
-                }
-            });
-
-
-        } else if (data.isArray) {
-
-        }
         if (index === 0 && data.noLabel) {
             return (
                 <input type={data.type}

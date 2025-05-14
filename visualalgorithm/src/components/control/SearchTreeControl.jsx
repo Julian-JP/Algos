@@ -30,8 +30,6 @@ const SearchTreeControl = ({svgWidth, svgHeight, type, graphDispatch}) => {
             return;
         }
 
-        console.log(tree);
-
         if (tree.left) {
             let newNumElemInLine = (numElemInLine * 2) - 1;
             let newCurDepth = curDepth + 1;

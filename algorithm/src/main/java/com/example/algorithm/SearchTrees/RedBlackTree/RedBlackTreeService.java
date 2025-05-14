@@ -3,6 +3,7 @@ package com.example.algorithm.SearchTrees.RedBlackTree;
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.SearchTrees.SearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeService;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -40,22 +41,30 @@ public class RedBlackTreeService extends SearchTreeService {
 
     private RedBlackTree convJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
-        RedBlackTree tree = new RedBlackTree(convNodeJSON(root.getString("root")));
+        RedBlackTree tree = new RedBlackTree(convNodeJSON(root.getString("root"), null));
         tree.parents();
         return tree;
     }
 
-    private RedBlackTreeNode convNodeJSON(String json) throws JSONException {
+    private RedBlackTreeNode convNodeJSON(String json, RedBlackTreeNode parent) throws JSONException {
         JSONObject root = new JSONObject(json);
         RedBlackTreeNode left = null;
         RedBlackTreeNode right = null;
-        String color;
+        String color = root.getString("color");
 
+        Integer value = root.has("value") && !root.isNull("value") ? root.getInt("value") : null;
 
-        if (root.optJSONObject("left") != null) left = convNodeJSON(root.getString("left"));
-        if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
-        color = root.getString("color");
+        if (value == null) {
+            return RedBlackTreeNode.getNilNode(parent);
+        } else {
+            RedBlackTreeNode parentNode = new RedBlackTreeNode(value, null, null, color, parent);
+            if (root.optJSONObject("left") != null) left = convNodeJSON(root.getString("left"), parentNode);
+            if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"), parentNode);
 
-        return new RedBlackTreeNode(root.getInt("value"), left, right, color, null);
+            parentNode.setLeft(left);
+            parentNode.setRight(right);
+
+            return parentNode;
+        }
     }
 }

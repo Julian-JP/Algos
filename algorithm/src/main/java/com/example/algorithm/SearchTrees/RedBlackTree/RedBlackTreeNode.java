@@ -5,7 +5,6 @@ import com.example.algorithm.SearchTrees.SearchTreeNode;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 public class RedBlackTreeNode extends BSTNode {
 
     public static RedBlackTreeNode getNilNode(RedBlackTreeNode parent) {
@@ -13,9 +12,8 @@ public class RedBlackTreeNode extends BSTNode {
     }
 
     @Setter
+    @Getter
     private RedBlackTreeNode parent;
-
-    private boolean isNil = false;
 
 
     public RedBlackTreeNode(Integer value, boolean isRed, RedBlackTreeNode parent) {
@@ -34,13 +32,8 @@ public class RedBlackTreeNode extends BSTNode {
 
     private RedBlackTreeNode(RedBlackTreeNode parent) {
         super(null, null, null);
-        isNil = true;
         this.parent = parent;
         setColor("black");
-    }
-
-    public RedBlackTreeNode getRight() {
-        return (RedBlackTreeNode) super.getRight();
     }
 
     @Override
@@ -60,7 +53,7 @@ public class RedBlackTreeNode extends BSTNode {
                  return getRight().add(newValue);
              }
         }
-        return this;
+        return getRoot();
     }
 
     private RedBlackTreeNode balanceInsert() {
@@ -245,7 +238,7 @@ public class RedBlackTreeNode extends BSTNode {
 
 
     public RedBlackTreeNode find(int value) {
-        if (isNil) {
+        if (isNil()) {
             return null;
         }
 
@@ -267,26 +260,10 @@ public class RedBlackTreeNode extends BSTNode {
     }
 
     public RedBlackTreeNode getSmallest() {
-        if (!getLeft().isNil) {
+        if (!getLeft().isNil()) {
             return getLeft().getSmallest();
         } else {
             return this;
-        }
-    }
-
-    public RedBlackTreeNode getLeft() {
-        return (RedBlackTreeNode) super.getLeft();
-    }
-
-    public void setRight(RedBlackTreeNode right) {
-        if (!isNil) {
-            super.setRight(right);
-        }
-    }
-
-    public void setLeft(RedBlackTreeNode left) {
-        if (!isNil) {
-            super.setLeft(left);
         }
     }
 
@@ -301,7 +278,7 @@ public class RedBlackTreeNode extends BSTNode {
             getLeft().traverseInorder(tabs + "\t");
         }
 
-        if (isNil) {
+        if (isNil()) {
             System.out.println(tabs + "NIL");
         } else {
             if (getColor().equals("red")) {
@@ -317,7 +294,7 @@ public class RedBlackTreeNode extends BSTNode {
     }
 
     boolean isBlack() {
-        return isNil || getColor().equals("black");
+        return isNil() || getColor().equals("black");
     }
 
     boolean isRightChild() {
@@ -326,5 +303,33 @@ public class RedBlackTreeNode extends BSTNode {
 
     boolean isLeftChild() {
         return parent != null && parent.getLeft() == this;
+    }
+
+    @Override
+    public RedBlackTreeNode getRight() {
+        return (RedBlackTreeNode) super.getRight();
+    }
+
+    @Override
+    public RedBlackTreeNode getLeft() {
+        return (RedBlackTreeNode) super.getLeft();
+    }
+
+    @Override
+    public void setRight(SearchTreeNode newRight) {
+        if (!isNil()) {
+            super.setRight(newRight);
+        }
+    }
+
+    @Override
+    public void setLeft(SearchTreeNode newLeft) {
+        if (!isNil()) {
+            super.setLeft(newLeft);
+        }
+    }
+
+    public boolean isNil() {
+        return getValue() == null;
     }
 }

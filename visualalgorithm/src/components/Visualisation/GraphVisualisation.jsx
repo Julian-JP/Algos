@@ -21,22 +21,11 @@ const GraphVisualisation = props => {
 
     const lastMovement = useRef(Date.now());
 
-    function processVertices(newVertices, oldVertices) {
-        return newVertices.map(vertex => {
-            return {
-                ...vertex,
-                ...oldVertices.find(v => v.id === vertex.id)
-            }
-        })
-    }
-
     function graphReducer(graph, graphAction) {
         switch(graphAction.type) {
             case 'redraw': {
-                graph.vertices = processVertices(graphAction.vertices, graph.vertices);
+                graph.vertices = graphAction.vertices
                 graph.edges = graphAction.edges
-                console.log(graph.vertices);
-                console.log(graph.edges);
                 return {vertices: graph.vertices, edges: graph.edges};
             }
             case 'addVertex': {
