@@ -12,8 +12,11 @@ const GraphControl = (props) => {
     const START_COLOR = "Aqua";
     const END_COLOR = "Chartreuse";
 
-    const DEFAULT_LINE_COLOR = "white"
+    const DEFAULT_LINE_COLOR = "white";
     const DEFAULT_TEXT_COLOR = "black";
+
+    const VISITED_EDGE_COLOR = "blue"
+    const FINAL_PATH_COLOR = "red";
 
     const START_END_TEXT_COLOR = "black";
 
@@ -26,6 +29,8 @@ const GraphControl = (props) => {
     const start = useRef(undefined);
     const end = useRef(undefined);
 
+    const latestGraphRef = useRef(props.graph);
+
 
     const weight = useRef(0);
 
@@ -33,11 +38,15 @@ const GraphControl = (props) => {
 
     const {isLoading, error, sendRequest} = useFetch();
 
+    useEffect(() => {
+        latestGraphRef.current = props.graph;
+    }, [props.graph]);
+
     const handleAddNode = (event) => {
         resetEdgeColor();
         resetVertexWeight();
         event.preventDefault();
-        if (addVal.current === '' || props.graph.vertices.filter(item => (item.value !== addVal.current)).length !== props.graph.vertices.length) {
+        if (addVal.current === '' || latestGraphRef.current.vertices.filter(item => (item.value !== addVal.current)).length !== latestGraphRef.current.vertices.length) {
             return;
         }
         let newVertex = {
@@ -89,27 +98,47 @@ const GraphControl = (props) => {
         }
     }
 
+    const convertEdgeColor = (colorCode) => {
+        switch (colorCode) {
+            case 1:
+                return VISITED_EDGE_COLOR;
+            case 2:
+                return FINAL_PATH_COLOR;
+        }
+        return DEFAULT_LINE_COLOR
+    }
+
+    const findEdge = (a, b) => {
+        if (props.directed) {
+            return latestGraphRef.current.edges.find((val) => val.from === a && val.to === b);
+        } else {
+            return latestGraphRef.current.edges.find((val) => (val.from === a && val.to === b) || (val.from === b && val.to === a));
+        }
+    }
+
+
     const addRemoveEdge = (from, to) => {
         resetEdgeColor();
         resetVertexWeight();
-        let edge = props.graph.edges.find((val) => val.from === from && val.to === to);
+        let edge = findEdge(from, to)
+
         if (edge === undefined) {
             props.graphDispatch({
                 type: 'addEdge',
                 edge: {
-                    color: DEFAULT_TEXT_COLOR,
+                    color: DEFAULT_LINE_COLOR,
                     weight: props.weightedEdges ? weight.current : null,
                     from: from,
                     to: to,
                     stroke: DEFAULT_LINE_COLOR,
-                    id: from + "-" + to
+                    directed: props.directed
                 }
             })
         } else {
             props.graphDispatch({
                 type: 'removeEdge',
-                from: from,
-                to: to
+                from: edge.from,
+                to: edge.to
             })
         }
     }
@@ -145,6 +174,7 @@ const GraphControl = (props) => {
             type: 'changeEdgeProperties',
             updateEdge: (e => {
                 e.stroke = DEFAULT_LINE_COLOR;
+                e.color = DEFAULT_LINE_COLOR;
                 return e;
             })
         })
@@ -162,41 +192,52 @@ const GraphControl = (props) => {
         })
     }
 
-    const next = () => {
-        if (currentStep.current !== undefined) {
-            if (currentStep.current >= graphSteps.current.length) {
-                return;
+    const edgeAdapter = (edges) => {
+        return edges.map(edge => {
+            return {
+                color: convertEdgeColor(edge.marking),
+                weight: edge.weight,
+                from: edge.from,
+                to: edge.to,
+                stroke: convertEdgeColor(edge.marking),
+                directed: props.directed
             }
+        })
+    }
 
-            currentStep.current++;
-            console.log(graphSteps)
-
-            let nextState = graphSteps.current[currentStep.current];
-            props.graphDispatch({
-                type: 'redraw',
-                vertices: nextState.vertices,
-                edges: nextState.edges
-            })
-            start.current = nextState.start;
-            end.current = nextState.end;
+    const nextStep = () => {
+        if (currentStep.current + 1 >= graphSteps.current.length) {
             return;
         }
 
-        function createGraphFromJSON(response) {
-           graphSteps.current = response;
+        currentStep.current++;
 
-            currentStep.current = 1;
+        let nextState = graphSteps.current[currentStep.current];
+        props.graphDispatch({
+            type: 'redraw',
+            vertices: nextState.vertices,
+            edges: edgeAdapter(nextState.edges)
+        })
+        start.current = nextState.start;
+        end.current = nextState.end;
+    }
 
-            let nextState = graphSteps.current[currentStep.current];
-            props.graphDispatch({
-                type: 'redraw',
-                vertices: nextState.vertices,
-                edges: nextState.edges
-            })
-            start.current = nextState.start;
-            end.current = nextState.end;
-        }
+    const createGraphFromJSON = (response) => {
+        graphSteps.current = response;
 
+        currentStep.current = 0;
+
+        let nextState = graphSteps.current[currentStep.current];
+        props.graphDispatch({
+            type: 'redraw',
+            vertices: nextState.vertices,
+            edges: edgeAdapter(nextState.edges)
+        })
+        start.current = nextState.start;
+        end.current = nextState.end;
+    }
+
+    const fetchSteps = () => {
         sendRequest({
             url: SERVER_URL + props.type + '/step',
             method: 'POST',
@@ -204,14 +245,22 @@ const GraphControl = (props) => {
                 'Content-Type': 'application/json'
             },
             body: {
-                edges: props.graph.edges,
+                edges: latestGraphRef.current.edges,
                 start: start.current,
-                vertices: props.graph.vertices,
+                vertices: latestGraphRef.current.vertices,
                 end: end.current
             }
         }, (response => {
             createGraphFromJSON(response);
         }));
+    }
+
+    const next = () => {
+        if (currentStep.current !== undefined) {
+           nextStep();
+        } else if (start.current !== undefined && end.current !== undefined) {
+            fetchSteps();
+        }
     }
 
     const previous = () => {
@@ -223,7 +272,7 @@ const GraphControl = (props) => {
         props.graphDispatch({
             type: 'redraw',
             vertices: previousState.vertices,
-            edges: previousState.edges
+            edges: edgeAdapter(previousState.edges)
         })
         start.current = previousState.start;
         end.current = previousState.end;

@@ -35,14 +35,13 @@ public class Graph {
             JSONObject edge = jsonEdgeList.getJSONObject(i);
             int from = getVertexId(edge.getString("from"));
             int to = getVertexId(edge.getString("to"));
-            String id = edge.getString("id");
 
             Double weight = null;
             if (edge.has("weight") && !edge.isNull("weight")) {
                 weight = edge.getDouble("weight");
             }
 
-            adjacencyMatrix[from][to] = new GraphEdge(GraphEdge.UNVISITED, weight, id);
+            adjacencyMatrix[from][to] = new GraphEdge(GraphEdge.UNVISITED, weight);
         }
     }
 

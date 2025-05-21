@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 @Getter
 class EdgeListEntry {
-    String id;
-
     String from;
     String to;
     Double weight;
@@ -21,15 +19,13 @@ class EdgeListEntry {
         this.to = to;
         this.weight = edge.getWeight();
         this.marking = edge.getMarking();
-        this.id = edge.getId();
     }
 }
 
+@Getter
 public class GraphResponse {
-    @Getter
-    private EdgeListEntry[] edges;
-    @Getter
-    private GraphNode[] vertices;
+    private final EdgeListEntry[] edges;
+    private final GraphNode[] vertices;
 
     public GraphResponse(Graph graph) {
         ArrayList<EdgeListEntry> edgeList = new ArrayList<>();

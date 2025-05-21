@@ -13,10 +13,8 @@ public class GraphEdge {
     private int marking;
     @Getter
     private Double weight;
-    @Getter
-    private String id;
 
-    public GraphEdge(int marking, Double weight, String id) {
+    public GraphEdge(int marking, Double weight) {
         this.marking = marking;
         this.weight = weight;
     }

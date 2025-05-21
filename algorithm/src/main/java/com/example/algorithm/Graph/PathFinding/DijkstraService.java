@@ -17,12 +17,15 @@ public class DijkstraService extends PathFindingService {
         PathFindingGraph graph = new PathFindingGraph(graphString);
 
         ArrayList<GraphResponse> steps = new ArrayList<>();
+        steps.add(new GraphResponse(graph));
         PriorityQueue<DijkstraElement> nextToProcess = new PriorityQueue<>(Comparator.comparingDouble(value -> value.cost));
         List<Integer> temp = new ArrayList<>();
         temp.add(graph.getStart());
         nextToProcess.add(new DijkstraElement(0.0, temp));
 
         double[] cost = new double[graph.getVertexList().length];
+        Arrays.fill(cost, Double.POSITIVE_INFINITY);
+        cost[graph.getStart()] = 0;
         dijkstra(steps, nextToProcess, graph, cost);
 
         return steps.toArray(new GraphResponse[0]);
@@ -65,6 +68,7 @@ public class DijkstraService extends PathFindingService {
                     steps.add(new GraphResponse(graph));
 
                     List<Integer> newPath = new ArrayList<>(current.path);
+                    newPath.add(i);
                     nextToProcess.add(new DijkstraElement(newCost, newPath));
                 }
             }

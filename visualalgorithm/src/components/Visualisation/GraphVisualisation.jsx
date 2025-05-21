@@ -21,49 +21,103 @@ const GraphVisualisation = props => {
 
     const lastMovement = useRef(Date.now());
 
+    function processVertices(newVertices, oldVertices) {
+        return newVertices.map(vertex => {
+            return {
+                ...vertex,
+                ...oldVertices.find(v => v.id === vertex.id)
+            }
+        })
+    }
+
     function graphReducer(graph, graphAction) {
         switch(graphAction.type) {
+            case 'redraw_entirely': {
+                let new_vertices = graphAction.vertices
+                let new_edges = graphAction.edges
+                return {
+                    ...graph,
+                    vertices: new_vertices,
+                    edges: new_edges
+                };
+            }
             case 'redraw': {
-                graph.vertices = graphAction.vertices
-                graph.edges = graphAction.edges
-                return {vertices: graph.vertices, edges: graph.edges};
+                let new_vertices = [...processVertices(graphAction.vertices, graph.vertices)];
+                let new_edges = graphAction.edges
+                return {
+                    ...graph,
+                    vertices: new_vertices,
+                    edges: new_edges
+                };
             }
             case 'addVertex': {
                 if (graphAction.vertex !== undefined && ! graph.vertices.find(vertex => vertex.id === graphAction.vertex.id)) {
-                    graph.vertices.push(graphAction.vertex)
+                    let new_vertices = [...graph.vertices, graphAction.vertex]
+                    return {
+                        ...graph,
+                        vertices: new_vertices,
+                    };
+                } else {
+                    return graph
                 }
-                return {vertices: graph.vertices, edges: graph.edges};
             }
             case 'removeVertex': {
-                graph.vertices = graph.vertices.filter(vertex => vertex.id !== graphAction.vertexId);
-                graph.edges = graph.edges.filter(edge => edge.from !== graphAction.vertexId && edge.to !== graphAction.vertexId);
-                return {vertices: graph.vertices, edges: graph.edges};
+                let new_vertices = graph.vertices.filter(vertex => vertex.id !== graphAction.vertexId);
+                let new_edges = graph.edges.filter(edge => edge.from !== graphAction.vertexId && edge.to !== graphAction.vertexId);
+                return {
+                    ...graph,
+                    vertices: new_vertices,
+                    edges: new_edges
+                };
             }
             case 'addEdge': {
                 if (graphAction.edge !== undefined && ! graph.edges.find(edge => edge.from === graphAction.edge.from && edge.to === graphAction.edge.to)) {
-                    graph.edges.push(graphAction.edge)
+                    let new_edges = [...graph.edges, graphAction.edge]
+                    return {
+                        ...graph,
+                        edges: new_edges
+                    };
+                } else {
+                    return graph;
                 }
-                return {vertices: graph.vertices, edges: graph.edges};
             }
             case 'removeEdge': {
-                graph.edges = graph.edges.filter(edge => edge.from !== graphAction.from || edge.to !== graphAction.to);
-                return {vertices: graph.vertices, edges: graph.edges};
+                let new_edges = graph.edges.filter(edge => edge.from !== graphAction.from || edge.to !== graphAction.to);
+                return {
+                    ...graph,
+                    edges: new_edges
+                };
             }
             case 'moveVertex': {
                 let vertexIndex = graph.vertices.findIndex(item => item.id === graphAction.vertexId)
-                graph.vertices[vertexIndex].x = graphAction.newX;
-                graph.vertices[vertexIndex].y = graphAction.newY;
-                return {vertices: graph.vertices, edges: graph.edges};
+                let new_vertices = [...graph.vertices];
+
+                new_vertices[vertexIndex].x = graphAction.newX;
+                new_vertices[vertexIndex].y = graphAction.newY;
+                return {
+                    ...graph,
+                    vertices: new_vertices
+                };
             }
             case 'changeVertexProperties': {
-                graphAction.updateVertices(graph.vertices);
-                return {vertices: graph.vertices, edges: graph.edges};
+                let new_vertices = [...graph.vertices];
+                graphAction.updateVertices(new_vertices);
+                return {
+                    ...graph,
+                    vertices: new_vertices
+                };
             }
             case 'changeEdgeProperties': {
-                graph.edges.map(edge => graphAction.updateEdge(edge));
-                return {vertices: graph.vertices, edges: graph.edges};
+                let new_edges = [...graph.edges];
+                new_edges.map(edge => graphAction.updateEdge(edge));
+                return {
+                    ...graph,
+                    edges: new_edges
+                };
             }
         }
+
+        return graph;
     }
 
     useEffect(() => {
@@ -84,21 +138,8 @@ const GraphVisualisation = props => {
         }
     }, []);
 
-    const processMarking = (marking) => {
-        switch (marking) {
-            case 0: return {
-                color: "black",
-                stroke: "white",
-            }
-            case 1: return {
-                color: "blue",
-                stroke: "black",
-            }
-            case 2: return {
-                color: "red",
-                stroke: "black",
-            }
-        }
+    const generateEdgeId = (from, to) => {
+        return from + "-" + to;
     }
 
     const convertVertex = (item) => {
@@ -127,14 +168,7 @@ const GraphVisualisation = props => {
         return  graph.vertices.find(item => item.id === id);
     }
 
-    const convertEdge = (item) => {
-        let colors = processMarking(item.marking);
-
-        let edge = {
-            ...colors,
-            ...item,
-        }
-
+    const convertEdge = (edge) => {
         if (edge.from === edge.to && edge.from != null) {
             return convertSelfEdge(edge);
         }
@@ -142,7 +176,7 @@ const GraphVisualisation = props => {
         let vertexFrom = getVertex(edge.from);
         let vertexTo = getVertex(edge.to);
 
-        if (edge.directed) {
+        if (graph.directed) {
             return convertDirectedEdge(edge, vertexFrom, vertexTo)
         } else {
             return convertUndirectedEdge(edge, vertexFrom, vertexTo);
@@ -150,19 +184,19 @@ const GraphVisualisation = props => {
     }
 
     const convertArrow = (item, lineCoordinates) => {
-        return <g key={"arrowGroup" + item.id}>
+        return <g key={"arrowGroup" + generateEdgeId(item.from, item.to)}>
             <marker id="arrowheadblue"
                     markerWidth={10}
                     markerHeight={3}
                     refX="0"
                     refY="1.5"
                     orient="auto"
-                    key={"marker-blue" + item.id}
+                    key={"marker-blue" + generateEdgeId(item.from, item.to)}
                     fill={"blue"}
             >
                 <polygon
                     points="0 0, 10 1.5, 0 3"
-                    key={"polygon1" + item.id}
+                    key={"polygon1" + generateEdgeId(item.from, item.to)}
                 />
             </marker>
             <marker id="arrowheadred"
@@ -171,12 +205,12 @@ const GraphVisualisation = props => {
                     refX="0"
                     refY="1.5"
                     orient="auto"
-                    key={"marker-red" + item.id}
+                    key={"marker-red" + generateEdgeId(item.from, item.to)}
                     fill={"red"}
             >
                 <polygon
                     points="0 0, 10 1.5, 0 3"
-                    key={"polygon2" + item.id}
+                    key={"polygon2" + generateEdgeId(item.from, item.to)}
                 />
             </marker>
             <marker id="arrowheadgray"
@@ -185,12 +219,12 @@ const GraphVisualisation = props => {
                     refX="0"
                     refY="1.5"
                     orient="auto"
-                    key={"marker-gray" + item.id}
+                    key={"marker-gray" + generateEdgeId(item.from, item.to)}
                     fill={"gray"}
             >
                 <polygon
                     points="0 0, 10 1.5, 0 3"
-                    key={"polygon" + item.id}
+                    key={"polygon" + generateEdgeId(item.from, item.to)}
                 />
             </marker>
             <marker id="arrowheadblack"
@@ -199,12 +233,12 @@ const GraphVisualisation = props => {
                     refX="0"
                     refY="1.5"
                     orient="auto"
-                    key={"marker-black" + item.id}
+                    key={"marker-black" + generateEdgeId(item.from, item.to)}
                     fill={"black"}
             >
                 <polygon
                     points="0 0, 10 1.5, 0 3"
-                    key={"polygon" + item.id}
+                    key={"polygon" + generateEdgeId(item.from, item.to)}
                 />
             </marker>
             <marker id="arrowheadwhite"
@@ -213,12 +247,12 @@ const GraphVisualisation = props => {
                     refX="0"
                     refY="1.5"
                     orient="auto"
-                    key={"marker-white" + item.id}
+                    key={"marker-white" + generateEdgeId(item.from, item.to)}
                     fill={"white"}
             >
                 <polygon
                     points="0 0, 10 1.5, 0 3"
-                    key={"polygon" + item.id}
+                    key={"polygon" + generateEdgeId(item.from, item.to)}
                 />
             </marker>
             <line x1={lineCoordinates.x1}
@@ -228,17 +262,17 @@ const GraphVisualisation = props => {
                   stroke={item.stroke}
                   strokeWidth={3}
                   markerEnd={item.stroke === "white" ? "url(#arrowheadwhite)" : item.stroke === "black" ? "url(#arrowheadblack)" : (item.stroke === "blue" ? "url(#arrowheadblue)" : (item.stroke === "red" ? "url(#arrowheadred)" : "url(#arrowheadgray)"))}
-                  key={"markerline" + item.id}
+                  key={"markerline" + generateEdgeId(item.from, item.to)}
             />
             <line
                 x1={lineCoordinates.x1}
                 x2={lineCoordinates.x2}
                 y1={lineCoordinates.y1}
                 y2={lineCoordinates.y2}
-                id={item.id}
+                id={generateEdgeId(item.from, item.to)}
                 stroke={item.stroke}
                 strokeWidth={3}
-                key={"line" + item.id}
+                key={"line" + generateEdgeId(item.from, item.to)}
             />
         </g>
     }
@@ -250,7 +284,7 @@ const GraphVisualisation = props => {
         let lineCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETLINE);
         let textCoordinates = calculateEdge(vertexFrom.x, vertexFrom.y, vertexTo.x, vertexTo.y, OFFSETTEXT);
 
-        return <g key={"directedEdgeGroup" + item.id}>
+        return <g key={"directedEdgeGroup" + generateEdgeId(item.from, item.to)}>
             {convertArrow(item, lineCoordinates)}
             {item.weight != null ? <text
                 alignmentBaseline={"middle"}
@@ -259,7 +293,7 @@ const GraphVisualisation = props => {
                 x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
                 y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
                 stroke={item.stroke}
-                key={"Text" + item.id}
+                key={"Text" + generateEdgeId(item.from, item.to)}
             >{convertWeightToText(item.weight)}</text> : null}
         </g>
     }
@@ -273,16 +307,16 @@ const GraphVisualisation = props => {
 
 
 
-        return <g key={"edgeGroup" + item.id}>
+        return <g key={"edgeGroup" + generateEdgeId(item.from, item.to)}>
             <line
                 x1={lineCoordinates.x1}
                 x2={lineCoordinates.x2}
                 y1={lineCoordinates.y1}
                 y2={lineCoordinates.y2}
-                id={item.id}
+                id={generateEdgeId(item.from, item.to)}
                 stroke={item.stroke}
                 strokeWidth={3}
-                key={"line" + item.id}
+                key={"line" + generateEdgeId(item.from, item.to)}
             />
             {item.weight != null && item.from > item.to ? <text
                 alignmentBaseline={"middle"}
@@ -291,19 +325,19 @@ const GraphVisualisation = props => {
                 x={textCoordinates.x2 + (textCoordinates.x1 - textCoordinates.x2) / 2}
                 y={textCoordinates.y2 + (textCoordinates.y1 - textCoordinates.y2) / 2}
                 stroke={item.stroke}
-                key={"Text" + item.id}
+                key={"Text" + generateEdgeId(item.from, item.to)}
             >{convertWeightToText(item.weight)}</text> : null}
         </g>
     }
 
     const convertSelfEdge = (item) => {
-        return <g key={"selfEdgeGroup" + item.id}>
+        return <g key={"selfEdgeGroup" + generateEdgeId(item.from, item.to)}>
             <circle
                 r={15}
                 cx={getVertex(item.to).x}
                 cy={getVertex(item.to).y + 25}
-                key={item.id}
-                id={item.id}
+                key={generateEdgeId(item.from, item.to)}
+                id={generateEdgeId(item.from, item.to)}
                 fill={"none"}
                 stroke={item.stroke}
                 strokeWidth={3}

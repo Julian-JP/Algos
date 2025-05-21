@@ -20,7 +20,7 @@ const SearchTreeControl = ({svgWidth, svgHeight, type, graphDispatch}) => {
         let edges = [];
         let vertices = [];
         drawTree(tree, edges, vertices, svgWidth, svgHeight);
-        graphDispatch({type: 'redraw', vertices: vertices, edges: edges});
+        graphDispatch({type: 'redraw_entirely', vertices: vertices, edges: edges});
     }, [tree]);
 
     const handleAdd = (event) => {

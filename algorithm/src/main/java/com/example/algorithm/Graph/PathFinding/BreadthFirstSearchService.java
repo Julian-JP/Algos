@@ -22,6 +22,8 @@ public class BreadthFirstSearchService extends PathFindingService {
         nextToProcess.add(startProcessingList);
 
         boolean[] visited = new boolean[graph.getVertexList().length];
+        visited[graph.getStart()] = true;
+
         ArrayList<GraphResponse> steps = new ArrayList<>();
         steps.add(new GraphResponse(graph));
 
@@ -49,7 +51,7 @@ public class BreadthFirstSearchService extends PathFindingService {
         for (int i=0; i < graph.getAdjacencyMatrix()[indexNextToProcess].length; ++i) {
             if (!visited[i] && graph.getAdjacencyMatrix()[indexNextToProcess][i] != null) {
                 visited[i] = true;
-                ArrayList<Integer> newNextToProcess = new ArrayList<>(nextToProcess);
+                ArrayList<Integer> newNextToProcess = new ArrayList<>();
                 newNextToProcess.add(i);
                 nextToProcessQueue.add(newNextToProcess);
 
@@ -57,6 +59,7 @@ public class BreadthFirstSearchService extends PathFindingService {
                 progress = true;
 
                 if (i == graph.getEnd()) {
+                    nextToProcess.add(i);
                     colorFinishedPath(steps, nextToProcess, graph);
                     return;
                 }
