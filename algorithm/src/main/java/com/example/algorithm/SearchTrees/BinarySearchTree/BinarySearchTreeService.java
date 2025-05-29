@@ -1,7 +1,9 @@
 package com.example.algorithm.SearchTrees.BinarySearchTree;
 
 import com.example.algorithm.Explanation.Explanation;
+import com.example.algorithm.ResponseTypes.TreeResponse;
 import com.example.algorithm.SearchTrees.SearchTreeService;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -13,20 +15,20 @@ import java.nio.file.Files;
 @Service
 public class BinarySearchTreeService extends SearchTreeService {
 
-    public BinarySearchTree insert(int value, String tree) throws JSONException {
+    public TreeResponse insert(int value, String tree) throws JSONException {
         BinarySearchTree bst = convJSON(tree);
         bst.add(value);
-        return bst;
+        return toResponse(bst.getRoot());
     }
 
-    public BinarySearchTree remove(int value, String tree) throws JSONException {
+    public TreeResponse remove(int value, String tree) throws JSONException {
         BinarySearchTree bst = convJSON(tree);
         bst.remove(value);
-        return bst;
+        return toResponse(bst.getRoot());
     }
 
-    public BinarySearchTree create(int value) {
-        return new BinarySearchTree(new BSTNode(value));
+    public TreeResponse create(int value) {
+        return toResponse(new BinarySearchTree(new BSTNode(value)).getRoot());
     }
 
     public Explanation getExplanation() throws IOException {
@@ -40,12 +42,23 @@ public class BinarySearchTreeService extends SearchTreeService {
     }
 
     private BSTNode convNodeJSON(String json) throws JSONException {
-        JSONObject root = new JSONObject(json);
-        BSTNode left = null;
-        BSTNode right = null;
+        if (json.equals("null") || json.isEmpty()) {
+            return null;
+        }
 
-        if (root.optJSONObject("left") != null) left = convNodeJSON(root.getString("left"));
-        if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
+        JSONObject root = new JSONObject(json);
+
+        BSTNode left;
+        BSTNode right;
+
+        JSONArray children = root.getJSONArray("children");
+
+        if (children.length() == 2) {
+            left = convNodeJSON(children.getString(0));
+            right = convNodeJSON(children.getString(1));
+        } else {
+            throw new JSONException("invalid json 2 children expected");
+        }
 
         int value = root.getInt("value");
 

@@ -1,7 +1,7 @@
 package com.example.algorithm.Controller;
 
 import com.example.algorithm.Explanation.Explanation;
-import com.example.algorithm.Graph.GraphResponse;
+import com.example.algorithm.ResponseTypes.GraphResponse;
 import com.example.algorithm.Graph.PathFinding.BreadthFirstSearchService;
 import com.example.algorithm.Graph.PathFinding.DepthFirstSearchService;
 import com.example.algorithm.Graph.PathFinding.DijkstraService;

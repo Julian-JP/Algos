@@ -1,6 +1,7 @@
 package com.example.algorithm.Controller;
 
 import com.example.algorithm.Explanation.Explanation;
+import com.example.algorithm.ResponseTypes.TreeResponse;
 import com.example.algorithm.SearchTrees.AVLTree.AVLTreeService;
 import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTreeService;
 import com.example.algorithm.SearchTrees.RedBlackTree.RedBlackTreeService;
@@ -36,7 +37,7 @@ public class SearchTreeController {
     @PostMapping(
             path = "/{tree}/insert/{value}"
     )
-    public ResponseEntity<SearchTree> insert(@PathVariable("value") int value, @PathVariable("tree") String treeType, RequestEntity<String> tree) {
+    public ResponseEntity<TreeResponse> insert(@PathVariable("value") int value, @PathVariable("tree") String treeType, RequestEntity<String> tree) {
         try {
             SearchTreeService service = stringToService(treeType);
 
@@ -55,7 +56,7 @@ public class SearchTreeController {
             path = "/{tree}/remove/{value}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<SearchTree> BSTremove(@PathVariable("value") int value, @PathVariable("tree") String treeType, RequestEntity<String> tree) {
+    public ResponseEntity<TreeResponse> BSTremove(@PathVariable("value") int value, @PathVariable("tree") String treeType, RequestEntity<String> tree) {
         logger.info("New BinarySearchtree remove-request: " + value + " in " + tree.getBody());
         try {
             SearchTreeService service = stringToService(treeType);
@@ -70,7 +71,7 @@ public class SearchTreeController {
     }
 
     @PostMapping("/{tree}/new/{value}")
-    public ResponseEntity<SearchTree> BSTcreate(@PathVariable("value") int value, @PathVariable("tree") String treeType) {
+    public ResponseEntity<TreeResponse> BSTcreate(@PathVariable("value") int value, @PathVariable("tree") String treeType) {
         logger.info("New BinarySearchtree create-request: " + value);
         SearchTreeService service = null;
         try {

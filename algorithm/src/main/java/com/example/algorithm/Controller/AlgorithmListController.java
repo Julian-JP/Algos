@@ -77,18 +77,19 @@ public class AlgorithmListController {
         logger.info("Requested list of all Categories of Algorithms");
         List<Category> categories = new ArrayList<>();
         String[] searchTreeAlgos = {"/SearchTrees/BinarySearchTree", "/SearchTrees/AVLTree", "/SearchTrees/RedBlackTree"};
-        String[] heapAlgos = {"/Heaps/BinaryHeap"};
+        String[] heapAlgos = {"/Heaps/BinaryHeap", "/Heaps/PairingHeap"};
         String[] pathFindingAlgos = {"/PathFinding/BFS", "/PathFinding/DFS", "/PathFinding/Dijkstra"};
         String[] allShortestPathAlgos = {"/allShortestPath/Dijkstra", "/allShortestPath/BellmanFord"};
         String[] minimalSpanningTreeAlgos = {"/MinimalSpanningTree/JarnikPrim", "/MinimalSpanningTree/Kruskal"};
+
         Category searchTrees = new Category("Searchtrees", searchTreeAlgos, 0);
-        Category minHeap = new Category("Heaps", heapAlgos, 1);
+        Category heaps = new Category("Heaps", heapAlgos, 1);
         Category pathFinding = new Category("PathFinding", pathFindingAlgos, 2);
         Category allShortestPath = new Category("All shortest paths", allShortestPathAlgos, 3);
         Category minimalSpanningTree = new Category("MinimalSpanningTree", minimalSpanningTreeAlgos, 4);
 
         categories.add(searchTrees);
-        categories.add(minHeap);
+        categories.add(heaps);
         categories.add(pathFinding);
         categories.add(allShortestPath);
         categories.add(minimalSpanningTree);
@@ -119,8 +120,15 @@ public class AlgorithmListController {
     @GetMapping("/Heaps/BinaryHeap")
     public ResponseEntity<Algorithm> getBinaryHeap() {
         logger.info("Requested information to: BinaryHeap");
-        Algorithm binaryHeap = new Algorithm("Binary Min-Heap", "Heaps/BinaryHeap", "binaryheap", 0);
+        Algorithm binaryHeap = new Algorithm("Binary Heap", "Heaps/BinaryHeap", "binaryheap", 0);
         return new ResponseEntity<>(binaryHeap, HttpStatus.OK);
+    }
+
+    @GetMapping("/Heaps/PairingHeap")
+    public ResponseEntity<Algorithm> getPairingHeap() {
+        logger.info("Requested information to: PairingHeap");
+        Algorithm pairingHeap = new Algorithm("Pairing Heap", "Heaps/PairingHeap", "pairingheap", 1);
+        return new ResponseEntity<>(pairingHeap, HttpStatus.OK);
     }
 
     @GetMapping("/PathFinding/BFS")

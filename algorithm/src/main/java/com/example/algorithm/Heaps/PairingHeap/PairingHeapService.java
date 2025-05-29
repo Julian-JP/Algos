@@ -1,6 +1,10 @@
-package com.example.algorithm.Heaps;
+package com.example.algorithm.Heaps.PairingHeap;
 
 import com.example.algorithm.Explanation.Explanation;
+import com.example.algorithm.Heaps.BinaryHeap.BinaryHeap;
+import com.example.algorithm.Heaps.BinaryHeap.BinaryHeapNode;
+import com.example.algorithm.ResponseTypes.TreeNodeResponse;
+import com.example.algorithm.ResponseTypes.TreeResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -8,24 +12,24 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 @Service
-public class BinaryHeapService {
-
-    public BinaryHeapResponse insert(int value, String heap) throws JSONException {
+public class PairingHeapService {
+    public TreeResponse insert(int value, String heap) throws JSONException {
         BinaryHeap binaryHeap = convJSON(heap);
         binaryHeap.add(value);
-        return new BinaryHeapResponse(binaryHeap.getRoot());
+        return toResponse(binaryHeap.getRoot());
     }
 
-    public BinaryHeapResponse create(int value) {
-        return new BinaryHeapResponse(new BinaryHeapNode(value, null, null));
+    public TreeResponse create(int value) {
+        return toResponse(new BinaryHeapNode(value, null, null));
     }
 
-    public BinaryHeapResponse getMinimum(String heap) throws JSONException {
+    public TreeResponse getMinimum(String heap) throws JSONException {
         BinaryHeap binaryHeap = convJSON(heap);
         binaryHeap.getMinimum();
-        return new BinaryHeapResponse(binaryHeap.getRoot());
+        return toResponse(binaryHeap.getRoot());
     }
 
     public Explanation getExplanation() throws IOException {
@@ -54,5 +58,17 @@ public class BinaryHeapService {
         int value = root.getInt("value");
 
         return new BinaryHeapNode(value, left, right);
+    }
+
+    private TreeResponse toResponse(BinaryHeapNode root) {
+        return new TreeResponse(toResponseRec(root));
+    }
+
+    private TreeNodeResponse toResponseRec(BinaryHeapNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        return new TreeNodeResponse(List.of(toResponseRec(root.getLeft()), toResponseRec(root.getRight())), String.valueOf(root.getValue()));
     }
 }

@@ -1,14 +1,13 @@
 package com.example.algorithm.Graph.PathFinding;
 
 import com.example.algorithm.Explanation.Explanation;
-import com.example.algorithm.Graph.GraphResponse;
+import com.example.algorithm.ResponseTypes.GraphResponse;
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 @Service

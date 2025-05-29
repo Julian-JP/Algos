@@ -3,7 +3,7 @@ package com.example.algorithm.Graph.AllShortestPath.BellmanFord;
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.AllShortestPath.AllShortestPathGraph;
 import com.example.algorithm.Graph.AllShortestPath.AllShortestPathService;
-import com.example.algorithm.Graph.GraphResponse;
+import com.example.algorithm.ResponseTypes.GraphResponse;
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;

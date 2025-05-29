@@ -1,7 +1,7 @@
 package com.example.algorithm.Graph.MinimalSpanningTree.Kruskal;
 
 import com.example.algorithm.Explanation.Explanation;
-import com.example.algorithm.Graph.GraphResponse;
+import com.example.algorithm.ResponseTypes.GraphResponse;
 import com.example.algorithm.Graph.MinimalSpanningTree.MinimalSpanningTreeGraph;
 import com.example.algorithm.Graph.MinimalSpanningTree.MinimalSpanningTreeService;
 import org.json.JSONException;

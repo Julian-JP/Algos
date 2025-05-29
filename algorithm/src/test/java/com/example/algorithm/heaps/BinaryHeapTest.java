@@ -1,7 +1,7 @@
 package com.example.algorithm.heaps;
 
-import com.example.algorithm.Heaps.BinaryHeap;
-import com.example.algorithm.Heaps.BinaryHeapNode;
+import com.example.algorithm.Heaps.BinaryHeap.BinaryHeap;
+import com.example.algorithm.Heaps.BinaryHeap.BinaryHeapNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;

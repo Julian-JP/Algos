@@ -4,7 +4,7 @@ import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.AllShortestPath.AllShortestPathService;
 import com.example.algorithm.Graph.AllShortestPath.BellmanFord.BellmanFordService;
 import com.example.algorithm.Graph.AllShortestPath.Dijkstra.AllShortestPathDijkstraService;
-import com.example.algorithm.Graph.GraphResponse;
+import com.example.algorithm.ResponseTypes.GraphResponse;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

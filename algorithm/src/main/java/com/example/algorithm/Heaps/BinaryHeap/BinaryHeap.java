@@ -1,4 +1,4 @@
-package com.example.algorithm.Heaps;
+package com.example.algorithm.Heaps.BinaryHeap;
 
 import java.util.ArrayList;
 

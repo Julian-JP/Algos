@@ -1,12 +1,9 @@
 package com.example.algorithm.Controller;
 
 import com.example.algorithm.Explanation.Explanation;
-import com.example.algorithm.Heaps.BinaryHeap;
-import com.example.algorithm.Heaps.BinaryHeapNode;
-import com.example.algorithm.Heaps.BinaryHeapResponse;
-import com.example.algorithm.Heaps.BinaryHeapService;
-import com.example.algorithm.SearchTrees.SearchTree;
-import com.example.algorithm.SearchTrees.SearchTreeService;
+import com.example.algorithm.ResponseTypes.TreeResponse;
+import com.example.algorithm.Heaps.BinaryHeap.BinaryHeapService;
+import com.example.algorithm.Heaps.PairingHeap.PairingHeapService;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,16 +21,19 @@ import java.io.IOException;
 public class HeapController {
 
     private final BinaryHeapService binaryHeapService;
+    private final PairingHeapService pairingHeapService;
+
     private final Logger logger = LoggerFactory.getLogger(HeapController.class);
 
-    public HeapController(BinaryHeapService binaryHeapService) {
+    public HeapController(BinaryHeapService binaryHeapService, PairingHeapService pairingHeapService) {
         this.binaryHeapService = binaryHeapService;
+        this.pairingHeapService = pairingHeapService;
     }
 
     @PostMapping(
             path = "/{heap}/insert/{value}"
     )
-    public ResponseEntity<BinaryHeapResponse> insert(@PathVariable("value") int value, @PathVariable("heap") String heapType, RequestEntity<String> heap) {
+    public ResponseEntity<TreeResponse> insert(@PathVariable("value") int value, @PathVariable("heap") String heapType, RequestEntity<String> heap) {
         try {
             BinaryHeapService service = stringToService(heapType);
 
@@ -52,7 +52,7 @@ public class HeapController {
             path = "/{tree}/remove",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<BinaryHeapResponse> BSTremove(@PathVariable("tree") String treeType, RequestEntity<String> tree) {
+    public ResponseEntity<TreeResponse> binaryHeapRemove(@PathVariable("tree") String treeType, RequestEntity<String> tree) {
         logger.info("New Heap remove-request: " + tree.getBody());
         try {
             BinaryHeapService service = stringToService(treeType);
@@ -67,7 +67,7 @@ public class HeapController {
     }
 
     @PostMapping("/{heap}/new/{value}")
-    public ResponseEntity<BinaryHeapResponse> BSTcreate(@PathVariable("value") int value, @PathVariable("heap") String heapType) {
+    public ResponseEntity<TreeResponse> binaryHeapCreate(@PathVariable("value") int value, @PathVariable("heap") String heapType) {
         logger.info("New Heap create-request: " + value);
         BinaryHeapService service = null;
         try {
@@ -80,7 +80,7 @@ public class HeapController {
     }
 
     @GetMapping("/{heap}/explanation")
-    public ResponseEntity<Explanation> BSTgetExpl(@PathVariable("heap") String heapType) {
+    public ResponseEntity<Explanation> binaryHeapGetExpl(@PathVariable("heap") String heapType) {
         logger.info("Requested Explanation Heap");
         try {
             BinaryHeapService service = stringToService(heapType);

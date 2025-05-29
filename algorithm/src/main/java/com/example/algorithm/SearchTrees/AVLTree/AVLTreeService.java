@@ -1,8 +1,12 @@
 package com.example.algorithm.SearchTrees.AVLTree;
 
 import com.example.algorithm.Explanation.Explanation;
+import com.example.algorithm.ResponseTypes.TreeResponse;
+import com.example.algorithm.SearchTrees.BinarySearchTree.BSTNode;
+import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
 import com.example.algorithm.SearchTrees.SearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeService;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -14,22 +18,22 @@ import java.nio.file.Files;
 @Service
 public class AVLTreeService extends SearchTreeService {
     @Override
-    public SearchTree insert(int value, String tree) throws JSONException {
+    public TreeResponse insert(int value, String tree) throws JSONException {
         AVLTree avlTree = convJSON(tree);
         avlTree.add(value);
-        return avlTree;
+        return toResponse(avlTree.getRoot());
     }
 
     @Override
-    public SearchTree remove(int value, String tree) throws JSONException {
+    public TreeResponse remove(int value, String tree) throws JSONException {
         AVLTree avlTree = convJSON(tree);
         avlTree.remove(value);
-        return avlTree;
+        return toResponse(avlTree.getRoot());
     }
 
     @Override
-    public AVLTree create(int value) {
-        return new AVLTree(new AVLTreeNode(value));
+    public TreeResponse create(int value) {
+        return toResponse(new AVLTree(new AVLTreeNode(value)).getRoot());
     }
 
     @Override
@@ -44,14 +48,23 @@ public class AVLTreeService extends SearchTreeService {
     }
 
     private AVLTreeNode convNodeJSON(String json) throws JSONException {
+        if (json.equals("null") || json.isEmpty()) {
+            return null;
+        }
+
         JSONObject root = new JSONObject(json);
-        AVLTreeNode left = null;
-        AVLTreeNode right = null;
 
+        AVLTreeNode left;
+        AVLTreeNode right;
 
-        if (root.optJSONObject("left") != null) left = convNodeJSON(root.getString("left"));
-        if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
+        JSONArray children = root.getJSONArray("children");
 
+        if (children.length() == 2) {
+            left = convNodeJSON(children.getString(0));
+            right = convNodeJSON(children.getString(1));
+        } else {
+            throw new JSONException("invalid json 2 children expected");
+        }
 
         int value = root.getInt("value");
 
