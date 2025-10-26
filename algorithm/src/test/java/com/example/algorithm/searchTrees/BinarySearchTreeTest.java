@@ -1,13 +1,9 @@
 package com.example.algorithm.searchTrees;
 
+import com.example.algorithm.SearchTrees.BinarySearchTree.BSTNode;
 import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
 import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTreeService;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +12,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void create1DeepTree() {
-        BinarySearchTree tree = binarySearchTreeService.create(0);
+        BinarySearchTree tree = new BinarySearchTree(new BSTNode(0));
 
         assertNull(tree.getRoot().getLeft());
         assertEquals(0, tree.getRoot().getValue());
@@ -26,7 +22,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void addLeftNode() {
-        BinarySearchTree tree = binarySearchTreeService.create(1);
+        BinarySearchTree tree = new BinarySearchTree(new BSTNode(1));
         tree.add(0);
 
         assertEquals(0, tree.getRoot().getLeft().getValue());
@@ -36,7 +32,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void addRightNode() {
-        BinarySearchTree tree = binarySearchTreeService.create(0);
+        BinarySearchTree tree = new BinarySearchTree(new BSTNode(0));
         tree.add(1);
 
         assertNull(tree.getRoot().getLeft());
@@ -46,7 +42,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void removeChildNode() {
-        BinarySearchTree tree = binarySearchTreeService.create(1);
+        BinarySearchTree tree = new BinarySearchTree(new BSTNode(1));
         tree.add(0);
         tree.remove(0);
 
@@ -65,7 +61,7 @@ public class BinarySearchTreeTest {
 
     @Test
     void removeRootNode() {
-        BinarySearchTree tree = binarySearchTreeService.create(1);
+        BinarySearchTree tree = new BinarySearchTree(new BSTNode(1));
         tree.add(0);
         tree.add(2);
 
@@ -82,36 +78,13 @@ public class BinarySearchTreeTest {
 
     @Test
     void addAndRemove1000Nodes() {
-        BinarySearchTree tree = binarySearchTreeService.create(0);
-        List<Integer> numbers = new ArrayList<>();
-        for (int i = 1; i < 1000; i++) {
-            numbers.add(i);
-        }
-
-        long seed = 42;
-        Random random = new Random(seed);
-
-        Collections.shuffle(numbers, random);
-
-        for (int number : numbers) {
-            tree.add(number);
-        }
-
-
-        Collections.shuffle(numbers, random);
-        for (int number : numbers) {
-            assertTrue(tree.contains(number));
-            tree.remove(number);
-        }
-
-        assertNull(tree.getRoot().getLeft());
-        assertNull(tree.getRoot().getRight());
-        assertEquals(0, tree.getRoot().getValue());
+        BinarySearchTree tree = new BinarySearchTree(new BSTNode(0));
+        SearchTreeTestUtils.addAndRemove1000Nodes(tree, searchTreeNode -> true);
     }
 
     @Test
     void addInEmptyTree() {
-        BinarySearchTree tree = binarySearchTreeService.create(0);
+        BinarySearchTree tree = new BinarySearchTree(new BSTNode(0));
         tree.remove(0);
         assertNull(tree.getRoot());
         tree.add(0);

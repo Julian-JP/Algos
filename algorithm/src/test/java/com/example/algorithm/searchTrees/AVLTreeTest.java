@@ -1,15 +1,10 @@
 package com.example.algorithm.searchTrees;
 
 import com.example.algorithm.SearchTrees.AVLTree.AVLTree;
+import com.example.algorithm.SearchTrees.AVLTree.AVLTreeNode;
 import com.example.algorithm.SearchTrees.AVLTree.AVLTreeService;
-import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeNode;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +13,7 @@ public class AVLTreeTest {
 
     @Test
     void leftLeftRotateInsert() {
-        AVLTree tree = avlTreeService.create(6);
+        AVLTree tree = new AVLTree(new AVLTreeNode(6));
 
         tree.add(4);
         tree.add(7);
@@ -46,7 +41,7 @@ public class AVLTreeTest {
 
     @Test
     void rightRightRotateInsert() {
-        AVLTree tree = avlTreeService.create(2);
+        AVLTree tree = new AVLTree(new AVLTreeNode(2));
 
         tree.add(1);
         tree.add(4);
@@ -74,7 +69,7 @@ public class AVLTreeTest {
 
     @Test
     void leftRightRotateInsert() {
-        AVLTree tree = avlTreeService.create(5);
+        AVLTree tree = new AVLTree(new AVLTreeNode(5));
 
         tree.add(2);
         tree.add(6);
@@ -102,7 +97,7 @@ public class AVLTreeTest {
 
     @Test
     void rightLeftRotateInsert() {
-        AVLTree tree = avlTreeService.create(2);
+        AVLTree tree = new AVLTree(new AVLTreeNode(2));
 
         tree.add(1);
         tree.add(5);
@@ -130,7 +125,7 @@ public class AVLTreeTest {
 
     @Test
     void leftLeftRotateRemove() {
-        AVLTree tree = avlTreeService.create(6);
+        AVLTree tree = new AVLTree(new AVLTreeNode(6));
 
         tree.add(4);
         tree.add(7);
@@ -161,7 +156,7 @@ public class AVLTreeTest {
 
     @Test
     void rightRightRotateRemove() {
-        AVLTree tree = avlTreeService.create(2);
+        AVLTree tree = new AVLTree(new AVLTreeNode(2));
 
         tree.add(1);
         tree.add(3);
@@ -193,7 +188,7 @@ public class AVLTreeTest {
 
     @Test
     void leftRightRotateRemove() {
-        AVLTree tree = avlTreeService.create(5);
+        AVLTree tree = new AVLTree(new AVLTreeNode(5));
 
         tree.add(2);
         tree.add(6);
@@ -224,7 +219,7 @@ public class AVLTreeTest {
 
     @Test
     void rightLeftRotateRemove() {
-        AVLTree tree = avlTreeService.create(2);
+        AVLTree tree = new AVLTree(new AVLTreeNode(2));
 
         tree.add(1);
         tree.add(5);
@@ -255,38 +250,14 @@ public class AVLTreeTest {
 
     @Test
     void addAndRemove1000Nodes() {
-        AVLTree tree = avlTreeService.create(0);
-        List<Integer> numbers = new ArrayList<>();
-        for (int i = 1; i < 1000; i++) {
-            numbers.add(i);
-        }
+        AVLTree tree = new AVLTree(new AVLTreeNode(0));
 
-        long seed = 42;
-        Random random = new Random(seed);
-
-        Collections.shuffle(numbers, random);
-
-        for (int number : numbers) {
-            tree.add(number);
-            assertTrue(satisfiesAVLInvariant(tree.getRoot()));
-        }
-
-
-        Collections.shuffle(numbers, random);
-        for (int number : numbers) {
-            assertTrue(tree.contains(number));
-            tree.remove(number);
-            assertTrue(satisfiesAVLInvariant(tree.getRoot()));
-        }
-
-        assertNull(tree.getRoot().getLeft());
-        assertNull(tree.getRoot().getRight());
-        assertEquals(0, tree.getRoot().getValue());
+        SearchTreeTestUtils.addAndRemove1000Nodes(tree, this::satisfiesAVLInvariant);
     }
 
     @Test
     void addInEmptyTree() {
-        AVLTree tree = avlTreeService.create(0);
+        AVLTree tree = new AVLTree(new AVLTreeNode(0));
         tree.remove(0);
         assertNull(tree.getRoot());
         tree.add(0);

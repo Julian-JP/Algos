@@ -18,7 +18,7 @@ public class RedBlackTreeTest {
 
     @Test
     void redUncleInsertionTest() {
-        RedBlackTree tree = redBlackTreeService.create(3);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(3, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, true, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(4, true, tree.getRoot());
@@ -32,7 +32,7 @@ public class RedBlackTreeTest {
 
     @Test
     void blackUncleLeftLeftInsert() {
-        RedBlackTree tree = redBlackTreeService.create(3);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(3, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, false, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(4, false, tree.getRoot());
@@ -50,7 +50,7 @@ public class RedBlackTreeTest {
 
     @Test
     void blackUncleLeftRightInsert() {
-        RedBlackTree tree = redBlackTreeService.create(3);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(3, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, false, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(4, false, tree.getRoot());
@@ -68,7 +68,7 @@ public class RedBlackTreeTest {
 
     @Test
     void blackUncleRightRightInsert() {
-        RedBlackTree tree = redBlackTreeService.create(3);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(3, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, false, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(4, false, tree.getRoot());
@@ -85,7 +85,7 @@ public class RedBlackTreeTest {
 
     @Test
     void blackUncleRightLeftInsert() {
-        RedBlackTree tree = redBlackTreeService.create(3);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(3, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, false, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(4, false, tree.getRoot());
@@ -102,7 +102,7 @@ public class RedBlackTreeTest {
 
     @Test
     void removeRedLeaf() {
-        RedBlackTree tree = redBlackTreeService.create(3);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(3, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, false, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(4, false, tree.getRoot());
@@ -119,7 +119,7 @@ public class RedBlackTreeTest {
 
     @Test
     void removeBlackLeafWithBlackSiblings() {
-        RedBlackTree tree = redBlackTreeService.create(3);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(3, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, false, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(4, false, tree.getRoot());
@@ -223,7 +223,7 @@ public class RedBlackTreeTest {
 
     @Test
     void addAndRemove1000Nodes() {
-        RedBlackTree tree = redBlackTreeService.create(0);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(0, false, null));
         List<Integer> numbers = new ArrayList<>();
         for (int i = 1; i < 1000; i++) {
             numbers.add(i);
@@ -257,7 +257,7 @@ public class RedBlackTreeTest {
 
     @Test
     void addInEmptyTree() {
-        RedBlackTree tree = redBlackTreeService.create(0);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(0, true, null));
 
         tree.remove(0);
         assertTrue(tree.getRoot().isNil());
@@ -310,7 +310,7 @@ public class RedBlackTreeTest {
 
     private RedBlackTree getExampleTree() {
 
-        RedBlackTree tree = redBlackTreeService.create(13);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(13, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(8, true, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(17, true, tree.getRoot());
@@ -341,7 +341,7 @@ public class RedBlackTreeTest {
 
     private RedBlackTree getExampleTree2() {
 
-        RedBlackTree tree = redBlackTreeService.create(7);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(7, false, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(3, false, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(18, true, tree.getRoot());
@@ -367,7 +367,7 @@ public class RedBlackTreeTest {
 
     private RedBlackTree getExampleTree3() {
 
-        RedBlackTree tree = redBlackTreeService.create(5);
+        RedBlackTree tree = new RedBlackTree(new RedBlackTreeNode(5, true, null));
 
         RedBlackTreeNode left = new RedBlackTreeNode(2, true, tree.getRoot());
         RedBlackTreeNode right = new RedBlackTreeNode(8, false, tree.getRoot());
