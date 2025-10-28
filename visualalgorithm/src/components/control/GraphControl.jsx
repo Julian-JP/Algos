@@ -4,9 +4,9 @@ import useFetch from "../../hooks/useFetch";
 import MultidataInputWithSubmit from "../UI/Input/MultidataInputWithSubmit.jsx";
 import Modal from "../UI/Modal.jsx";
 import {node} from "globals";
+import configData from "@/configs/config.json";
 
 const GraphControl = (props) => {
-    const SERVER_URL = "http://localhost:8080/algos/"
 
     const DEFAULT_VERTEX_COLOR = "white";
     const START_COLOR = "Aqua";
@@ -155,15 +155,11 @@ const GraphControl = (props) => {
     }
 
     const updateStartEndAfterRemovingIndex = (index) => {
-        if (start.current > index) {
-            start.current -= 1;
-        } else if (start.current === index) {
+        if (start.current === index) {
             start.current = null;
         }
 
-        if (end.current > index) {
-            end.current -= 1;
-        } else if (end.current === index) {
+        if (end.current === index) {
             end.current = null;
         }
     }
@@ -218,8 +214,6 @@ const GraphControl = (props) => {
             vertices: nextState.vertices,
             edges: edgeAdapter(nextState.edges)
         })
-        start.current = nextState.start;
-        end.current = nextState.end;
     }
 
     const createGraphFromJSON = (response) => {
@@ -233,13 +227,11 @@ const GraphControl = (props) => {
             vertices: nextState.vertices,
             edges: edgeAdapter(nextState.edges)
         })
-        start.current = nextState.start;
-        end.current = nextState.end;
     }
 
     const fetchSteps = () => {
         sendRequest({
-            url: SERVER_URL + props.type + '/step',
+            url: configData.BACKEND_URL + props.type + '/step',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -274,12 +266,14 @@ const GraphControl = (props) => {
             vertices: previousState.vertices,
             edges: edgeAdapter(previousState.edges)
         })
-        start.current = previousState.start;
-        end.current = previousState.end;
     }
 
 
     const updateVertexFill = (vertexId, fillColor, textColor) => {
+        if (vertexId === undefined) {
+            return;
+        }
+
         props.graphDispatch({
             type: 'changeVertexProperties',
             updateVertices: vertices =>  {
@@ -296,24 +290,29 @@ const GraphControl = (props) => {
     }
 
     const updateStart = (newStart) => {
-        if (start.current !== undefined && end.current !== start.current) {
+        if (end.current !== newStart && start.current !== newStart) {
             updateVertexFill(start.current, DEFAULT_VERTEX_COLOR, DEFAULT_TEXT_COLOR);
-        }
-        if (newStart !== undefined) {
             updateVertexFill(newStart, START_COLOR, START_END_TEXT_COLOR);
+            start.current = newStart;
+        } else if (end.current === newStart) {
+            updateVertexFill(start.current, DEFAULT_VERTEX_COLOR, DEFAULT_TEXT_COLOR);
+            updateVertexFill(newStart, START_COLOR, START_END_TEXT_COLOR);
+            start.current = newStart;
+            end.current = undefined;
         }
-        start.current = newStart;
     }
 
     const updateEnd = (newEnd) => {
-        if (end.current !== undefined && end.current !== start.current) {
+        if (start.current !== newEnd && end.current !== newEnd) {
             updateVertexFill(end.current, DEFAULT_VERTEX_COLOR, DEFAULT_TEXT_COLOR);
-        }
-        if (newEnd !== undefined) {
             updateVertexFill(newEnd, END_COLOR, START_END_TEXT_COLOR);
+            end.current = newEnd;
+        } else if (start.current === newEnd) {
+            updateVertexFill(end.current, DEFAULT_VERTEX_COLOR, DEFAULT_TEXT_COLOR);
+            updateVertexFill(newEnd, END_COLOR, START_END_TEXT_COLOR);
+            end.current = newEnd;
+            start.current = undefined;
         }
-
-        end.current = newEnd;
     }
 
     const handleStartEnd = (isStart) => {
