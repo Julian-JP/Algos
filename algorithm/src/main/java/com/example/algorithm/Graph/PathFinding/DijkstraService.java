@@ -53,7 +53,8 @@ public class DijkstraService extends PathFindingService {
 
             int currentIndex = current.path.getLast();
             if (currentIndex == graph.getEnd()) {
-                colorFinishedPath(steps, current.path, graph);
+                colorFinishedPath(current.path, graph);
+                steps.add(new GraphResponse(graph));
                 return;
             }
 

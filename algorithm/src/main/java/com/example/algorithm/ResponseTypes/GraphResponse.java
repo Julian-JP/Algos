@@ -18,7 +18,7 @@ class EdgeListEntry {
         this.from = from;
         this.to = to;
         this.weight = edge.getWeight();
-        this.marking = edge.getMarking();
+        this.marking = edge.getMarking().getValue();
     }
 }
 

@@ -4,30 +4,42 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class GraphEdge {
-    public static final int UNVISITED = 0;
-    public static final int VISITED = 1;
-    public static final int ON_FINAL_PATH = 2;
-    public static final int PROCESSED = 3;
+    public enum Marking {
+        UNVISITED(0),
+        VISITED(1),
+        ON_FINAL_PATH(2),
+        PROCESSED(3);
+
+        private final int value;
+
+        Marking(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 
     @Getter
-    private int marking;
+    private Marking marking;
     @Getter
     private Double weight;
 
-    public GraphEdge(int marking, Double weight) {
+    public GraphEdge(Marking marking, Double weight) {
         this.marking = marking;
         this.weight = weight;
     }
 
     public void visit() {
-        marking = VISITED;
+        marking = Marking.VISITED;
     }
 
     public void process() {
-        marking = PROCESSED;
+        marking = Marking.PROCESSED;
     }
 
     public void finish() {
-        marking = ON_FINAL_PATH;
+        marking = Marking.ON_FINAL_PATH;
     }
 }

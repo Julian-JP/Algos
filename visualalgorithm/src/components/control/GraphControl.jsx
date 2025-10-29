@@ -218,15 +218,16 @@ const GraphControl = (props) => {
 
     const createGraphFromJSON = (response) => {
         graphSteps.current = response;
+        currentStep.current = 1
 
-        currentStep.current = 0;
-
-        let nextState = graphSteps.current[currentStep.current];
-        props.graphDispatch({
-            type: 'redraw',
-            vertices: nextState.vertices,
-            edges: edgeAdapter(nextState.edges)
-        })
+        if (response.length > 1) {
+            let nextState = response[1];
+            props.graphDispatch({
+                type: 'redraw',
+                vertices: nextState.vertices,
+                edges: edgeAdapter(nextState.edges)
+            })
+        }
     }
 
     const fetchSteps = () => {

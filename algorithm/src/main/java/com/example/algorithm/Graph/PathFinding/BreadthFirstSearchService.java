@@ -27,7 +27,9 @@ public class BreadthFirstSearchService extends PathFindingService {
         ArrayList<GraphResponse> steps = new ArrayList<>();
         steps.add(new GraphResponse(graph));
 
-        recursiveBreathFirstSearch(steps, graph, nextToProcess, visited);
+        List<Integer> shortestPath = recursiveBreathFirstSearch(steps, graph, nextToProcess, visited);
+        colorFinishedPath(shortestPath, graph);
+        steps.add(new GraphResponse(graph));
 
         return steps.toArray(new GraphResponse[0]);
     }
@@ -38,37 +40,29 @@ public class BreadthFirstSearchService extends PathFindingService {
         return new Explanation(explanation);
     }
 
-    private void recursiveBreathFirstSearch(ArrayList<GraphResponse> steps, PathFindingGraph graph, Deque<List<Integer>> nextToProcessQueue, boolean[] visited) {
+    private List<Integer> recursiveBreathFirstSearch(ArrayList<GraphResponse> steps, PathFindingGraph graph, Deque<List<Integer>> nextToProcessQueue, boolean[] visited) {
         if (nextToProcessQueue.isEmpty()) {
-            return;
+            return new ArrayList<>();
         }
+        List<Integer> path = nextToProcessQueue.poll();
+        int cur = path.getLast();
 
-        boolean progress = false;
-
-        List<Integer> nextToProcess = nextToProcessQueue.poll();
-        int indexNextToProcess = nextToProcess.getLast();
-
-        for (int i=0; i < graph.getAdjacencyMatrix()[indexNextToProcess].length; ++i) {
-            if (!visited[i] && graph.getAdjacencyMatrix()[indexNextToProcess][i] != null) {
+        for (int i = 0; i < graph.getAdjacencyMatrix()[cur].length; i++) {
+            if (graph.getAdjacencyMatrix()[cur][i] != null && !visited[i]) {
                 visited[i] = true;
-                ArrayList<Integer> newNextToProcess = new ArrayList<>();
-                newNextToProcess.add(i);
-                nextToProcessQueue.add(newNextToProcess);
 
-                graph.getAdjacencyMatrix()[indexNextToProcess][i].visit();
-                progress = true;
+                graph.getAdjacencyMatrix()[cur][i].visit();
+                steps.add(new GraphResponse(graph));
+
+                List<Integer> newPath = new ArrayList<>(path);
+                newPath.add(i);
+                nextToProcessQueue.addLast(newPath);
 
                 if (i == graph.getEnd()) {
-                    nextToProcess.add(i);
-                    colorFinishedPath(steps, nextToProcess, graph);
-                    return;
+                    return newPath;
                 }
             }
         }
-
-        if (progress) {
-            steps.add(new GraphResponse(graph));
-        }
-        recursiveBreathFirstSearch(steps, graph, nextToProcessQueue, visited);
+        return recursiveBreathFirstSearch(steps, graph, nextToProcessQueue, visited);
     }
 }

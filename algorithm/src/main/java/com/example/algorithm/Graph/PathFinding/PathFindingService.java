@@ -13,14 +13,12 @@ public abstract class PathFindingService {
     public abstract Explanation getExplanation() throws IOException;
 
 
-    protected void colorFinishedPath(ArrayList<GraphResponse> steps, List<Integer> path, PathFindingGraph graph) {
+    protected void colorFinishedPath(List<Integer> path, PathFindingGraph graph) {
         int prevNode = path.getFirst();
         for (int i=1; i < path.size(); ++i) {
             int currentNode = path.get(i);
             graph.getAdjacencyMatrix()[prevNode][currentNode].finish();
             prevNode = currentNode;
         }
-
-        steps.add(new GraphResponse(graph));
     }
 }

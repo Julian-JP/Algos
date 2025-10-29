@@ -41,7 +41,7 @@ public class Graph {
                 weight = edge.getDouble("weight");
             }
 
-            adjacencyMatrix[from][to] = new GraphEdge(GraphEdge.UNVISITED, weight);
+            adjacencyMatrix[from][to] = new GraphEdge(GraphEdge.Marking.UNVISITED, weight);
         }
     }
 
