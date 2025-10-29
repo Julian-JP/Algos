@@ -64,12 +64,21 @@ public class DijkstraService extends PathFindingService {
 
                     double newCost = graph.getAdjacencyMatrix()[currentIndex][i].getWeight() + current.cost;
                     cost[i] = newCost;
+
+                    List<Integer> newPath = new ArrayList<>(current.path);
+                    newPath.add(i);
+
+                    if (i == graph.getEnd()) {
+                        colorFinishedPath(newPath, graph);
+                        steps.add(new GraphResponse(graph));
+                        return;
+                    }
+
+
                     graph.getAdjacencyMatrix()[currentIndex][i].visit();
 
                     steps.add(new GraphResponse(graph));
 
-                    List<Integer> newPath = new ArrayList<>(current.path);
-                    newPath.add(i);
                     nextToProcess.add(new DijkstraElement(newCost, newPath));
                 }
             }
