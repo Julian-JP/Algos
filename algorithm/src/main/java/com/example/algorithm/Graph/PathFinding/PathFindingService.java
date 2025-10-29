@@ -14,6 +14,10 @@ public abstract class PathFindingService {
 
 
     protected void colorFinishedPath(List<Integer> path, PathFindingGraph graph) {
+        if (path.isEmpty()) {
+            return;
+        }
+
         int prevNode = path.getFirst();
         for (int i=1; i < path.size(); ++i) {
             int currentNode = path.get(i);

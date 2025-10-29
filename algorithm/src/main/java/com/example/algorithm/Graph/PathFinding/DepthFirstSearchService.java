@@ -9,6 +9,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DepthFirstSearchService extends PathFindingService {
@@ -17,9 +18,14 @@ public class DepthFirstSearchService extends PathFindingService {
         PathFindingGraph graph = new PathFindingGraph(graphString);
 
         ArrayList<GraphResponse> steps = new ArrayList<>();
+        steps.add(new GraphResponse(graph));
         boolean[] visited = new boolean[graph.getVertexList().length];
+        visited[graph.getStart()] = true;
 
-        recursiveDepthFirstSearch(steps, graph, visited, graph.getStart());
+        List<Integer> reversedPath = recursiveDepthFirstSearch(steps, graph, visited, graph.getStart());
+        List<Integer> path = reversedPath.reversed();
+        colorFinishedPath(path, graph);
+        steps.add(new GraphResponse(graph));
 
         return steps.toArray(new GraphResponse[0]);
     }
@@ -30,30 +36,32 @@ public class DepthFirstSearchService extends PathFindingService {
         return new Explanation(explanation);
     }
 
-    private boolean recursiveDepthFirstSearch(ArrayList<GraphResponse> steps, PathFindingGraph graph, boolean[] visited, int current) {
+    private List<Integer> recursiveDepthFirstSearch(ArrayList<GraphResponse> steps, PathFindingGraph graph, boolean[] visited, int current) {
         if (graph.getEnd() == current) {
-            return true;
+            ArrayList<Integer> res = new ArrayList<>();
+            res.add(current);
+            return res;
         }
 
         for (int i=0; i < graph.getAdjacencyMatrix()[current].length; i++) {
-            if (visited[i]) {
+            if (visited[i] || graph.getAdjacencyMatrix()[current][i] == null) {
                 continue;
-            } else {
-                visited[i] = true;
             }
+            visited[i] = true;
 
-
-            graph.getAdjacencyMatrix()[current][i].visit();
-            steps.add(new GraphResponse(graph));
-
-            boolean finished = recursiveDepthFirstSearch(steps, graph, visited, i);
-            if (finished) {
-                graph.getAdjacencyMatrix()[current][i].finish();
+            if (i != graph.getEnd()) {
+                graph.getAdjacencyMatrix()[current][i].visit();
                 steps.add(new GraphResponse(graph));
-                return true;
             }
+
+            List<Integer> finished = recursiveDepthFirstSearch(steps, graph, visited, i);
+            if (!finished.isEmpty()) {
+                finished.add(current);
+                return finished;
+            }
+
         }
 
-        return false;
+        return new ArrayList<>();
     }
 }
