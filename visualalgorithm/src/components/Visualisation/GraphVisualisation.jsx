@@ -324,7 +324,7 @@ const GraphVisualisation = props => {
                 strokeWidth={3}
                 key={"line" + generateEdgeId(item.from, item.to)}
             />
-            {item.weight != null && item.from > item.to ? <text
+            {item.weight != null ? <text
                 alignmentBaseline={"middle"}
                 dominantBaseline={"middle"}
                 textAnchor={"middle"}

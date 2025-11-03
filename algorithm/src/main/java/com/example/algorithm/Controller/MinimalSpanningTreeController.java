@@ -32,12 +32,12 @@ public class MinimalSpanningTreeController {
     @PostMapping(
             path = "/{algorithm}/step"
     )
-    public ResponseEntity<GraphResponse> step(@PathVariable("algorithm") String algorithm, RequestEntity<String> graph) {
+    public ResponseEntity<GraphResponse[]> step(@PathVariable("algorithm") String algorithm, RequestEntity<String> graph) {
         try {
             MinimalSpanningTreeService service = stringToService(algorithm);
 
             logger.info("New MinimalSpanningTree nextstep-request: " + graph.getBody());
-            GraphResponse temp = service.step(graph.getBody());
+            GraphResponse[] temp = service.execute(graph.getBody());
             return new ResponseEntity<>(temp, HttpStatus.OK);
         } catch (JSONException e) {
             logger.error("MinimalSpanningTree step JSON failed: " + graph);
@@ -54,20 +54,17 @@ public class MinimalSpanningTreeController {
         try {
             MinimalSpanningTreeService service = stringToService(algorithm);
             return new ResponseEntity<>(service.getExplanation(), HttpStatus.OK);
-        } catch (IOException e) {
-            logger.error("MinimalSpanningTree explanation failed: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (ServiceNotFoundException e) {
+        } catch (IOException | ServiceNotFoundException e) {
             logger.error("MinimalSpanningTree explanation failed: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     private MinimalSpanningTreeService stringToService(String service) throws ServiceNotFoundException {
-        switch (service) {
-            case "JarnikPrim": return jarnikPrimService;
-            case "Kruskal": return kruskalService;
-            default: throw new ServiceNotFoundException("Service: " + service + " Not Found");
-        }
+        return switch (service) {
+            case "JarnikPrim" -> jarnikPrimService;
+            case "Kruskal" -> kruskalService;
+            default -> throw new ServiceNotFoundException("Service: " + service + " Not Found");
+        };
     }
 }
