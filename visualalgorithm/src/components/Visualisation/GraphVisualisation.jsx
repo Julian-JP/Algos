@@ -147,6 +147,8 @@ const GraphVisualisation = props => {
         let conv_weight = item.weight;
         if (conv_weight === "Infinity") {
             conv_weight = "∞";
+        } else if (conv_weight === "-Infinity") {
+            conv_weight = "-∞";
         }
         let text = conv_weight != null ? item.value + "|" + conv_weight : item.value;
         return <Circle
@@ -180,8 +182,7 @@ const GraphVisualisation = props => {
 
         let vertexFrom = getVertex(edge.from);
         let vertexTo = getVertex(edge.to);
-
-        if (graph.directed) {
+        if (edge.directed) {
             return convertDirectedEdge(edge, vertexFrom, vertexTo)
         } else {
             return convertUndirectedEdge(edge, vertexFrom, vertexTo);

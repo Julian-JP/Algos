@@ -37,7 +37,7 @@ public class AllShortestPathDijkstraService extends AllShortestPathService {
     }
 
 
-    private ArrayList<GraphResponse> dijkstra( AllShortestPathGraph graph) {
+    private ArrayList<GraphResponse> dijkstra(AllShortestPathGraph graph) {
         ArrayList<GraphResponse> steps = new ArrayList<>();
         steps.add(new GraphResponse(graph));
         PriorityQueue<DijkstraElement> queue = new PriorityQueue<>(Comparator.comparingDouble(value -> value.cost));
