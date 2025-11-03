@@ -1,5 +1,6 @@
 package com.example.algorithm.ResponseTypes;
 
+import com.example.algorithm.Graph.AllShortestPath.AllShortestPathGraph;
 import com.example.algorithm.Graph.Graph;
 import com.example.algorithm.Graph.GraphEdge;
 import com.example.algorithm.Graph.GraphNode;
@@ -44,6 +45,14 @@ public class GraphResponse {
 
         for (int i = 0; i < graph.getVertexList().length; ++i) {
             vertices[i] = new GraphNode(graph.getVertexList()[i]);
+        }
+    }
+
+    public GraphResponse(AllShortestPathGraph graph) {
+        this((Graph) graph);
+
+        for (int i=0; i < graph.getVertexList().length; ++i) {
+            vertices[i].setWeight(graph.getCost()[i]);
         }
     }
 }

@@ -24,8 +24,9 @@ const GraphVisualisation = props => {
     function processVertices(newVertices, oldVertices) {
         return newVertices.map(vertex => {
             return {
-                ...vertex,
-                ...oldVertices.find(v => v.id === vertex.id)
+                ...oldVertices.find(v => v.id === vertex.id),
+                weight: vertex.weight,
+                value: vertex.value,
             }
         })
     }
@@ -143,7 +144,11 @@ const GraphVisualisation = props => {
     }
 
     const convertVertex = (item) => {
-        let text = item.weight !== undefined ? item.value + "|" + item.weight : item.value;
+        let conv_weight = item.weight;
+        if (conv_weight === "Infinity") {
+            conv_weight = "∞";
+        }
+        let text = conv_weight != null ? item.value + "|" + conv_weight : item.value;
         return <Circle
             handleDragStart={handleDragStart}
             handleDrag={handleDrag}

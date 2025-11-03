@@ -7,6 +7,6 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public abstract class AllShortestPathService {
-    public abstract GraphResponse step(String graph) throws JSONException;
+    public abstract GraphResponse[] execute(String graph) throws JSONException;
     public abstract Explanation getExplanation() throws IOException;
 }

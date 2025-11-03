@@ -14,9 +14,9 @@ import java.nio.file.Files;
 @Service
 public class BellmanFordService extends AllShortestPathService {
     @Override
-    public GraphResponse step(String graphString) throws JSONException {
+    public GraphResponse[] execute(String graphString) throws JSONException {
         AllShortestPathGraph graph = new AllShortestPathGraph(graphString);
-        return new GraphResponse(graph);
+        return new GraphResponse[0];
     }
 
     @Override

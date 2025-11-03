@@ -219,9 +219,8 @@ const GraphControl = (props) => {
     const createGraphFromJSON = (response) => {
         graphSteps.current = response;
         currentStep.current = 1
-
-        if (response.length > 1) {
-            let nextState = response[1];
+        if (response.length > 0) {
+            let nextState = response.length > 1 ? response[1] : response[0];
             props.graphDispatch({
                 type: 'redraw',
                 vertices: nextState.vertices,
@@ -251,7 +250,7 @@ const GraphControl = (props) => {
     const next = () => {
         if (currentStep.current !== undefined) {
            nextStep();
-        } else if (start.current !== undefined && end.current !== undefined) {
+        } else if (isStartOk() && isEndOk()) {
             fetchSteps();
         }
     }
@@ -267,6 +266,14 @@ const GraphControl = (props) => {
             vertices: previousState.vertices,
             edges: edgeAdapter(previousState.edges)
         })
+    }
+
+    const isStartOk = () => {
+        return start.current !== undefined || props.startButton === false;
+    }
+
+    const isEndOk = () => {
+        return end.current !== undefined || props.endButton === false;
     }
 
 

@@ -32,12 +32,12 @@ public class AllShortestPathController {
     @PostMapping(
             path = "/{searchType}/step"
     )
-    public ResponseEntity<GraphResponse> step(@PathVariable("searchType") String searchType, RequestEntity<String> graph) {
+    public ResponseEntity<GraphResponse[]> step(@PathVariable("searchType") String searchType, RequestEntity<String> graph) {
         try {
             AllShortestPathService service = stringToService(searchType);
 
             logger.info("New AllShortestPath nextstep-request: " + graph.getBody());
-            GraphResponse temp = service.step(graph.getBody());
+            GraphResponse[] temp = service.execute(graph.getBody());
             return new ResponseEntity<>(temp, HttpStatus.OK);
         } catch (JSONException e) {
             logger.error("AllShortestPath step JSON failed: " + graph);
