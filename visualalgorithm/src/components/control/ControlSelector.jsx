@@ -21,7 +21,17 @@ const ControlSelector = props => {
                 graph={props.graph}
                 graphDispatch={props.graphDispatch}
                 type={props.url}
-                directed={true}
+                directed={false}
+                weightedEdges={false}
+                svgWidth={props.svgWidth}
+                svgHeight={props.svgHeight}
+            />
+            }
+            {props['type'] === "pairingheap" && <HeapControl
+                graph={props.graph}
+                graphDispatch={props.graphDispatch}
+                type={props.url}
+                directed={false}
                 weightedEdges={false}
                 svgWidth={props.svgWidth}
                 svgHeight={props.svgHeight}

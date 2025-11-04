@@ -1,6 +1,7 @@
 package com.example.algorithm.Heaps.BinaryHeap;
 
 import com.example.algorithm.Explanation.Explanation;
+import com.example.algorithm.Heaps.HeapService;
 import com.example.algorithm.ResponseTypes.TreeNodeResponse;
 import com.example.algorithm.ResponseTypes.TreeResponse;
 import org.json.JSONArray;
@@ -15,24 +16,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class BinaryHeapService {
+public class BinaryHeapService extends HeapService {
 
+    @Override
     public TreeResponse insert(int value, String heap) throws JSONException {
         BinaryHeap binaryHeap = convJSON(heap);
         binaryHeap.add(value);
         return toResponse(binaryHeap.getRoot());
     }
 
+    @Override
     public TreeResponse create(int value) {
         return toResponse(new BinaryHeapNode(value, null, null));
     }
 
+    @Override
     public TreeResponse getMinimum(String heap) throws JSONException {
         BinaryHeap binaryHeap = convJSON(heap);
         binaryHeap.getMinimum();
         return toResponse(binaryHeap.getRoot());
     }
 
+    @Override
     public Explanation getExplanation() throws IOException {
         String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/binaryHeap.txt").toPath()));
         return new Explanation(explanation);

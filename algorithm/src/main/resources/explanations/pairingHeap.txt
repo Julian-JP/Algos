@@ -1,0 +1,67 @@
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Understanding Pairing Heaps</h2>
+
+  <p>
+    A <strong>pairing heap</strong> is a type of <em>heap-ordered multiway tree</em> that supports efficient
+    priority queue operations. It combines simplicity with good <em>amortized</em> performance — often
+    competitive with more complex structures like Fibonacci heaps.
+  </p>
+
+  <p>
+    Each node may have multiple children, and the tree satisfies the
+    <strong>heap-order property</strong>: every parent’s key is smaller than or equal to the keys of its children.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Insert Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Amortized Time Complexity:</strong> O(1)
+  </p>
+  <p><strong>Goal:</strong> Add a new element while maintaining the heap property.</p>
+  <ol>
+    <li>Create a new heap consisting of the single inserted element.</li>
+    <li><strong>Merge</strong> this new heap with the existing one:
+      <ul>
+        <li>Compare the roots of the two heaps.</li>
+        <li>The smaller root becomes the new root; the other becomes its leftmost child.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">DeleteMin Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Amortized Time Complexity:</strong> O(log n)
+  </p>
+  <p><strong>Goal:</strong> Remove the smallest element (the root) and rebuild the heap.</p>
+  <ol>
+    <li>Remove the root node — this is the minimum element.</li>
+    <li>Take all its subheaps (its children) and place them into a list.</li>
+    <li><strong>First phase:</strong> Pairwise merge adjacent subheaps from left to right.</li>
+    <li><strong>Second phase (FIFO merging):</strong>
+      Use a queue to hold the resulting heaps from the first phase.
+      Dequeue two heaps at a time, merge them, and enqueue the result
+      until only one heap remains.
+    </li>
+    <li>The remaining heap becomes the new root heap.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Merge Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Amortized Time Complexity:</strong> O(1)
+  </p>
+  <p><strong>Goal:</strong> Combine two heaps while maintaining the heap-order property.</p>
+  <ol>
+    <li>Compare the roots of both heaps.</li>
+    <li>The smaller root becomes the root of the merged heap.</li>
+    <li>Attach the other heap as the leftmost child of the smaller root.</li>
+  </ol>
+</div>

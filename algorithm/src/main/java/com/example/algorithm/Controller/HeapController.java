@@ -1,6 +1,7 @@
 package com.example.algorithm.Controller;
 
 import com.example.algorithm.Explanation.Explanation;
+import com.example.algorithm.Heaps.HeapService;
 import com.example.algorithm.ResponseTypes.TreeResponse;
 import com.example.algorithm.Heaps.BinaryHeap.BinaryHeapService;
 import com.example.algorithm.Heaps.PairingHeap.PairingHeapService;
@@ -35,15 +36,15 @@ public class HeapController {
     )
     public ResponseEntity<TreeResponse> insert(@PathVariable("value") int value, @PathVariable("heap") String heapType, RequestEntity<String> heap) {
         try {
-            BinaryHeapService service = stringToService(heapType);
+            HeapService service = stringToService(heapType);
 
-            logger.info("New Heap insert-request: " + value + " in " + heap.getBody());
+            logger.info("New Heap insert-request: {} in {}", value, heap.getBody());
             return new ResponseEntity<>(service.insert(value, heap.getBody()), HttpStatus.OK);
         } catch (JSONException e) {
-            logger.error("Heap insert JSON failed: " + heap);
+            logger.error("Heap insert JSON failed: {}", heap);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
-            logger.error("Heap insert failed: " + e.getMessage());
+            logger.error("Heap insert failed: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -53,27 +54,27 @@ public class HeapController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<TreeResponse> binaryHeapRemove(@PathVariable("tree") String treeType, RequestEntity<String> tree) {
-        logger.info("New Heap remove-request: " + tree.getBody());
+        logger.info("New Heap remove-request: {}", tree.getBody());
         try {
-            BinaryHeapService service = stringToService(treeType);
+            HeapService service = stringToService(treeType);
             return new ResponseEntity<>(service.getMinimum(tree.getBody()), HttpStatus.OK);
         } catch (JSONException e) {
-            logger.error("Heap remove JSON failed: " + tree);
+            logger.error("Heap remove JSON failed: {}", tree);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ServiceNotFoundException e) {
-            logger.error("Heap remove failed: " + e.getMessage());
+            logger.error("Heap remove failed: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/{heap}/new/{value}")
     public ResponseEntity<TreeResponse> binaryHeapCreate(@PathVariable("value") int value, @PathVariable("heap") String heapType) {
-        logger.info("New Heap create-request: " + value);
-        BinaryHeapService service = null;
+        logger.info("New Heap create-request: {}", value);
+        HeapService service;
         try {
             service = stringToService(heapType);
         } catch (ServiceNotFoundException e) {
-            logger.error("Heap insert failed: " + e.getMessage());
+            logger.error("Heap insert failed: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(service.create(value), HttpStatus.OK);
@@ -83,21 +84,19 @@ public class HeapController {
     public ResponseEntity<Explanation> binaryHeapGetExpl(@PathVariable("heap") String heapType) {
         logger.info("Requested Explanation Heap");
         try {
-            BinaryHeapService service = stringToService(heapType);
+            HeapService service = stringToService(heapType);
             return new ResponseEntity<>(service.getExplanation(), HttpStatus.OK);
-        } catch (IOException e) {
-            logger.error("Heap explanation failed: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (ServiceNotFoundException e) {
-            logger.error("Heap explanation failed: " + e.getMessage());
+        } catch (IOException | ServiceNotFoundException e) {
+            logger.error("Heap explanation failed: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    private BinaryHeapService stringToService(String service) throws ServiceNotFoundException {
-        switch (service) {
-            case "BinaryHeap": return binaryHeapService;
-            default: throw new ServiceNotFoundException("Service: " + service + " Not Found");
-        }
+    private HeapService stringToService(String service) throws ServiceNotFoundException {
+        return switch (service) {
+            case "BinaryHeap" -> binaryHeapService;
+            case "PairingHeap" -> pairingHeapService;
+            default -> throw new ServiceNotFoundException("Service: " + service + " Not Found");
+        };
     }
 }

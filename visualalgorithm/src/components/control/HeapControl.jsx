@@ -19,7 +19,7 @@ const HeapControl = ({svgWidth, svgHeight, graphDispatch, type}) => {
         let edges = [];
         let vertices = [];
         drawTree(heap, edges, vertices, svgWidth, svgHeight);
-        graphDispatch({type: 'redraw', vertices: vertices, edges: edges});
+        graphDispatch({type: 'redraw_entirely', vertices: vertices, edges: edges});
     }, [heap]);
 
     const onAdd = (event) => {

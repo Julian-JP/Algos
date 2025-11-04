@@ -3,8 +3,10 @@ package com.example.algorithm.Heaps.PairingHeap;
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Heaps.BinaryHeap.BinaryHeap;
 import com.example.algorithm.Heaps.BinaryHeap.BinaryHeapNode;
+import com.example.algorithm.Heaps.HeapService;
 import com.example.algorithm.ResponseTypes.TreeNodeResponse;
 import com.example.algorithm.ResponseTypes.TreeResponse;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -12,63 +14,70 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PairingHeapService {
-    public TreeResponse insert(int value, String heap) throws JSONException {
-        BinaryHeap binaryHeap = convJSON(heap);
-        binaryHeap.add(value);
-        return toResponse(binaryHeap.getRoot());
+public class PairingHeapService extends HeapService {
+    @Override
+    public TreeResponse insert(int value, String heapString) throws JSONException {
+        PairingHeap heap = convJSON(heapString);
+        heap.add(value);
+        return toResponse(heap.getRoot());
     }
 
+    @Override
     public TreeResponse create(int value) {
-        return toResponse(new BinaryHeapNode(value, null, null));
+        return toResponse(new PairingHeapNode(value));
     }
 
-    public TreeResponse getMinimum(String heap) throws JSONException {
-        BinaryHeap binaryHeap = convJSON(heap);
-        binaryHeap.getMinimum();
-        return toResponse(binaryHeap.getRoot());
+    @Override
+    public TreeResponse getMinimum(String heapString) throws JSONException {
+        PairingHeap heap = convJSON(heapString);
+        heap.getMinimum();
+        return toResponse(heap.getRoot());
     }
 
+    @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/binaryHeap.txt").toPath()));
+        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/pairingHeap.txt").toPath()));
         return new Explanation(explanation);
     }
 
-    private BinaryHeap convJSON(String json) throws JSONException {
+    private PairingHeap convJSON(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
-        if (root.getString("root") == "null") {
-            return new BinaryHeap(null);
+        if (root.getString("root").equals("null")) {
+            return new PairingHeap();
         }
-        return new BinaryHeap(convNodeJSON(root.getString("root")));
+        return new PairingHeap(convNodeJSON(new JSONObject(root.getString("root"))));
     }
 
-    private BinaryHeapNode convNodeJSON(String json) throws JSONException {
-        JSONObject root = new JSONObject(json);
-        BinaryHeapNode left = null;
-        BinaryHeapNode right = null;
+    private PairingHeapNode convNodeJSON(JSONObject root) throws JSONException {
+        JSONArray childrenJSON = root.getJSONArray("children");
 
+        ArrayList<PairingHeapNode> children = new ArrayList<>();
+        for (int i = 0; i < childrenJSON.length(); i++) {
+            JSONObject child = childrenJSON.getJSONObject(i);
+            children.add(convNodeJSON(child));
+        }
 
-        if (root.optJSONObject("left") != null) left = convNodeJSON(root.getString("left"));
-        if (root.optJSONObject("right") != null) right = convNodeJSON(root.getString("right"));
-
-
-        int value = root.getInt("value");
-
-        return new BinaryHeapNode(value, left, right);
+        return new PairingHeapNode(children, root.getInt("value"));
     }
 
-    private TreeResponse toResponse(BinaryHeapNode root) {
+    private TreeResponse toResponse(PairingHeapNode root) {
         return new TreeResponse(toResponseRec(root));
     }
 
-    private TreeNodeResponse toResponseRec(BinaryHeapNode root) {
+    private TreeNodeResponse toResponseRec(PairingHeapNode root) {
         if (root == null) {
             return null;
         }
 
-        return new TreeNodeResponse(List.of(toResponseRec(root.getLeft()), toResponseRec(root.getRight())), String.valueOf(root.getValue()));
+        ArrayList<TreeNodeResponse> children = new ArrayList<>();
+        for (int i=0; i < root.getChildren().size(); i++) {
+            children.add(toResponseRec(root.getChildren().get(i)));
+        }
+
+        return new TreeNodeResponse(children, String.valueOf(root.getVal()));
     }
 }
