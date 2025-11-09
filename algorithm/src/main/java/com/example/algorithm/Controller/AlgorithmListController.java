@@ -161,7 +161,7 @@ public class AlgorithmListController {
 
     @GetMapping("/allShortestPath/BellmanFord")
     public ResponseEntity<Algorithm> getBellmanford() {
-        logger.info("Requested information to: bellmanFord");
+        logger.info("Requested information to: bellmanFord.txt");
         Algorithm dfs = new Algorithm("Bellman-Ford algorithm", "allShortestPath/BellmanFord", "weightedAllPathFindingGraph", 1);
         return new ResponseEntity<>(dfs, HttpStatus.OK);
     }

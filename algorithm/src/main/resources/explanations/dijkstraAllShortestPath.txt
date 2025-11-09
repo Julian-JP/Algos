@@ -1,0 +1,60 @@
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Dijkstra's Algorithm for All Shortest Paths</h2>
+
+  <p>
+    <strong>Dijkstra's Algorithm</strong> can be used to find the shortest path from a single starting node to <em>all other nodes</em> in a graph with <em>non-negative edge weights</em>.
+    This makes it a powerful tool for network routing, map navigation, and general graph analysis.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Find All Shortest Paths</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O((V + E) log V) with a priority queue &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Space Complexity:</strong> O(V)
+  </p>
+  <p><strong>Goal:</strong> Compute the shortest distance from the start node to every other node and optionally reconstruct the paths.</p>
+  <ol>
+    <li>Initialize a <strong>distance map</strong>:
+      <ul>
+        <li>Set the start node distance to 0.</li>
+        <li>Set all other nodes to infinity.</li>
+      </ul>
+    </li>
+    <li>Initialize a <strong>priority queue (min-heap)</strong> containing the start node with distance 0.</li>
+    <li>While the priority queue is not empty:
+      <ul>
+        <li>Extract the node <em>current</em> with the smallest distance.</li>
+        <li>For each neighbor of <em>current</em>:
+          <ul>
+            <li>Compute the tentative distance through <em>current</em>.</li>
+            <li>If this distance is smaller than the previously recorded distance:
+              <ul>
+                <li>Update the distance in the distance map.</li>
+                <li>Record <em>current</em> as the predecessor of the neighbor for path reconstruction.</li>
+                <li>Add the neighbor to the priority queue with the updated distance.</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>When the queue is empty, the distance map contains the shortest distances from the start node to every other node in the graph.</li>
+    <li>Paths to any target node can be reconstructed by backtracking through the predecessor map.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Notes</h3>
+  <ul>
+    <li>This algorithm works only with graphs that have <strong>non-negative edge weights or don't have no negative cycles</strong>.</li>
+    <li>Using a min-heap improves performance over a naive array-based implementation.</li>
+    <li>It guarantees the shortest path in terms of <strong>total weight</strong>, not necessarily the fewest edges.</li>
+    <li>The same algorithm naturally finds the shortest path to all nodes from the source, so no additional runs are needed per target.</li>
+  </ul>
+</div>

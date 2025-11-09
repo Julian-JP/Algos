@@ -1,0 +1,58 @@
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Bellman-Ford Algorithm for All Shortest Paths</h2>
+
+  <p>
+    The <strong>Bellman-Ford Algorithm</strong> computes the shortest paths from a single starting node to <em>all other nodes</em> in a weighted graph, even if some edges have <strong>negative weights</strong>.
+    It is widely used in network routing and graphs where edge weights can be negative.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Find All Shortest Paths</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(V × E) &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Space Complexity:</strong> O(V)
+  </p>
+  <p><strong>Goal:</strong> Compute the shortest distance from the start node to every other node and detect negative weight cycles if any.</p>
+  <ol>
+    <li>Initialize a <strong>distance map</strong>:
+      <ul>
+        <li>Set the start node distance to 0.</li>
+        <li>Set all other nodes to infinity.</li>
+      </ul>
+    </li>
+    <li>Initialize a <strong>predecessor map</strong> for path reconstruction.</li>
+    <li>Repeat <strong>(V - 1)</strong> times, where V is the number of nodes:
+      <ul>
+        <li>For each edge (u → v) with weight w:
+          <ul>
+            <li>If distance[u] + w < distance[v], update distance[v] = distance[u] + w.</li>
+            <li>Set u as the predecessor of v for path reconstruction.</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>After V - 1 iterations, check for negative weight cycles:
+      <ul>
+        <li>If any edge can still relax a distance, the graph contains a negative weight cycle.</li>
+      </ul>
+    </li>
+    <li>The distance map now contains the shortest distances from the start node to all reachable nodes.</li>
+    <li>Paths can be reconstructed by backtracking predecessors from any target node.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Notes</h3>
+  <ul>
+    <li>Unlike Dijkstra, Bellman-Ford supports <strong>negative edge weights</strong>.</li>
+    <li>It can detect <strong>negative weight cycles</strong> that make shortest paths undefined.</li>
+    <li>The algorithm guarantees the shortest path in terms of total weight for graphs without negative cycles.</li>
+    <li>Its runtime is generally slower than Dijkstra’s algorithm for graphs without negative weights.</li>
+  </ul>
+</div>

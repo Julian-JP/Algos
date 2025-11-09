@@ -1,2 +1,51 @@
-<h1>Jarnik-Prim algorithm</h1>
-todo
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Prim's (Jarnik) Algorithm for Minimum Spanning Tree</h2>
+
+  <p>
+    <strong>Prim's Algorithm</strong>, also called Jarnik’s Algorithm, finds a <em>minimum spanning tree (MST)</em> of a connected, undirected graph.
+    The MST connects all vertices with the minimum total edge weight, without forming cycles.
+    It is commonly used in network design, clustering, and circuit layout.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Construct MST</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O((V + E) log V) with a priority queue &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Space Complexity:</strong> O(V + E)
+  </p>
+  <p><strong>Goal:</strong> Grow the MST one vertex at a time by always adding the cheapest edge that connects a new vertex to the tree.</p>
+  <ol>
+    <li>Select an arbitrary start vertex and mark it as part of the MST.</li>
+    <li>Initialize a <strong>priority queue (min-heap)</strong> containing all edges from the start vertex, keyed by weight.</li>
+    <li>While not all vertices are in the MST:
+      <ul>
+        <li>Extract the edge with the smallest weight from the queue.</li>
+        <li>If the edge connects a vertex outside the MST:
+          <ul>
+            <li>Add the edge to the MST.</li>
+            <li>Mark the newly connected vertex as part of the MST.</li>
+            <li>Add all edges from this vertex to vertices not yet in the MST into the priority queue.</li>
+          </ul>
+        </li>
+        <li>If both vertices of the edge are already in the MST, discard the edge to avoid cycles.</li>
+      </ul>
+    </li>
+    <li>Repeat until the MST contains exactly (V - 1) edges.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Notes</h3>
+  <ul>
+    <li>Prim’s algorithm builds the MST incrementally, starting from any vertex.</li>
+    <li>Using a priority queue ensures efficient selection of the minimum-weight edge at each step.</li>
+    <li>The MST is guaranteed to have the minimum total weight, but it may not be unique if multiple edges have the same weight.</li>
+    <li>Unlike Kruskal’s algorithm, Prim’s works by growing a single connected component instead of combining separate components.</li>
+  </ul>
+</div>

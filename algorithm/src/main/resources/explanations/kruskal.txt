@@ -1,2 +1,53 @@
-<h1>Kruskal algorithm</h1>
-todo
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Kruskal's Algorithm for Minimum Spanning Tree</h2>
+
+  <p>
+    <strong>Kruskal's Algorithm</strong> finds a <em>minimum spanning tree (MST)</em> of a connected, undirected graph.
+    An MST connects all vertices with the minimum total edge weight, without forming cycles.
+    It is widely used in network design, clustering, and circuit design.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Construct MST</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(E log E) &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Space Complexity:</strong> O(V)
+  </p>
+  <p><strong>Goal:</strong> Select edges to connect all vertices with minimum total weight without forming cycles.</p>
+  <ol>
+    <li>Sort all edges in the graph by their weight in ascending order.</li>
+    <li>Initialize a <strong>disjoint-set (union-find) structure</strong> to track connected components of vertices.</li>
+    <li>Iterate over the sorted edges:
+      <ul>
+        <li>For each edge (u, v):
+          <ul>
+            <li>If u and v belong to different components (not already connected):
+              <ul>
+                <li>Add the edge to the MST.</li>
+                <li>Union the components containing u and v.</li>
+              </ul>
+            </li>
+            <li>If u and v are already in the same component, skip the edge to avoid cycles.</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Continue until the MST contains exactly (V - 1) edges.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Notes</h3>
+  <ul>
+    <li>Kruskal’s algorithm works for both connected and disconnected graphs, producing a <em>minimum spanning forest</em> in the latter case.</li>
+    <li>Using a union-find data structure with path compression ensures nearly linear-time component tracking.</li>
+    <li>The MST is guaranteed to have the minimum total weight, but it may not be unique if edges have equal weights.</li>
+    <li>Edges are always added in increasing order of weight to maintain optimality.</li>
+  </ul>
+</div>

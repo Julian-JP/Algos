@@ -1,108 +1,74 @@
-<h1>RedBlack Suchbaum</h1>
-Der RedBlack Suchbaum ist eine Suchstruktur basierend auf einem binärem Suchbaum, welcher durch Rotationen und Einführung der Knotenfärbungen Rot und schwarz die Daten "balanzierter" speichert. In einem RedBlack Suchbaum gelten die Folgenden Invarianten: </br>
-<ol>
-    <li><h5>Doppel-Rot:</h5> Ein Knoten mit roter Färbung darf kein Kind mit roter Färbung haben</li>
-    <li><h5>Blatt-Knoten 2:</h5> An jedem Knoten der keine/nur ein Kind hat hängen zwei/ein "Null-Knoten", welche(r) schwarz gefärbt ist. Dieser "Nullknoten" wird allerdings oft nicht hingezeichnet</li>
-    <li><h5>Anzahl schwarzer Knoten auf einem Pfad:</h5> Für jeden beliebigen Knoten gilt, jeder Pfad zu einem Blatt enthält von diesem Knoten aus gleich viele schwarze Knoten</li>
-</ol>
-</br>
-<h2>Find</h2>
-Wende bei der Wurzel beginnend den folgenden Algorithmus an:
-<ol>
-    <li>Vergleiche die Wurzel mit dem gesuchten Wert. Wenn es der richtige ist, sind wir fertig</li>
-    <li>Ist der gesuchte Wert kleiner als die Wurzel? Dann nehme den linken Kinderknoten, sonst nehme den rechten Kinderknoten</li>
-    <li>Betrachte diesen Knoten als neue Wurzel und führe wieder Schritt 1 aus</li>
-</ol>
-Da durch die Invarianten eine komplette Entartung in eine Liste ausgeschlossen ist, liegt die Worstcase Lauzeit in O(log n), armortisiert liegt sie sogar in O(1).
-</br>
-<h2>Insert</h2>
-Füge den neuen Knoten wie in einem ganz normalen Binärem Suchbaum als roten Knoten ein. Betrachte zunächst den Eltern Knoten:
-<ol>
-    <li><h5>Schwarzer Eltern Knoten:</h5> Fertig, da weder Rotation noch Umfärbung nötig sind</li>
-    <li><h5>Roter Eltern Knoten:</h5> Betrachte den Onkel (Falls Onkel nicht vorhanden, an "Null-Knoten" denken also schwarze Färbung)</li>
-</ol>
-TODO 4 Cases + Nach rotation immer fertig +  beim umfärben Großvaterknoten als "Kind betrachten" und weiter von dort aus fixen + wurzel immer schwarz färben, ist allerdings
-je nach implementierung nicht immer notwendig, da invariante auch ohne das einfach eingehalten werden kann
-</br>
-<h2>Remove</h2>
-Für das Remove sind immer vier Knoten rellevant. Ein replacement Knoten und der Knoten der entfernt werden soll. Außerdem noch ein Knoten x und dessen Geschwisterknoten w
-Zuerst wird der Knoten der gelöscht werden soll lokalisiert. Ist er gefunden gibt es 3 Fälle um den replacement Knoten und den Knoten x zu lokalisieren.
-<ul>
-    <li><h5>Der zu entfernende Knoten hat zwei NIL-Kinder:</h5> Der replacement Knoten und Knoten x sind NIL Knoten</li>
-    <li><h5>Der zu entfernende Knoten hat genau ein NIL-Kind und ein Kind welches ein nicht NIL-Knoten ist:</h5> Das Kind welches kein NIL-Knoten ist, ist sowohl der replacement Knoten als auch der Knoten x</li>
-    <li><h5>Der zu entfernende Knoten hat zwei Kinder welche beide nicht NIL-Knoten sind:</h5> Wähle das rechte Kind als replacement Knoten und das rechte Kind des replacement Knotens als Knoten x</li>
-</ul>
-Führe nun die passenden Färbungen und Rotationen durch:
-<ul>
-    <li><h5>Entfernter Knoten ist rot und der replacement Knoten ist entweder rot oder ein NIL-Knoten:</h5> Fertig!</li>
-    <li><h5>Entfernter Knoten ist rot und der replacement Knoten ist schwarz und kein NIL-Knoten:</h5> Färbe den replacement Knoten rot und führe den passenden Fall aus</li>
-    <li><h5>Entfernter Knoten ist schwarz und der replacement Knoten ist rot:</h5> Färbe den Replacement Knoten schwarz. Fertig!</li>
-    <li><h5>Entfernter Knoten ist schwarz und der replacement Knoten ist schwarz:</h5> Führe den passenden Fall aus</li>
-</ul>
-Falls nötig wähle einen der Fälle 1-5 aus:
-<ul>
-    <li><h5>Fall 1 falls:</h5> Knoten x ist rot</li>
-    <li><h5>Fall 2 falls:</h5> Knoten x ist schwarz und der Geschwisterknoten w ist rot</li>
-    <li><h5>Fall 3 falls:</h5> Knoten x ist schwarz und der Geschwisterknoten w ist schwarz und beide von w's Kindern sind schwarz</li>
-    <li><h5>Fall 4 falls:</h5> Knoten x ist schwarz, der Geschwisterknoten w ist schwarz und<br>
-        <ul>
-            <li>Falls x ein linkes Kind ist und w linkes Kind rot und w rechtes Kind schwarz ist</li>
-            <li>Falls x ein rechtes Kind ist und w rechtes Kind rot und w linkes Kind schwarz ist</li>
-        </ul>
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Understanding Red-Black Trees</h2>
+
+  <p>
+    A <strong>Red-Black Tree (RBT)</strong> is a self-balancing binary search tree where each node contains an extra bit representing its <em>color</em> (red or black).
+    RBTs maintain balance using the following properties:
+  </p>
+  <ul>
+    <li>Every node is either red or black.</li>
+    <li>The root is always black.</li>
+    <li>All leaves (null nodes) are black.</li>
+    <li>Red nodes cannot have red children (no two reds in a row).</li>
+    <li>Every path from a node to its descendant leaves contains the same number of black nodes.</li>
+  </ul>
+
+  <h3 style="color:#2b4a6f;">Add Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(log n)
+  </p>
+  <p><strong>Goal:</strong> Insert a new value while maintaining BST order and Red-Black properties.</p>
+  <ol>
+    <li>Insert the node as in a standard BST and color it red.</li>
+    <li>Check Red-Black properties and fix violations using rotations and recoloring:
+      <ul>
+        <li>Case 1: Parent is black → nothing to do.</li>
+        <li>Case 2: Parent and uncle are red → recolor parent, uncle, and grandparent.</li>
+        <li>Case 3: Parent is red but uncle is black → perform rotations (left, right, or combination) and recolor.</li>
+      </ul>
     </li>
-    <li><h5>Fall 5 falls:</h5> Knoten x ist schwarz, der Geschwisterknote w ist schwarz und<br>
-    <ul>
-                <li>Falls x ein linkes Kind ist und w rechtes Kind rot ist</li>
-                <li>Falls x ein rechtes Kind ist und linkes Kind rot ist</li>
-            </ul>
-        </li>
-</ul>
-Führe den auswählten Fall anschließend aus:
-<ul>
-    <li><h5>Fall 1:</h5>
-        <ol>
-            <li>Färbe x schwarz</li>
-            <li>Fertig!</li>
-        </ol>
+    <li>Ensure the root remains black.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Find Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(log n)
+  </p>
+  <p><strong>Goal:</strong> Search for a value in the tree.</p>
+  <ol>
+    <li>Start at the root.</li>
+    <li>If the target equals the current node's key, it is found.</li>
+    <li>If the target is smaller, search recursively in the left subtree; if larger, search the right subtree.</li>
+    <li>If a null node is reached, the value does not exist in the tree.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Remove Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(log n)
+  </p>
+  <p><strong>Goal:</strong> Delete a node while maintaining BST order and Red-Black properties.</p>
+  <ol>
+    <li>Remove the node as in a standard BST:
+      <ul>
+        <li>Node with 0 or 1 child → delete directly.</li>
+        <li>Node with 2 children → replace with in-order successor and delete successor.</li>
+      </ul>
     </li>
-    <li><h5>Fall 2:</h5>
-        <ol>
-            <li>Färbe den Geschwisterknoten w schwarz</li>
-            <li>Färbe x Vater Knoten rot</li>
-            <li>Rotiere an x Vater Knoten: Falls x ein linkes Kind links rotation sonst rechts rotation</li>
-            <li>Wähle den Geschwisterknoten w neu, da er sich durch die roation verschoben hat</li>
-            <li>Wähle nun einen der Fälle 3,4 oder 5 aus und führe diesen aus</li>
-        </ol>
+    <li>If the deleted node or replacement was black, fix Red-Black violations using rotations and recoloring:
+      <ul>
+        <li>Double-black cases are resolved using sibling color checks, rotations, and recoloring.</li>
+      </ul>
     </li>
-    <li><h5>Fall 3:</h5>
-        <ol>
-            <li>Färbe den Geschwisterknoten w rot</li>
-            <li>Wähle den Vater von x als den neuen Knoten x</li>
-            <li>
-                <ul>
-                    <li>Ist der neue Knoten x rot: Färbe ihn schwarz. Fertig!</li>
-                    <li>Ist der neue Knoten x schwarz und Wurzel des Baumes: Fertig!</li>
-                    <li>Ist der neue Knoten x schwarz und nicht Wurzel des Baumes: Wähle Fall 2,3,4 oder 5 aus und führe diesen aus, der Geschwisterknoten w muss neu gewählt werden</li>
-                </ul>
-            </li>
-        </ol>
-    </li>
-    <li><h5>Fall 4:</h5>
-        <ol>
-            <li>Färbe das rote Kind des Geschwisterknotens w schwarz</li>
-            <li>Färbe den Geschwisterknoten w rot</li>
-            <li>Rotiere am Geschwisterknoten w. Ist x ein linkes Kind führe ine rechts rotation durch sonst eine links rotation</li>
-            <li>Wähle den Geschwisterknoten w neu, da er sich durch die roation verschoben hat</li>
-            <li>Führe Fall 5 aus</li>
-        </ol>
-    </li>
-    <li><h5>Fall 5:</h5>
-        <ol>
-            <li>Färbe den Geschwisterknoten w gleich wie den Vater Knoten von x</li>
-            <li>Färbe x Vater Knoten schwarz</li>
-            <li>Falls x ein linkes Kind ist färbe das rechte Kind des Geschwisterknotens w schwarz sonst färbe das linke Kind von w schwarz</li>
-            <li>Rotiere am Vater Knoten von x. Falls x ein linkes Kind ist führe eine links rotation durch sonst eine rechtsrotation</li>
-            <li>Fertig!</li>
-        </ol>
-    </li>
-</ul>
+    <li>Ensure the root remains black.</li>
+  </ol>
+</div>

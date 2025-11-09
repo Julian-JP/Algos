@@ -1,2 +1,54 @@
-<h1>Dijkstra's algorithm</h1>
-todo
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Understanding Dijkstra's Algorithm</h2>
+
+  <p>
+    <strong>Dijkstra's Algorithm</strong> finds the shortest path from a starting node to all other nodes in a graph with <em>non-negative edge weights</em>.
+    It is widely used in network routing, map navigation, and pathfinding.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Find Shortest Path</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O((V + E) log V) with a priority queue &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Space Complexity:</strong> O(V)
+  </p>
+  <p><strong>Goal:</strong> Compute the shortest distances from a start node to all other nodes and optionally reconstruct paths.</p>
+  <ol>
+    <li>Initialize a distance map, setting the start node distance to 0 and all others to infinity.</li>
+    <li>Initialize a priority queue (min-heap) with the start node.</li>
+    <li>While the queue is not empty:
+      <ul>
+        <li>Extract the node <em>current</em> with the smallest distance.</li>
+        <li>For each neighbor of <em>current</em>:
+          <ul>
+            <li>Compute the tentative distance through <em>current</em>.</li>
+            <li>If this distance is smaller than the previously recorded distance:
+              <ul>
+                <li>Update the distance.</li>
+                <li>Record <em>current</em> as the predecessor for path reconstruction.</li>
+                <li>Add the neighbor to the priority queue with the updated distance.</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Once the queue is empty, the distance map contains the shortest distances from the start node.</li>
+    <li>Paths can be reconstructed by backtracking predecessors from any target node.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Notes</h3>
+  <ul>
+    <li>Dijkstra's algorithm only works correctly with non-negative edge weights or without negative cycles.</li>
+    <li>Using a min-heap or priority queue improves performance from O(V²) to O((V + E) log V).</li>
+    <li>It finds the shortest path in terms of total weight, not necessarily the fewest edges.</li>
+  </ul>
+</div>

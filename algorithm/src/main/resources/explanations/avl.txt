@@ -1,2 +1,73 @@
-<h1>AVL Suchbaum</h1>
-todo
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Understanding AVL Trees</h2>
+
+  <p>
+    An <strong>AVL tree</strong> is a self-balancing binary search tree. Like a standard BST, each node has at most two children,
+    and the left subtree contains smaller keys while the right subtree contains larger keys.
+    <strong>AVL trees maintain a balance factor</strong> (the height difference between left and right subtrees) of -1, 0, or +1 for every node.
+    This guarantees that operations remain logarithmic in time.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Add Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(log n)
+  </p>
+  <p><strong>Goal:</strong> Insert a new value while maintaining BST and AVL balance properties.</p>
+  <ol>
+    <li>Insert the node as in a standard BST.</li>
+    <li>Update the height of all ancestors back to the root.</li>
+    <li>Check the balance factor of each ancestor node:</li>
+    <ul>
+      <li>If the balance factor is outside [-1, 1], perform rotations to restore balance:</li>
+      <ul>
+        <li><strong>Left-Left (LL) rotation</strong></li>
+        <li><strong>Right-Right (RR) rotation</strong></li>
+        <li><strong>Left-Right (LR) rotation</strong></li>
+        <li><strong>Right-Left (RL) rotation</strong></li>
+      </ul>
+    </ul>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Find Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(log n)
+  </p>
+  <p><strong>Goal:</strong> Search for a specific value in the AVL tree.</p>
+  <ol>
+    <li>Start at the root node.</li>
+    <li>If the target equals the current node's key, the value is found.</li>
+    <li>If the target is smaller, search recursively in the left subtree; if larger, search the right subtree.</li>
+    <li>If a null node is reached, the value does not exist in the tree.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Remove Operation</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(log n)
+  </p>
+  <p><strong>Goal:</strong> Delete a value while maintaining BST and AVL balance properties.</p>
+  <ol>
+    <li>Remove the node as in a standard BST:
+      <ul>
+        <li>No children: delete directly.</li>
+        <li>One child: replace with the child.</li>
+        <li>Two children: replace with in-order successor and delete successor.</li>
+      </ul>
+    </li>
+    <li>Update the height of ancestors back to the root.</li>
+    <li>Check the balance factor of each ancestor node:
+      <ul>
+        <li>If unbalanced, perform rotations (LL, RR, LR, RL) to restore AVL balance.</li>
+      </ul>
+    </li>
+  </ol>
+</div>

@@ -1,2 +1,48 @@
-<h1>Breadth-First search</h1>
-todo
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Understanding BFS Pathfinding</h2>
+
+  <p>
+    <strong>Breadth-First Search (BFS)</strong> is an algorithm for traversing or searching through a graph or grid.
+    It explores nodes in order of their distance from the starting node, making it ideal for finding the shortest path in unweighted graphs.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Find Shortest Path</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(V + E) &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Space Complexity:</strong> O(V)
+  </p>
+  <p><strong>Goal:</strong> Find the shortest path from a start node to a target node in a graph.</p>
+  <ol>
+    <li>Initialize a <strong>queue</strong> and enqueue the start node.</li>
+    <li>Mark the start node as visited and optionally store its predecessor for path reconstruction.</li>
+    <li>While the queue is not empty:
+      <ul>
+        <li>Dequeue a node <em>current</em>.</li>
+        <li>For each unvisited neighbor of <em>current</em>:
+          <ul>
+            <li>Mark it as visited.</li>
+            <li>Record <em>current</em> as its predecessor.</li>
+            <li>Enqueue the neighbor.</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>If the target node is reached, reconstruct the path by backtracking through predecessors.</li>
+    <li>If the queue empties without reaching the target, no path exists.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Notes</h3>
+  <ul>
+    <li>BFS guarantees the shortest path in terms of the number of edges for unweighted graphs.</li>
+    <li>Space complexity can be significant for large graphs due to the queue and visited set.</li>
+  </ul>
+</div>

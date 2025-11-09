@@ -1,2 +1,48 @@
-<h1>Depth-First Search</h1>
-todo
+<div style="
+  font-family:Segoe UI,Tahoma,sans-serif;
+  color:#333;
+  line-height:1.6;
+  margin:auto;
+  max-width:700px;
+  background:#fafafa;
+  border-radius:8px;
+  padding:20px 30px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+">
+  <h2 style="color:#2b4a6f;text-align:center;">Understanding DFS Pathfinding</h2>
+
+  <p>
+    <strong>Depth-First Search (DFS)</strong> is an algorithm for traversing or searching a graph or grid by exploring as far as possible along each branch before backtracking.
+    It is useful for pathfinding, topological sorting, and exploring connected components.
+  </p>
+
+  <h3 style="color:#2b4a6f;">Find a Path</h3>
+  <p style="font-size:0.95em;margin-top:-8px;margin-bottom:10px;color:#666;">
+    <strong>Time Complexity:</strong> O(V + E) &nbsp;&nbsp; | &nbsp;&nbsp; <strong>Space Complexity:</strong> O(V) (due to recursion stack or explicit stack)
+  </p>
+  <p><strong>Goal:</strong> Find a path from a start node to a target node in a graph.</p>
+  <ol>
+    <li>Initialize a <strong>visited set</strong> to keep track of explored nodes.</li>
+    <li>Use a <strong>stack</strong> (explicit or recursion) and push the start node.</li>
+    <li>While the stack is not empty:
+      <ul>
+        <li>Pop a node <em>current</em> from the stack.</li>
+        <li>If <em>current</em> is the target, the path is found.</li>
+        <li>If <em>current</em> is unvisited:
+          <ul>
+            <li>Mark it as visited.</li>
+            <li>Optionally record its predecessor for path reconstruction.</li>
+            <li>Push all unvisited neighbors onto the stack.</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>If the stack empties without reaching the target, no path exists.</li>
+  </ol>
+
+  <h3 style="color:#2b4a6f;">Notes</h3>
+  <ul>
+    <li>DFS does not guarantee the shortest path in terms of edges.</li>
+    <li>Recursive DFS may hit stack limits for very deep graphs; an explicit stack is safer in such cases.</li>
+  </ul>
+</div>
