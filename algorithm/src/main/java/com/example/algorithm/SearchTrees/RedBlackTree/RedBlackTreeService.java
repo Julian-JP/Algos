@@ -2,20 +2,16 @@ package com.example.algorithm.SearchTrees.RedBlackTree;
 
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.ResponseTypes.TreeResponse;
-import com.example.algorithm.SearchTrees.BinarySearchTree.BSTNode;
-import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
-import com.example.algorithm.SearchTrees.SearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeService;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class RedBlackTreeService extends SearchTreeService {
@@ -40,7 +36,11 @@ public class RedBlackTreeService extends SearchTreeService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/redblackTree.txt").toPath()));
+        ClassPathResource resource = new ClassPathResource("explanations/redblackTree.txt");
+        String explanation;
+        try (InputStream in = resource.getInputStream()) {
+            explanation = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
         return new Explanation(explanation);
     }
 

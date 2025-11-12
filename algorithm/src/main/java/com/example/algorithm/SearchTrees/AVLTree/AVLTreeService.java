@@ -2,18 +2,16 @@ package com.example.algorithm.SearchTrees.AVLTree;
 
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.ResponseTypes.TreeResponse;
-import com.example.algorithm.SearchTrees.BinarySearchTree.BSTNode;
-import com.example.algorithm.SearchTrees.BinarySearchTree.BinarySearchTree;
-import com.example.algorithm.SearchTrees.SearchTree;
 import com.example.algorithm.SearchTrees.SearchTreeService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class AVLTreeService extends SearchTreeService {
@@ -38,7 +36,11 @@ public class AVLTreeService extends SearchTreeService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/avl.txt").toPath()));
+        ClassPathResource resource = new ClassPathResource("explanations/avl.txt");
+        String explanation;
+        try (InputStream in = resource.getInputStream()) {
+            explanation = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
         return new Explanation(explanation);
     }
 

@@ -3,11 +3,12 @@ package com.example.algorithm.Graph.PathFinding;
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.ResponseTypes.GraphResponse;
 import org.json.JSONException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -36,7 +37,11 @@ public class BreadthFirstSearchService extends PathFindingService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/bfs.txt").toPath()));
+        ClassPathResource resource = new ClassPathResource("explanations/bfs.txt");
+        String explanation;
+        try (InputStream in = resource.getInputStream()) {
+            explanation = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
         return new Explanation(explanation);
     }
 

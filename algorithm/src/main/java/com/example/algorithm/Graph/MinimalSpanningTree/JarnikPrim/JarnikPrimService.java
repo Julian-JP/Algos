@@ -6,11 +6,12 @@ import com.example.algorithm.Graph.MinimalSpanningTree.MinimalSpanningTreeGraph;
 import com.example.algorithm.Graph.MinimalSpanningTree.MinimalSpanningTreeService;
 import com.example.algorithm.utils.UnionFind;
 import org.json.JSONException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -23,7 +24,11 @@ public class JarnikPrimService extends MinimalSpanningTreeService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/jarnikPrim.txt").toPath()));
+        ClassPathResource resource = new ClassPathResource("explanations/jarnikPrim.txt");
+        String explanation;
+        try (InputStream in = resource.getInputStream()) {
+            explanation = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
         return new Explanation(explanation);
     }
 

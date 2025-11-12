@@ -7,13 +7,13 @@ import com.example.algorithm.ResponseTypes.TreeResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class BinaryHeapService extends HeapService {
@@ -39,7 +39,11 @@ public class BinaryHeapService extends HeapService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/binaryHeap.txt").toPath()));
+        ClassPathResource resource = new ClassPathResource("explanations/binaryHeap.txt");
+        String explanation;
+        try (InputStream in = resource.getInputStream()) {
+            explanation = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
         return new Explanation(explanation);
     }
 

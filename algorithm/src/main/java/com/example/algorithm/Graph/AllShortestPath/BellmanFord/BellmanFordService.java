@@ -3,17 +3,15 @@ package com.example.algorithm.Graph.AllShortestPath.BellmanFord;
 import com.example.algorithm.Explanation.Explanation;
 import com.example.algorithm.Graph.AllShortestPath.AllShortestPathGraph;
 import com.example.algorithm.Graph.AllShortestPath.AllShortestPathService;
-import com.example.algorithm.Graph.AllShortestPath.Dijkstra.AllShortestPathDijkstraService;
 import com.example.algorithm.ResponseTypes.GraphResponse;
 import org.json.JSONException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
 
 @Service
 public class BellmanFordService extends AllShortestPathService {
@@ -25,7 +23,11 @@ public class BellmanFordService extends AllShortestPathService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/bellmanFord.txt").toPath()));
+        ClassPathResource resource = new ClassPathResource("explanations/bellmanFord.txt");
+        String explanation;
+        try (InputStream in = resource.getInputStream()) {
+            explanation = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
         return new Explanation(explanation);
     }
 

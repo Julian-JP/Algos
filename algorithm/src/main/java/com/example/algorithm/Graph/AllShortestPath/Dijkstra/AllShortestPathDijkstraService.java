@@ -5,11 +5,12 @@ import com.example.algorithm.Graph.AllShortestPath.AllShortestPathGraph;
 import com.example.algorithm.Graph.AllShortestPath.AllShortestPathService;
 import com.example.algorithm.ResponseTypes.GraphResponse;
 import org.json.JSONException;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -22,7 +23,11 @@ public class AllShortestPathDijkstraService extends AllShortestPathService {
 
     @Override
     public Explanation getExplanation() throws IOException {
-        String explanation = new String(Files.readAllBytes(ResourceUtils.getFile("classpath:explanations/dijkstraAllShortestPath.txt").toPath()));
+        ClassPathResource resource = new ClassPathResource("explanations/dijkstraAllShortestPath.txt");
+        String explanation;
+        try (InputStream in = resource.getInputStream()) {
+            explanation = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
         return new Explanation(explanation);
     }
 
